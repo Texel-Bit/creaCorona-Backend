@@ -1,0 +1,177 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  idCompany                     Int             @id @default(autoincrement())
+  CompanyName                   String?         @db.VarChar(45)
+  CompanyAddress                String?         @db.VarChar(80)
+  CompanyImagePath              String?         @db.VarChar(255)
+  CompanyNIT                    String?         @db.VarChar(45)
+  CompanyPhone                  String?         @db.VarChar(45)
+  companyStatus_idcompanyStatus Int
+  CompanyRole_idCompanyRole     Int
+  CompanyRole                   CompanyRole     @relation(fields: [CompanyRole_idCompanyRole], references: [idCompanyRole], onDelete: NoAction, onUpdate: NoAction, map: "fk_Company_CompanyRole1")
+  companyStatus                 companyStatus   @relation(fields: [companyStatus_idcompanyStatus], references: [idcompanyStatus], onDelete: NoAction, onUpdate: NoAction, map: "fk_Company_companyStatus1")
+  DesignCompany                 DesignCompany[]
+  sysUser                       sysUser[]
+
+  @@index([CompanyRole_idCompanyRole], map: "fk_Company_CompanyRole1_idx")
+  @@index([companyStatus_idcompanyStatus], map: "fk_Company_companyStatus1_idx")
+}
+
+model CompanyRole {
+  idCompanyRole   Int       @id @default(autoincrement())
+  CompanyRoleName String?   @db.VarChar(45)
+  Company         Company[]
+}
+
+model Design {
+  idDesign                Int             @id @default(autoincrement())
+  DesignPath              String?         @db.VarChar(255)
+  DesignName              String?         @db.VarChar(45)
+  DesignSellPrice         Float?
+  DesignType_idDesignType Int
+  DesignType              DesignType      @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_Design_DesignType1")
+  DesignCompany           DesignCompany[]
+
+  @@index([DesignType_idDesignType], map: "fk_Design_DesignType1_idx")
+}
+
+model DesignColors {
+  idDesignColors          Int        @id @default(autoincrement())
+  DesignColorName         String?    @db.VarChar(45)
+  DesignColorPath         String?    @db.VarChar(255)
+  DesignType_idDesignType Int
+  DesignType              DesignType @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColors_DesignType1")
+
+  @@index([DesignType_idDesignType], map: "fk_DesignColors_DesignType1_idx")
+}
+
+model DesignCompany {
+  idDesignCompany       Int     @id @default(autoincrement())
+  DesignCompanyBuyPrice Float?
+  Company_idCompany     Int
+  Design_idDesign       Int
+  Company               Company @relation(fields: [Company_idCompany], references: [idCompany], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignCompany_Company1")
+  Design                Design  @relation(fields: [Design_idDesign], references: [idDesign], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignCompany_Design1")
+
+  @@index([Company_idCompany], map: "fk_DesignCompany_Company1_idx")
+  @@index([Design_idDesign], map: "fk_DesignCompany_Design1_idx")
+}
+
+model DesignType {
+  idDesignType               Int                          @id @default(autoincrement())
+  DesignTypeName             String?                      @db.VarChar(45)
+  DesignTypeIconPath         String?                      @db.VarChar(255)
+  Design                     Design[]
+  DesignColors               DesignColors[]
+  DesignTypeFormatSize       DesignTypeFormatSize[]
+  DesignType_EnvironmentType DesignType_EnvironmentType[]
+}
+
+model DesignTypeFormatSize {
+  idDesignTypeFormatSize     Int                 @id @default(autoincrement())
+  DesignTypeFormatSizeName   String?             @db.VarChar(45)
+  DesignType_idDesignType    Int
+  DesignTypeFormatSizeHeight Float?
+  DesignTypeFormatSizeWidht  Float?
+  DesignType                 DesignType          @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignTypeFormatSize_DesignType1")
+  FormatSizeTexture          FormatSizeTexture[]
+
+  @@index([DesignType_idDesignType], map: "fk_DesignTypeFormatSize_DesignType1_idx")
+}
+
+model DesignType_EnvironmentType {
+  DesignType_EnvironmentTypecol     Int             @id @default(autoincrement())
+  DesignType_idDesignType           Int
+  EnvironmentType_idEnvironmentType Int
+  DesignType                        DesignType      @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignType_has_EnvironmentType_DesignType1")
+  EnvironmentType                   EnvironmentType @relation(fields: [EnvironmentType_idEnvironmentType], references: [idEnvironmentType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignType_has_EnvironmentType_EnvironmentType1")
+
+  @@index([DesignType_idDesignType], map: "fk_DesignType_has_EnvironmentType_DesignType1_idx")
+  @@index([EnvironmentType_idEnvironmentType], map: "fk_DesignType_has_EnvironmentType_EnvironmentType1_idx")
+}
+
+model Environment {
+  idEnvironment                     Int             @id @default(autoincrement())
+  EnvironmentName                   String?         @db.VarChar(45)
+  EnvironmentType_idEnvironmentType Int
+  EnvironmentType                   EnvironmentType @relation(fields: [EnvironmentType_idEnvironmentType], references: [idEnvironmentType], onDelete: NoAction, onUpdate: NoAction, map: "fk_Environment_EnvironmentType1")
+
+  @@index([EnvironmentType_idEnvironmentType], map: "fk_Environment_EnvironmentType1_idx")
+}
+
+model EnvironmentType {
+  idEnvironmentType          Int                          @id @default(autoincrement())
+  EnvironmentTypeName        String?                      @db.VarChar(45)
+  EnvironmentProfileImage    String?                      @db.VarChar(255)
+  DesignType_EnvironmentType DesignType_EnvironmentType[]
+  Environment                Environment[]
+}
+
+model FormatSizeTexture {
+  idFormatSizeTexture                         Int                  @id @default(autoincrement())
+  DesignTypeFormatSize_idDesignTypeFormatSize Int
+  FormatSizeTextureName                       String?              @db.VarChar(45)
+  FormatSizeTextureMaskPath                   String?              @db.VarChar(255)
+  DesignTypeFormatSize                        DesignTypeFormatSize @relation(fields: [DesignTypeFormatSize_idDesignTypeFormatSize], references: [idDesignTypeFormatSize], onDelete: NoAction, onUpdate: NoAction, map: "fk_FormatSizeTexture_DesignTypeFormatSize1")
+
+  @@index([DesignTypeFormatSize_idDesignTypeFormatSize], map: "fk_FormatSizeTexture_DesignTypeFormatSize1_idx")
+}
+
+model SystemSetup {
+  idSystemSetup                 Int    @id @default(autoincrement())
+  SystemSetupGarbagePercenttage Float?
+}
+
+model brecha {
+  idbrecha        Int     @id @default(autoincrement())
+  brechaName      String? @db.VarChar(45)
+  brechaColorPath String? @db.VarChar(255)
+  brechacol       String? @db.VarChar(45)
+}
+
+model companyStatus {
+  idcompanyStatus   Int       @id @default(autoincrement())
+  companyStatusName String?   @db.VarChar(45)
+  Company           Company[]
+}
+
+model sysUser {
+  idsysuser               Int        @id @default(autoincrement())
+  userName                String     @db.VarChar(45)
+  lastName                String     @db.VarChar(45)
+  email                   String     @unique(map: "email_UNIQUE") @db.VarChar(80)
+  password                String     @db.VarChar(255)
+  tempPassword            String?    @db.VarChar(255)
+  tempPasswordExpDate     DateTime?  @db.DateTime(0)
+  creationDate            DateTime   @db.DateTime(0)
+  userRole_iduserRole     Int
+  userStatus_iduserStatus Int
+  Company_idCompany       Int
+  Company                 Company    @relation(fields: [Company_idCompany], references: [idCompany], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysUser_Company1")
+  userRole                userRole   @relation(fields: [userRole_iduserRole], references: [iduserRole], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysuser_userRole")
+  userStatus              userStatus @relation(fields: [userStatus_iduserStatus], references: [iduserStatus], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysuser_userStatus1")
+
+  @@index([Company_idCompany], map: "fk_sysUser_Company1_idx")
+  @@index([userRole_iduserRole], map: "fk_sysuser_userRole_idx")
+  @@index([userStatus_iduserStatus], map: "fk_sysuser_userStatus1_idx")
+}
+
+model userRole {
+  iduserRole Int       @id @default(autoincrement())
+  roleName   String?   @db.VarChar(45)
+  sysUser    sysUser[]
+}
+
+model userStatus {
+  iduserStatus          Int       @id @default(autoincrement())
+  userStatusDescription String?   @db.VarChar(45)
+  sysUser               sysUser[]
+}
