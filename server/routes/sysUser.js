@@ -1,35 +1,15 @@
-const express = require('express')
-const app = express()
 
-const _ = require('underscore');
 
-const sysUser = require('../controllers/sysUser');
+const express = require('express');
+const app = express.Router();
+const { createUser, recoverPassword, login, changePassword, getAllUsers, updateStatusByIdUser } = require('../controllers/sysUser');
 const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacion');
-const { validarArchivoSubir } = require('../middlewares/validar-archivo');
 
-app.post("/sysUser/createUser",[verificaToken,verificaAdminRol], sysUser.createUser);
-app.post("/sysUser/recoverPassword", sysUser.recoverPassword);
-app.post("/sysUser/login", sysUser.login);
-app.post("/sysUser/changePassword",[verificaToken], sysUser.changePassword);
-app.post("/sysUser/updateUser",[verificaToken], sysUser.updateUser);
-app.get("/sysUser/getAllUsers",[verificaToken,verificaAdminRol], sysUser.getAllUsers);
-
-
-
-
-
-
-app.post("/sysUser/updateStatusByIdUser",[verificaToken,verificaAdminRol], sysUser.updateStatusByIdUser);
-
-
-
-
-
-
-// app.post("/sysUser/LoginUserJWT", sysUser.LoginUserJWT);
-
-
-
-
+app.post('/createUser', [verificaToken, verificaAdminRol], createUser);
+app.post('/recoverPassword', recoverPassword);
+app.post('/login', login);
+app.post('/changePassword', [verificaToken], changePassword);
+app.get('/getAllUsers', [verificaToken, verificaAdminRol], getAllUsers);
+app.post('/updateStatusByIdUser', [verificaToken, verificaAdminRol], updateStatusByIdUser);
 
 module.exports = app;

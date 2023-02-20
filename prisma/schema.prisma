@@ -9,7 +9,7 @@ datasource db {
 
 model Company {
   idCompany                     Int             @id @default(autoincrement())
-  CompanyName                   String?         @db.VarChar(45)
+  CompanyName                   String          @db.VarChar(45)
   CompanyAddress                String?         @db.VarChar(80)
   CompanyImagePath              String?         @db.VarChar(255)
   CompanyNIT                    String?         @db.VarChar(45)
@@ -27,13 +27,13 @@ model Company {
 
 model CompanyRole {
   idCompanyRole   Int       @id @default(autoincrement())
-  CompanyRoleName String?   @db.VarChar(45)
+  CompanyRoleName String    @db.VarChar(45)
   Company         Company[]
 }
 
 model Design {
   idDesign                Int             @id @default(autoincrement())
-  DesignPath              String?         @db.VarChar(255)
+  DesignImagePath         String?         @db.VarChar(255)
   DesignName              String?         @db.VarChar(45)
   DesignSellPrice         Float?
   DesignType_idDesignType Int
@@ -102,6 +102,7 @@ model Environment {
   idEnvironment                     Int             @id @default(autoincrement())
   EnvironmentName                   String?         @db.VarChar(45)
   EnvironmentType_idEnvironmentType Int
+  EnvironmentProfileImage           String?         @db.VarChar(45)
   EnvironmentType                   EnvironmentType @relation(fields: [EnvironmentType_idEnvironmentType], references: [idEnvironmentType], onDelete: NoAction, onUpdate: NoAction, map: "fk_Environment_EnvironmentType1")
 
   @@index([EnvironmentType_idEnvironmentType], map: "fk_Environment_EnvironmentType1_idx")
@@ -110,7 +111,7 @@ model Environment {
 model EnvironmentType {
   idEnvironmentType          Int                          @id @default(autoincrement())
   EnvironmentTypeName        String?                      @db.VarChar(45)
-  EnvironmentProfileImage    String?                      @db.VarChar(255)
+  EnvironmentTypeImage       String?                      @db.VarChar(255)
   DesignType_EnvironmentType DesignType_EnvironmentType[]
   Environment                Environment[]
 }
@@ -139,7 +140,7 @@ model brecha {
 
 model companyStatus {
   idcompanyStatus   Int       @id @default(autoincrement())
-  companyStatusName String?   @db.VarChar(45)
+  companyStatusName String    @db.VarChar(45)
   Company           Company[]
 }
 
@@ -166,12 +167,12 @@ model sysUser {
 
 model userRole {
   iduserRole Int       @id @default(autoincrement())
-  roleName   String?   @db.VarChar(45)
+  roleName   String    @db.VarChar(45)
   sysUser    sysUser[]
 }
 
 model userStatus {
   iduserStatus          Int       @id @default(autoincrement())
-  userStatusDescription String?   @db.VarChar(45)
+  userStatusDescription String    @db.VarChar(45)
   sysUser               sysUser[]
 }

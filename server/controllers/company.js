@@ -5,6 +5,77 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const date = require('date-and-time');
 var fs = require('fs');
+exports.createCompany = (req, res) => {
+    // Validate request
+    if (!req.body) {
+      res.status(400).json({
+        status: false,
+        error: "error",
+      });
+      return;
+    }
+  
+    const {
+        CompanyName,
+        CompanyAddress,
+        CompanyImagePath,
+        CompanyNIT ,
+        CompanyPhone ,
+        companyStatus_idcompanyStatus,
+        CompanyRole_idCompanyRole = 1,
+      
+    } = req.body;
+  
+    data = {
+      userName,
+      lastName,
+      email,
+      password,
+      creationDate,
+      userRole: { connect: { iduserRole: +iduserRole } },
+      userStatus: { connect: { iduserStatus } },
+      Company: { connect: { idCompany: +idCompany } },
+    };
+  
+    findOneLoginByEmail(data, (err, result) => {
+      if (err)
+        res.status(500).send({
+          status: false,
+          message: err,
+        });
+  
+      console.log(result.length);
+      if (result.length != 0) {
+        res.status(400).send({
+          status: false,
+          message: "userName o Email ya existe",
+        });
+      } else {
+        console.log(data);
+        createUser(data, (err, result) => {
+          if (err)
+            res.status(500).send({
+              status: false,
+  
+              message: "No se logro Crear el usuario.",
+            });
+          else {
+            res.json({
+              status: true,
+              data: result,
+            });
+          }
+        });
+      }
+    });
+  };
+
+
+//sin uso
+
+
+
+
 
 exports.getAllCompany = (req, res) => {
     // Validate request
@@ -78,52 +149,7 @@ exports.getAllCompanybyBrands = (req, res) => {
 };
 
 
-exports.createCompany = (req, res) => {
-    // Validate request
-    if (!req.body) {
-        res.status(400).json({
-            status: 'error',
-            error: 'tbl_user_type_description Content can not be empty!',
-        });
-        return;
 
-    }
-    let valorRandom = randompassword.randomPassword({ length: 20, characters: [randompassword.lower,randompassword.upper, randompassword.digits] });
-
-
-    // Create a Customer
-    const company = new Company({
-        
-        nameCompany: req.body.nameCompany,
-        nit:req.body.nit,
-        createdDate:new Date(),
-        companyType_idcompanyType: req.body.companyType_idcompanyType,
-        companyStatus_idcompanyStatus:1,
-        TokenAPI:valorRandom
-
-    });
-
-    Company.createCompany(company, (err, data) => {
-
-
-        if (err)
-            res.status(500).send({
-                message: err.message || "Some error occurred while creating the userTypeCompanyUser."
-            });
-        else {
-
-         
-
-            res.json({
-                status: true,
-                data
-            });
-        }
-
-    });
-
-
-};
 
 exports.getCompanyById = (req, res) => {
     // Validate request

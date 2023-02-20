@@ -9,7 +9,9 @@ const createUser = async (data, resultado) => {
       data,
     });
     await prisma.$disconnect();
-
+    delete result.password
+delete result.tempPassword
+delete result.tempPasswordExpDate
     resultado(null, { result });
   } catch (e) {
 
@@ -22,11 +24,11 @@ const createUser = async (data, resultado) => {
 
 const findOneLoginByEmail = async ({ email }, resultado) => {
 
+
   try {
     const result = await prisma.sysUser.findMany({
       where: {
-       
-          
+               
             email: {
                 equals: email,
             },
@@ -118,6 +120,31 @@ console.log(result);
   }
 };
 
+const updateStatusByIdUser = async (data, resultado) => {
 
 
-module.exports = { createUser, findOneLoginByEmail,recoverPassword,changePassword,getAllUsers };
+let idsysuser=data.idsysuser;
+delete data.idsysuser
+  try {
+    const result = await prisma.sysUser.update({
+      where: {
+        idsysuser
+     },
+      data
+      
+    });
+    await prisma.$disconnect();
+    resultado(null,  result );
+  } catch (e) {
+
+    console.log(e);
+    await prisma.$disconnect();
+
+    resultado(e, null);
+  }
+};
+
+
+
+
+module.exports = { createUser, findOneLoginByEmail,recoverPassword,changePassword,getAllUsers,updateStatusByIdUser };

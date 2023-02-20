@@ -3,7 +3,8 @@ const {
   findOneLoginByEmail,
   recoverPassword,
   changePassword,
-  getAllUsers
+  getAllUsers,
+  updateStatusByIdUser,
 } = require("../models/sysUser");
 const randompassword = require("secure-random-password");
 
@@ -11,6 +12,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const date = require("date-and-time");
 const email = require("../helpers/email");
+const { result } = require("underscore");
 
 exports.recoverPassword = (req, res) => {
   let passwordrecover = randompassword.randomPassword({
@@ -62,16 +64,19 @@ exports.recoverPassword = (req, res) => {
     }
   });
 };
+
+// Manejador de ruta para crear un nuevo usuario
 exports.createUser = (req, res) => {
-  // Validate request
+  // Validar que la solicitud contenga datos
   if (!req.body) {
     res.status(400).json({
       status: false,
-      error: "error",
+      error: "La solicitud debe contener datos",
     });
     return;
   }
 
+  // Desestructurar los datos de la solicitud
   const {
     userName,
     lastName,
@@ -83,7 +88,9 @@ exports.createUser = (req, res) => {
     idCompany,
   } = req.body;
 
-  data = {
+
+  // Configurar los datos para el nuevo usuario
+  const userData = {
     userName,
     lastName,
     email,
@@ -94,30 +101,34 @@ exports.createUser = (req, res) => {
     Company: { connect: { idCompany: +idCompany } },
   };
 
-  findOneLoginByEmail(data, (err, result) => {
-    if (err)
+  // Buscar si ya existe un usuario con el mismo email o userName
+  findOneLoginByEmail(userData, (err, result) => {
+    if (err) {
       res.status(500).send({
         status: false,
-        message: err,
+        message: "No se pudo buscar el usuario en la base de datos",
       });
+      return;
+    }
 
-    console.log(result.length);
     if (result.length != 0) {
       res.status(400).send({
         status: false,
-        message: "userName o Email ya existe",
+        message: "El userName o Email ya existe",
       });
+      return;
     } else {
+      // Crear el nuevo usuario
 
-      console.log(data);
-      createUser(data, (err, result) => {
-        if (err)
+      createUser(userData, (err, result) => {
+        if (err) {
           res.status(500).send({
             status: false,
-
-            message: "No se logro Crear el usuario.",
+            message: "No se pudo crear el usuario",
           });
-        else {
+          return;
+        } else {
+
           res.json({
             status: true,
             data: result,
@@ -128,87 +139,104 @@ exports.createUser = (req, res) => {
   });
 };
 
-exports.login =  (req, res, next) => {
+
+exports.login = (req, res, next) => {
+
+  console.log(req.body,"ellos");
   const user = {
     email: req.body.email,
     password: req.body.password,
   };
 
-   findOneLoginByEmail(user, (err, data) => {
-    console.log(data, "todo");
 
-    if (err)
+  console.log(user);
+   findOneLoginByEmail  (user, async(err, data) => {
+
+    console.log(err,"err");
+    console.log(data,"data");
+
+    if (err){
+
       res.status(500).send({
         status: false,
         message: err,
       });
-
-    if (data[0] == undefined) {
-      return res.status(200).json({
-        status: false,
-        err: {
-          message: "Incorrect user or password",
-        },
-      });
-    }
-    let now = new Date();
-    now.setDate(now.getDate());
-    const fecha = date.format(now, "YYYY-MM-DD HH:mm:ss");
-    if (!bcrypt.compareSync(user.password, data[0].password)) {
-      if (fecha > data.tempPasswordExpDate) {
-        return res.status(400).json({
+    }else{
+      if (data == undefined) {
+        return res.status(200).json({
           status: false,
-          message: "clave vencida",
-        });
-      }
-
-      if (!bcrypt.compareSync(user.password, data[0].tempPassword)) {
-        return res.status(400).json({
-          status: false,
-          message: "Usuario o (contraseña) incorrectos",
-        });
-      } else {
-        delete data.password;
-        let token = jwt.sign(
-          {
-            user: data[0],
+          err: {
+            message: "Incorrect user or password",
           },
-          process.env.SEED,
-          { expiresIn: process.env.CADUCIDAD_TOKEN }
-        );
-        res.setHeader("token", token);
-
-        delete data[0].tempPassword;
-        delete data[0].tempPasswordExpDate;
-        res.json({
-          status: true,
-          isTmpPassword: true,
-          user: data,
-          token,
         });
-        return;
-      }
-    } else {
-      delete data.password;
-      let token = jwt.sign(
-        {
-          user: data[0],
-        },
-        process.env.SEED,
-        { expiresIn: process.env.CADUCIDAD_TOKEN }
-      );
-      res.setHeader("token", token);
+      }else{
+        let now = new Date();
+        now.setDate(now.getDate());
+        const fecha = date.format(now, "YYYY-MM-DD HH:mm:ss");
 
-      delete data[0].tempPassword;
-      delete data[0].tempPasswordExpDate;
-      res.json({
-        status: true,
-        isTmpPassword: false,
-        user: data,
-        token,
-      });
-      return;
+        console.log(req.body.password,"password");
+        if (!bcrypt.compareSync(req.body.password, data.password)) {
+          if (fecha > data.tempPasswordExpDate) {
+            return res.status(400).json({
+              status: false,
+              message: "clave vencida",
+            });
+          }
+    
+          if (!bcrypt.compareSync(user.password, data[0].tempPassword)) {
+            return res.status(400).json({
+              status: false,
+              message: "Usuario o (contraseña) incorrectos",
+            });
+          } else {
+            delete data.password;
+            let token = jwt.sign(
+              {
+                user: data,
+              },
+              process.env.SEED,
+              { expiresIn: process.env.CADUCIDAD_TOKEN }
+            );
+            res.setHeader("token", token);
+    
+            delete data[0].tempPassword;
+            delete data[0].tempPasswordExpDate;
+            res.json({
+              status: true,
+              isTmpPassword: true,
+              user: data,
+              token,
+            });
+            return;
+          }
+        } else {
+          delete data.password;
+          let token = jwt.sign(
+            {
+              user: data[0],
+            },
+            process.env.SEED,
+            { expiresIn: process.env.CADUCIDAD_TOKEN }
+          );
+          res.setHeader("token", token);
+    
+          delete data.tempPassword;
+          delete data.tempPasswordExpDate;
+          res.json({
+            status: true,
+            isTmpPassword: false,
+            user: data,
+            token,
+          });
+          return;
+        }
+      }
     }
+     
+
+    
+  
+  
   });
 };
 
@@ -222,7 +250,6 @@ exports.changePassword = (req, res) => {
         message: "Some error occurred while creating the userTypeCompanyUser.",
       });
     }
-    console.log(decode);
 
     req.usuario = decode.user;
     data.idsysuser = decode.user.idsysuser;
@@ -247,22 +274,12 @@ exports.changePassword = (req, res) => {
   });
 };
 exports.getAllUsers = (req, res) => {
-  // Validate request
-  if (!req.body) {
-    res.status(400).json({
-      status: "error",
-      error: "no se logro crear",
-    });
-    return;
-  }
-
   getAllUsers((err, data) => {
     if (err)
       res.status(500).send({
         message: err.message || "no se pudo consultar",
       });
     else {
-    
       delete data.password;
       res.json({
         status: true,
@@ -271,50 +288,12 @@ exports.getAllUsers = (req, res) => {
     }
   });
 };
-//Sin uso
-
-
-
-exports.updateUser = (req, res, next) => {
-  let token = req.get("JWT");
-
-  jwt.verify(token, process.env.SEED, (err, decode) => {
-    if (err) {
-      res.status(500).send({
-        message: "Some error occurred while creating the userTypeCompanyUser.",
-      });
-    }
-
-    req.usuario = decode.usuario;
-    idsysuserjwt = decode.user.idsysuser;
-    userRole_iduserRolejwt = decode.user.userRole_iduserRole;
-  });
-
-  const user = {
-    idsysuser: req.body.idsysuser,
-    userName: req.body.userName,
-    userLastName: req.body.userLastName,
-    email: req.body.email,
-  };
-
-  if (userRole_iduserRolejwt == 2) {
-    user.idsysuser = req.body.idsysuser;
-    user.userRole_iduserRole = req.body.userRole_iduserRole;
-  } else {
-    user.idsysuser = idsysuserjwt;
-  }
-
-  sysUser.updateUser(user, (err, data) => {
-    res.json({
-      status: true,
-      user: data,
-    });
-  });
-};
 
 exports.updateStatusByIdUser = (req, res, next) => {
   let token = req.get("JWT");
-
+  let data = {};
+  let rol;
+  let id;
   jwt.verify(token, process.env.SEED, (err, decode) => {
     if (err) {
       res.status(500).send({
@@ -322,164 +301,125 @@ exports.updateStatusByIdUser = (req, res, next) => {
       });
     }
 
-    req.usuario = decode.usuario;
-    idsysuserjwt = decode.user.idsysuser;
-    userRole_iduserRolejwt = decode.user.userRole_iduserRole;
-  });
+    req.usuario = decode.user;
+    // data.idsysuser = decode.user.idsysuser;
 
-  const user = {
-    idsysuser: req.body.idsysuser,
-    userStatus_iduserStatus: req.body.userStatus_iduserStatus,
-  };
+    console.log(decode.user);
 
-  sysUser.updateStatusByIdUser(user, (err, data) => {
-    res.json({
-      status: true,
-      user: data,
-    });
+    rol = decode.user.userRole_iduserRole;
+    id = +decode.user.idsysuser;
   });
-};
-exports.getUserById = (req, res) => {
-  // Validate request
 
   if (!req.body) {
     res.status(400).json({
-      status: "error",
-      error: "tbl_user_type_description Content can not be empty!",
+      status: false,
+      error: "error",
     });
     return;
   }
 
-  // Create a Customer
-  const user = new User({
-    iduser: req.body.iduser,
-  });
+  const { idsysuser, userName, lastName, email, iduserRole, idCompany } =
+    req.body;
 
-  User.getUserById(user, (err, data) => {
-    if (err)
-      res.status(500).send({
-        message:
-          err.message ||
-          "Some error occurred while creating the userTypeCompanyUser.",
-      });
-    else {
-      // let token = jwt.sign({
-      //     user: user,
-      // }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN });
+  data = {
+    userName,
+    lastName,
+    email,
+  };
 
-      // res.setHeader('token', token);
+  if (rol == 1) {
+    data.idsysuser = +idsysuser;
+    (data.userRole = { connect: { iduserRole: +iduserRole } }),
+      (data.Company = { connect: { idCompany: +idCompany } });
+  } else {
+    data.idsysuser = id;
+  }
 
-      res.json({
-        status: true,
-        data,
-      });
-    }
-  });
-};
+  updateStatusByIdUser(data, (err, result) => {
+    
+  delete result.password;
+  delete result.tempPassword;
 
-exports.LoginUserJWT = (req, res) => {
-  let emailtoken = null;
-  let token = req.get("JWT");
-
-  jwt.verify(token, process.env.SEED, (err, decode) => {
-    if (err) {
-      res.status(500).send({
-        message: "Some error occurred while creating the userTypeCompanyUser.",
-      });
-    }
-
-    req.usuario = decode.usuario;
-    iduser = decode.user.iduser;
-    emailtoken = decode.user.email;
-    UserName = decode.user.UserName;
-    UserLastName = decode.user.UserLastName;
-  });
-
-  sysUser.findOneLoginid(iduser, (err, data) => {
-    if (data == null) {
-      return res.status(500).send({
-        message: "La cuenta de correo no exista favor realizar registro",
-      });
-    } else {
-      res.json({
-        status: "ok",
-        data,
-      });
-    }
+  delete result.tempPasswordExpDate;
+    res.json({
+      status: true,
+      user: result,
+    });
   });
 };
+//Sin uso
 
-// exports.activeUserById = (req, res, next) => {
+// exports.updateUser = (req, res, next) => {
+//   let token = req.get("JWT");
 
-//     User.activeUserById(req.body, (err, data) => {
+//   jwt.verify(token, process.env.SEED, (err, decode) => {
+//     if (err) {
+//       res.status(500).send({
+//         message: "Some error occurred while creating the userTypeCompanyUser.",
+//       });
+//     }
 
-//         res.json({
-//             status: true,
-//             user: data,
+//     req.usuario = decode.usuario;
+//     idsysuserjwt = decode.user.idsysuser;
+//     userRole_iduserRolejwt = decode.user.userRole_iduserRole;
+//   });
 
-//         });
+//   const user = {
+//     idsysuser: req.body.idsysuser,
+//     userName: req.body.userName,
+//     userLastName: req.body.userLastName,
+//     email: req.body.email,
+//   };
 
+//   if (userRole_iduserRolejwt == 2) {
+//     user.idsysuser = req.body.idsysuser;
+//     user.userRole_iduserRole = req.body.userRole_iduserRole;
+//   } else {
+//     user.idsysuser = idsysuserjwt;
+//   }
+
+//   sysUser.updateUser(user, (err, data) => {
+//     res.json({
+//       status: true,
+//       user: data,
 //     });
-
+//   });
 // };
 
-// exports.inactiveUserById = (req, res, next) => {
-//     User.inactiveUserById(req.body, (err, data) => {
+// exports.getUserById = (req, res) => {
+//   // Validate request
 
-//         res.json({
-//             status: true,
-//             user: data,
-
-//         });
-
+//   if (!req.body) {
+//     res.status(400).json({
+//       status: "error",
+//       error: "tbl_user_type_description Content can not be empty!",
 //     });
-// };
+//     return;
+//   }
 
-// exports.getUserByCompanyId = (req, res, next) => {
-//     User.getUserByCompanyId(req.body, (err, data) => {
+//   // Create a Customer
+//   const user = new User({
+//     iduser: req.body.iduser,
+//   });
 
-//         res.json({
-//             status: true,
-//             data
+//   User.getUserById(user, (err, data) => {
+//     if (err)
+//       res.status(500).send({
+//         message:
+//           err.message ||
+//           "Some error occurred while creating the userTypeCompanyUser.",
+//       });
+//     else {
+//       // let token = jwt.sign({
+//       //     user: user,
+//       // }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN });
 
-//         });
+//       // res.setHeader('token', token);
 
-//     });
-// };
-
-// exports.getProjectUserById = (req, res, next) => {
-//     User.getProjectUserById(req.body, (err, data) => {
-
-//         res.json({
-//             status: true,
-//             data
-
-//         });
-
-//     });
-// };
-
-// exports.filterUsers = (req, res, next) => {
-//     const filtros = ({
-//         idcompany: req.body.idcompany,
-//         idrol:req.body.idrol
-
-//     });
-
-//     User.filterUsers(filtros, (err, data) => {
-
-//         if (err)
-//             res.status(500).send({
-//                 message: err.message || "Some error occurred while creating the userTypeCompanyUser."
-//             });
-//         else {
-
-//             res.json({
-//                 status: true,
-//                 data
-//             });
-//         }
-
-//     });
-
+//       res.json({
+//         status: true,
+//         data,
+//       });
+//     }
+//   });
 // };

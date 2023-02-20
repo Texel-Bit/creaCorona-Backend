@@ -1,14 +1,17 @@
-// const express = require('express')
-// const company = require("../controllers/company");
-
-// // const bcrypt = require('bcrypt');
-// const _ = require('underscore');
-
-// const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacion');
-// const app = express()
+const express = require('express')
+const company = require("../controllers/company");
 
 
 
+const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacion');
+const app = express()
+
+app.post("/company/createCompany",[verificaToken,verificaAdminRol], company.createCompany);
+
+
+
+
+//sin uso
 
 
 // app.get("/company/getAllCompany",[verificaToken,verificaAdminRol], company.getAllCompany);

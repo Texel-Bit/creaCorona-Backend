@@ -1,6 +1,4 @@
-//
-//verificar token
-//
+
 const jwt = require('jsonwebtoken');
 let verificaToken = (req, res, next) => {
     let token = req.get('JWT');
@@ -23,34 +21,35 @@ let verificaToken = (req, res, next) => {
 };
 
 
-//verifica admin rol
-let verificaAdminRol = (req, res, next) => {
-    let token = req.get('JWT');
-    var user;
+
+// Se define una función middleware para verificar el rol de administrador
+const verificaAdminRol = (req, res, next) => {
+    const token = req.get('JWT');
+    
+    // Se verifica el token
     jwt.verify(token, process.env.SEED, (err, decode) => {
         if (err) {
             return res.status(401).json({
                 status: false,
-message:'El usuario debe ser adminsitrador'
+                message: 'Token no válido'
             });
         }
-         user = decode.user;
+        
+        const user = decode.user;
 
+        // Se verifica el rol del usuario
+        if (user.userRole_iduserRole == 1) {
+            next();
+        } else {
+            return res.json({
+                status: false,
+                message: 'El usuario no es administrador'
+            });
+        }
     });
-
-
-
-    if (user.userRole_iduserRole == 1)  {
-
-        next();
-        return;
-    } else {
-        return res.json({
-            status: false,
-            message: 'El usuario no es administrador'
-        });
-    }
 };
+
+
 
 let verificaTokenImg = (req, res, next) => {
 
