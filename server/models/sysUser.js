@@ -12,38 +12,40 @@ const createUser = async (data, resultado) => {
     delete result.password
 delete result.tempPassword
 delete result.tempPasswordExpDate
-    resultado(null, { result });
+return result
   } catch (e) {
 
-    console.log(e);
-    await prisma.$disconnect();
 
-    resultado(e, null);
+    return e
+  }finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
   }
 };
 
-const findOneLoginByEmail = async ({ email }, resultado) => {
-
-
+// Esta función recibe un objeto que contiene un email y retorna una promesa con el resultado
+const findOneLoginByEmail = async ({ email }) => {
   try {
+    // Realizamos una búsqueda en la tabla sysUser de la base de datos con el email proporcionado
     const result = await prisma.sysUser.findMany({
       where: {
-               
-            email: {
-                equals: email,
-            },
-            
+        email: {
+          equals: email,
+        },
       },
     });
-    await prisma.$disconnect();
 
-    resultado(null,  result );
-  } catch (e) {
-    await prisma.$disconnect();
 
-    resultado(e, null);
+    // Devolvemos el resultado de la búsqueda
+    return result;
+  } catch (error) {
+    
+  }finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
   }
 };
+
 
 
 const recoverPassword = async ({ email, tempPassword,tempPasswordExpDate }, resultado) => {
@@ -62,15 +64,15 @@ const recoverPassword = async ({ email, tempPassword,tempPasswordExpDate }, resu
       },
       
     });
-    await prisma.$disconnect();
 
-    resultado(null,  result );
+    return result;
   } catch (e) {
 
-    console.log(e);
-    await prisma.$disconnect();
 
     resultado(e, null);
+  }finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
   }
 };
 
@@ -78,6 +80,7 @@ const recoverPassword = async ({ email, tempPassword,tempPasswordExpDate }, resu
 const changePassword = async ({ idsysuser, password }, resultado) => {
 
   try {
+    // Llamada a Prisma para actualizar la contraseña del usuario
     const result = await prisma.sysUser.updateMany({
       where: {
         idsysuser
@@ -89,62 +92,65 @@ const changePassword = async ({ idsysuser, password }, resultado) => {
       },
       
     });
-    await prisma.$disconnect();
-console.log(result);
-    resultado(null,  result );
-  } catch (e) {
 
-    console.log(e);
-    await prisma.$disconnect();
+    // Se devuelve el resultado exitoso
+return result  } catch (e) {
 
-    resultado(e, null);
+    // Se devuelve el error
+    return e
+  }finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
   }
 };
 
-const getAllUsers = async (resultado) => {
 
+// Función asincrónica que obtiene todos los usuarios de la base de datos
+const getAllUsers = async () => {
   try {
-    const result = await prisma.sysUser.findMany({
+    // Se llama a Prisma para buscar todos los usuarios
+    const result = await prisma.sysUser.findMany();
     
-      
-    });
-    await prisma.$disconnect();
-console.log(result);
-    resultado(null,  result );
+    // Se cierra la conexión a Prisma
+
+    // Se devuelve el resultado exitoso
+    return result;
   } catch (e) {
-
-    console.log(e);
+    // En caso de error, se cierra la conexión a Prisma
+    
+    // Se devuelve el error
+    throw e;
+  }finally {
+    // Siempre desconectar la base de datos después de la operación
     await prisma.$disconnect();
-
-    resultado(e, null);
   }
 };
 
-const updateStatusByIdUser = async (data, resultado) => {
+const updateUser = async (data, resultado) => {
+  // Extraer idsysuser de data
+  const { idsysuser, ...updateData } = data;
 
-
-let idsysuser=data.idsysuser;
-delete data.idsysuser
   try {
+    // Actualizar usuario en la base de datos
     const result = await prisma.sysUser.update({
-      where: {
-        idsysuser
-     },
-      data
-      
+      where: { idsysuser },
+      data: updateData
     });
-    await prisma.$disconnect();
-    resultado(null,  result );
+
+    // Llamar a la función de devolución de llamada con el resultado exitoso
+    resultado(null, result);
   } catch (e) {
-
+    // Capturar excepción y llamar a la función de devolución de llamada con el error
     console.log(e);
-    await prisma.$disconnect();
-
     resultado(e, null);
+  } finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
   }
 };
 
 
 
 
-module.exports = { createUser, findOneLoginByEmail,recoverPassword,changePassword,getAllUsers,updateStatusByIdUser };
+
+module.exports = { createUser, findOneLoginByEmail,recoverPassword,changePassword,getAllUsers,updateUser };
