@@ -21,8 +21,32 @@ const createCompany = async (data) => {
   };
 
 
+  const updateCompany = async (data,resultado) => {
 
-module.exports = { createCompany };
+ // Extraer idsysuser de data
+ const { idCompany, ...updateData } = data;
+
+
+ try {
+   // Actualizar usuario en la base de datos
+   const result = await prisma.company.update({
+     where: { idCompany },
+     data: updateData
+   });
+
+   // Llamar a la función de devolución de llamada con el resultado exitoso
+   resultado(null, result);
+ } catch (e) {
+   // Capturar excepción y llamar a la función de devolución de llamada con el error
+   console.log(e);
+   resultado(e, null);
+ } finally {
+   // Siempre desconectar la base de datos después de la operación
+   await prisma.$disconnect();
+ }
+};
+
+module.exports = { createCompany,updateCompany };
 
 
 // Company.createCompany = (newCompany, result) => {

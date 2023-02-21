@@ -1,0 +1,33 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Mi API",
+    "description": "Una descripción de mi API",
+    "version": "1.0.0"
+  },
+  "basePath": "/",
+  "paths": {
+    "/hola": {
+      "get": {
+        "description": "Devuelve un saludo",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensaje": {
+                  "type": "string",
+                  "description": "El mensaje de saludo"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

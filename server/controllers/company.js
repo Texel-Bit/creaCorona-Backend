@@ -1,5 +1,5 @@
 const {
-    createCompany,
+    createCompany,updateCompany
   
   } = require("../models/company");
   
@@ -23,17 +23,14 @@ exports.createCompany = async(req, res) => {
       }
 
    
-      // Actualizar contraseña en la base de datos
       const createdCompany = await createCompany(data);
 
-      // Devolver respuesta con datos actualizados
       res.json({
         status: true,
         data: createdCompany,
       });
     } catch (error) {
   
-      // Devolver respuesta con error si falla
       return res.status(400).json({
         ok: false,
         err: {
@@ -44,7 +41,49 @@ exports.createCompany = async(req, res) => {
   };
 
 
+  exports.updateCompany =async (req, res, next) => {
+    // Desestructurar los campos del cuerpo de la petición
+    const {idCompany, CompanyName, CompanyAddress, CompanyImagePath, CompanyNIT, CompanyPhone, idcompanyStatus, idCompanyRole } = req.body
+  
+    // Verificar si el cuerpo de la petición existe
+    if (!req.body) {
+      return res.status(400).json({
+        status: false,
+        error: "error",
+      });
+    }
+  
+    const  data= {
+      idCompany:+idCompany,
+      CompanyName,
+      CompanyAddress,
+      CompanyImagePath,
+      CompanyNIT,
+      CompanyPhone,
+      companyStatus:{ connect: { idcompanyStatus: +idcompanyStatus } },
+      CompanyRole:{ connect: { idCompanyRole: +idCompanyRole } },
+    }
 
+  
+    // Actualizar el usuario
+    updateCompany(data, (err, result) => {
+      if (err) {
+        // Enviar un error si la actualización falla
+        return res.status(500).json({
+          status: false,
+          error: err,
+        });
+      }
+      
+  
+  
+      // Enviar el resultado de la actualización al cliente
+      res.json({
+        status: true,
+        user: result,
+      });
+    });
+  };
 //sin uso
 
 

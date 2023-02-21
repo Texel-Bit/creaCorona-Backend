@@ -7,6 +7,10 @@ const fileUpload = require('express-fileupload');
 const https = require('https');
 const fs = require('fs');
 const app = express();
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Middleware
 app.use(cors());
