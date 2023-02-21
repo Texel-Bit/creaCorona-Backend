@@ -1,9 +1,9 @@
-const sql = require("./db.js");
+// const sql = require("./db.js");
 const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-const createUser = async (data, resultado) => {
+const createUser = async (data) => {
   try {
     const result = await prisma.sysUser.create({
       data,
@@ -150,7 +150,32 @@ const updateUser = async (data, resultado) => {
 };
 
 
+const updateUserStatus = async (data, resultado) => {
+  // Extraer idsysuser de data
+  const { idsysuser, ...updateData } = data;
+
+
+  try {
+    // Actualizar usuario en la base de datos
+    const result = await prisma.sysUser.update({
+      where: { idsysuser },
+      data: updateData
+    });
+
+    // Llamar a la función de devolución de llamada con el resultado exitoso
+    resultado(null, result);
+  } catch (e) {
+    // Capturar excepción y llamar a la función de devolución de llamada con el error
+    console.log(e);
+    resultado(e, null);
+  } finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
+  }
+};
 
 
 
-module.exports = { createUser, findOneLoginByEmail,recoverPassword,changePassword,getAllUsers,updateUser };
+
+
+module.exports = { createUser, findOneLoginByEmail,recoverPassword,changePassword,getAllUsers,updateUser,updateUserStatus };

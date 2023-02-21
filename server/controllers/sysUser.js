@@ -5,6 +5,7 @@ const {
   changePassword,
   getAllUsers,
   updateUser,
+  updateUserStatus
 } = require("../models/sysUser");
 const randompassword = require("secure-random-password");
 const { promisify } = require('util');
@@ -365,43 +366,45 @@ exports.updateUser = (req, res, next) => {
 
 //Sin uso
 
-// exports.updateUser = (req, res, next) => {
-//   let token = req.get("JWT");
+exports.updateUserStatus = (req, res, next) => {
+  // Desestructurar los campos del cuerpo de la petición
+  const { idsysuser, iduserStatus } = req.body;
 
-//   jwt.verify(token, process.env.SEED, (err, decode) => {
-//     if (err) {
-//       res.status(500).send({
-//         message: "Some error occurred while creating the userTypeCompanyUser.",
-//       });
-//     }
+  // Verificar si el cuerpo de la petición existe
+  if (!req.body) {
+    return res.status(400).json({
+      status: false,
+      error: "error",
+    });
+  }
 
-//     req.usuario = decode.usuario;
-//     idsysuserjwt = decode.user.idsysuser;
-//     userRole_iduserRolejwt = decode.user.userRole_iduserRole;
-//   });
+  // Crear el objeto de datos para actualizar el usuario
+  const data = {
+    idsysuser:+idsysuser,
+    userStatus: { connect: { iduserStatus: +iduserStatus } }
 
-//   const user = {
-//     idsysuser: req.body.idsysuser,
-//     userName: req.body.userName,
-//     userLastName: req.body.userLastName,
-//     email: req.body.email,
-//   };
+  };
 
-//   if (userRole_iduserRolejwt == 2) {
-//     user.idsysuser = req.body.idsysuser;
-//     user.userRole_iduserRole = req.body.userRole_iduserRole;
-//   } else {
-//     user.idsysuser = idsysuserjwt;
-//   }
 
-//   sysUser.updateUser(user, (err, data) => {
-//     res.json({
-//       status: true,
-//       user: data,
-//     });
-//   });
-// };
+  // Actualizar el usuario
+  updateUserStatus(data, (err, result) => {
+    if (err) {
+      // Enviar un error si la actualización falla
+      return res.status(500).json({
+        status: false,
+        error: err,
+      });
+    }
+    
 
+
+    // Enviar el resultado de la actualización al cliente
+    res.json({
+      status: true,
+      user: result,
+    });
+  });
+};
 // exports.getUserById = (req, res) => {
 //   // Validate request
 

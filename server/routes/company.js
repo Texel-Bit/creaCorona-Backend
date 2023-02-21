@@ -1,29 +1,19 @@
-const express = require('express')
-const company = require("../controllers/company");
+// Importa Express
+const express = require('express');
 
+// Crea una instancia de Router de Express
+const app = express.Router();
 
+// Importa los controladores que manejan las peticiones a las rutas
+const { createCompany} = require('../controllers/company');
 
+// Importa los middlewares que se utilizan en las rutas
 const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacion');
-const app = express()
 
-app.post("/company/createCompany",[verificaToken,verificaAdminRol], company.createCompany);
-
-
+// Define las rutas con los controladores correspondientes y los middlewares necesarios
+app.post('/createCompany', [verificaToken, verificaAdminRol], createCompany);
 
 
-//sin uso
-
-
-// app.get("/company/getAllCompany",[verificaToken,verificaAdminRol], company.getAllCompany);
-
-// app.get("/company/getAllCompanybyBrands",[verificaToken,verificaAdminRol], company.getAllCompanybyBrands);
-
-// app.post("/company/createCompany",[verificaToken,verificaAdminRol], company.createCompany);
-// app.post("/company/getCompanyById", [verificaToken,verificaAdminRol],company.getCompanyById);
-// app.post("/company/updateInfoCompanyById",[verificaToken,verificaAdminRol], company.updateInfoCompanyById);
-// app.post("/company/activeCompanyById", [verificaToken,verificaAdminRol],company.activeCompanyById);
-// app.post("/company/inactiveCompanyById",[verificaToken,verificaAdminRol] ,company.inactiveCompanyById);
-// app.post("/company/filterCompanies",[verificaToken,verificaAdminRol] ,company.filterCompanies);
-// app.post("/company/getBrandsByCompany",[verificaToken,verificaAdminRol], company.getBrandsByCompany);
-
-// module.exports = app;
+ 
+// Exporta el Router de Express
+module.exports = app;
