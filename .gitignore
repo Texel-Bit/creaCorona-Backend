@@ -1,4 +1,4 @@
 node_moddules/
 node_modules
-server/server.js
+# server/server.js
 uploads/
