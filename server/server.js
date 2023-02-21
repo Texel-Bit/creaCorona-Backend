@@ -40,6 +40,6 @@ const options = {
   ca: fs.readFileSync('/etc/letsencrypt/live/corona.texelbit.com/chain.pem')
 };
 
-https.createServer(options, app).listen(process.env.HTTPS_PORT, () => {
-  console.log(`My HTTPS server listening on port ${process.env.HTTPS_PORT}...`);
+https.createServer(options, app).listen(process.env.PORT, () => {
+  console.log(`My HTTPS server listening on port ${process.env.PORT}...`);
 });
