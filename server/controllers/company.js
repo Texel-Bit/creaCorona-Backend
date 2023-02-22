@@ -65,10 +65,8 @@ exports.createCompany = async(req, res) => {
     }
 
   
-    // Actualizar el usuario
     updateCompany(data, (err, result) => {
       if (err) {
-        // Enviar un error si la actualización falla
         return res.status(500).json({
           status: false,
           error: err,
@@ -77,7 +75,6 @@ exports.createCompany = async(req, res) => {
       
   
   
-      // Enviar el resultado de la actualización al cliente
       res.json({
         status: true,
         user: result,

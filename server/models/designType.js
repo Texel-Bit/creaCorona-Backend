@@ -2,10 +2,10 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 
-const createCompany = async (data) => {
+const createDesignType = async (data) => {
 
     try {
-      const result =  await prisma.company.create({
+      const result =  await prisma.designType.create({
         data
       })
 
@@ -21,15 +21,15 @@ const createCompany = async (data) => {
   };
 
 
-  const updateCompany = async (data,resultado) => {
+  const updateDesignType = async (data,resultado) => {
 
- const { idCompany, ...updateData } = data;
+ const { idDesignType, ...updateData } = data;
 
 
  try {
    // Actualizar usuario en la base de datos
-   const result = await prisma.company.update({
-     where: { idCompany },
+   const result = await prisma.designType.update({
+     where: { idDesignType },
      data: updateData
    });
 
@@ -45,5 +45,5 @@ const createCompany = async (data) => {
  }
 };
 
-module.exports = { createCompany,updateCompany };
+module.exports = { createDesignType,updateDesignType };
 

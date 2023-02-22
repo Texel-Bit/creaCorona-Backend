@@ -2,16 +2,15 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 
-const createCompany = async (data) => {
+const createBrecha = async (data) => {
 
     try {
-      const result =  await prisma.company.create({
+      const result =  await prisma.brecha.create({
         data
       })
 
   return result
     } catch (e) {
-  console.log(e);
   
       return e
     }finally {
@@ -21,15 +20,15 @@ const createCompany = async (data) => {
   };
 
 
-  const updateCompany = async (data,resultado) => {
+  const updateBrecha = async (data,resultado) => {
 
- const { idCompany, ...updateData } = data;
+ const { idbrecha, ...updateData } = data;
 
 
  try {
    // Actualizar usuario en la base de datos
-   const result = await prisma.company.update({
-     where: { idCompany },
+   const result = await prisma.brecha.update({
+     where: { idbrecha },
      data: updateData
    });
 
@@ -37,7 +36,6 @@ const createCompany = async (data) => {
    resultado(null, result);
  } catch (e) {
    // Capturar excepción y llamar a la función de devolución de llamada con el error
-   console.log(e);
    resultado(e, null);
  } finally {
    // Siempre desconectar la base de datos después de la operación
@@ -45,5 +43,5 @@ const createCompany = async (data) => {
  }
 };
 
-module.exports = { createCompany,updateCompany };
+module.exports = { createBrecha,updateBrecha };
 
