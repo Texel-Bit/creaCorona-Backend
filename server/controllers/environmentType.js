@@ -1,5 +1,5 @@
 const {
-  createEnvironmentType,updateEnvironmentType
+  createEnvironmentType,updateEnvironmentType, getAllEnvironmentType
   
   } = require("../models/environmentType");
   
@@ -72,6 +72,25 @@ exports.createEnvironmentType = async(req, res) => {
         user: result,
       });
     });
+  };
+
+  exports.getAllEnvironmentType  = async (req, res) => {
+    try {
+      const allEnvironmentType = await getAllEnvironmentType();
+  
+   
+  
+      // Enviar la respuesta con los usuarios
+      res.json({
+        status: true,
+        data: allEnvironmentType,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({
+        message: 'No se pudo obtener las EnvironmentType',
+      });
+    }
   };
 //sin uso
 

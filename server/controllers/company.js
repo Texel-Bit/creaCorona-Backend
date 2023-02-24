@@ -1,5 +1,5 @@
 const {
-    createCompany,updateCompany
+    createCompany,updateCompany,getAllCompany
   
   } = require("../models/company");
   
@@ -81,5 +81,25 @@ exports.createCompany = async(req, res) => {
       });
     });
   };
-//sin uso
+
+  
+  exports.getAllCompany = async (req, res) => {
+    try {
+      // Obtener todos los usuarios desde la base de datos
+      const allCompany = await getAllCompany();
+  
+   
+  
+      // Enviar la respuesta con los usuarios
+      res.json({
+        status: true,
+        data: allCompany,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({
+        message: 'No se pudo obtener las compañias',
+      });
+    }
+  };
 

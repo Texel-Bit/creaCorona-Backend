@@ -1,5 +1,5 @@
 const {
-    createBrecha,updateBrecha
+    createBrecha,updateBrecha,getAllBrecha
   
   } = require("../models/brecha");
   
@@ -77,4 +77,24 @@ exports.createBrecha = async(req, res) => {
     });
   };
   
+
+  exports.getAllBrecha = async (req, res) => {
+    try {
+      // Obtener todos los usuarios desde la base de datos
+      const allBrecha = await getAllBrecha();
+  
+   
+  
+      // Enviar la respuesta con los usuarios
+      res.json({
+        status: true,
+        data: allBrecha,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({
+        message: 'No se pudo obtener las brechas',
+      });
+    }
+  };
 //sin uso

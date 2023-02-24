@@ -5,7 +5,7 @@ const express = require('express');
 const app = express.Router();
 
 // Importa los controladores que manejan las peticiones a las rutas
-const { createDesignColors,updateDesignColors} = require('../controllers/designColors');
+const { createDesignColors,updateDesignColors,getAllDesignColors} = require('../controllers/designColors');
 
 // Importa los middlewares que se utilizan en las rutas
 const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacion');
@@ -13,6 +13,7 @@ const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacio
 // Define las rutas con los controladores correspondientes y los middlewares necesarios
 app.post('/createDesignColors', [verificaToken, verificaAdminRol], createDesignColors);
 app.post('/updateDesignColors', [verificaToken, verificaAdminRol], updateDesignColors);
+app.get('/getAllDesignColors', [verificaToken, verificaAdminRol], getAllDesignColors);
 
 
  

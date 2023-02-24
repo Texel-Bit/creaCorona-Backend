@@ -43,5 +43,26 @@ const createBrecha = async (data) => {
  }
 };
 
-module.exports = { createBrecha,updateBrecha };
+const getAllBrecha = async () => {
+  try {
+    // Se llama a Prisma para buscar todos los usuarios
+    const result = await prisma.brecha.findMany();
+    
+    // Se cierra la conexión a Prisma
+
+    // Se devuelve el resultado exitoso
+    return result;
+  } catch (e) {
+    // En caso de error, se cierra la conexión a Prisma
+    
+    // Se devuelve el error
+    throw e;
+  }finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
+  }
+};
+
+
+module.exports = { createBrecha,updateBrecha,getAllBrecha };
 

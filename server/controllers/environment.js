@@ -1,5 +1,5 @@
 const {
-  createEnvironment,updateEnvironment
+  createEnvironment,updateEnvironment, getAllEnvironment
   
   } = require("../models/environment");
   
@@ -70,6 +70,25 @@ exports.createEnvironment = async(req, res) => {
         user: result,
       });
     });
+  };
+
+  exports.getAllEnvironment  = async (req, res) => {
+    try {
+      const allEnvironment  = await getAllEnvironment();
+  
+   
+  
+      // Enviar la respuesta con los usuarios
+      res.json({
+        status: true,
+        data: allEnvironment,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({
+        message: 'No se pudo obtener las Environment',
+      });
+    }
   };
 //sin uso
 

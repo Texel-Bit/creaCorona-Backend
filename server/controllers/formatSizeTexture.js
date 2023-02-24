@@ -1,5 +1,5 @@
 const {
-  createFormatSizeTexture,updateFormatSizeTexture
+  createFormatSizeTexture,updateFormatSizeTexture, getAllFormatSizeTexture
   
   } = require("../models/formatSizeTexture");
   
@@ -72,6 +72,25 @@ exports.createFormatSizeTexture = async(req, res) => {
         user: result,
       });
     });
+  };
+
+  exports.getAllFormatSizeTexture  = async (req, res) => {
+    try {
+      const allFormatSizeTexture  = await getAllFormatSizeTexture();
+  
+   
+  
+      // Enviar la respuesta con los usuarios
+      res.json({
+        status: true,
+        data: allFormatSizeTexture,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({
+        message: 'No se pudo obtener las allFormatSizeTexture',
+      });
+    }
   };
 //sin uso
 

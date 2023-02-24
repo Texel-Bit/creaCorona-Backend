@@ -1,5 +1,5 @@
 const {
-  createDesign,updateDesign
+  createDesign,updateDesign, getAllDesign
   
   } = require("../models/design");
   
@@ -74,6 +74,26 @@ exports.createDesign = async(req, res) => {
         user: result,
       });
     });
+  };
+
+  exports.getAllDesign  = async (req, res) => {
+    try {
+      // Obtener todos los usuarios desde la base de datos
+      const allDesign  = await getAllDesign();
+  
+   
+  
+      // Enviar la respuesta con los usuarios
+      res.json({
+        status: true,
+        data: allDesign,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({
+        message: 'No se pudo obtener las Design',
+      });
+    }
   };
 //sin uso
 

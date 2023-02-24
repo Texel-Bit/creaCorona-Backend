@@ -1,5 +1,5 @@
 const {
-    createDesignTypeFormatSize,updateDesignTypeFormatSize
+    createDesignTypeFormatSize,updateDesignTypeFormatSize, getAllDesignTypeFormatSize
   
   } = require("../models/designTypeFormatSize");
   
@@ -73,6 +73,25 @@ exports.createDesignTypeFormatSize = async(req, res) => {
         user: result,
       });
     });
+  };
+
+  exports.getAllDesignTypeFormatSize  = async (req, res) => {
+    try {
+      const allDesignTypeFormatSize  = await getAllDesignTypeFormatSize();
+  
+   
+  
+      // Enviar la respuesta con los usuarios
+      res.json({
+        status: true,
+        data: allDesignTypeFormatSize,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({
+        message: 'No se pudo obtener las Design type format size',
+      });
+    }
   };
 //sin uso
 

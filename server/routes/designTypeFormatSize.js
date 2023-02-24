@@ -5,7 +5,7 @@ const express = require('express');
 const app = express.Router();
 
 // Importa los controladores que manejan las peticiones a las rutas
-const { createDesignTypeFormatSize,updateDesignTypeFormatSize} = require('../controllers/designTypeFormatSize');
+const { createDesignTypeFormatSize,updateDesignTypeFormatSize,getAllDesignTypeFormatSize} = require('../controllers/designTypeFormatSize');
 
 // Importa los middlewares que se utilizan en las rutas
 const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacion');
@@ -13,6 +13,7 @@ const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacio
 // Define las rutas con los controladores correspondientes y los middlewares necesarios
 app.post('/createDesignTypeFormatSize', [verificaToken, verificaAdminRol], createDesignTypeFormatSize);
 app.post('/updateDesignTypeFormatSize', [verificaToken, verificaAdminRol], updateDesignTypeFormatSize);
+app.get('/getAllDesignTypeFormatSize', [verificaToken, verificaAdminRol], getAllDesignTypeFormatSize);
 
 
  

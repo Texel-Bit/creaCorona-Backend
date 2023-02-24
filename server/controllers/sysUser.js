@@ -14,7 +14,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const date = require("date-and-time");
 const emailSend = require("../helpers/email");
-const { result } = require("underscore");
 const hashRounds = 15;
 
 exports.recoverPassword = async (req, res) => {

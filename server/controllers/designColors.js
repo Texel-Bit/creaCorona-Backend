@@ -1,5 +1,5 @@
 const {
-    createDesignColors,updateDesignColors
+    createDesignColors,updateDesignColors, getAllDesignColors
   
   } = require("../models/designColors");
   
@@ -72,6 +72,26 @@ exports.createDesignColors = async(req, res) => {
         user: result,
       });
     });
+  };
+
+  exports.getAllDesignColors  = async (req, res) => {
+    try {
+      // Obtener todos los usuarios desde la base de datos
+      const allDesignColors  = await getAllDesignColors();
+  
+   
+  
+      // Enviar la respuesta con los usuarios
+      res.json({
+        status: true,
+        data: allDesignColors,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({
+        message: 'No se pudo obtener las Design colors',
+      });
+    }
   };
 //sin uso
 

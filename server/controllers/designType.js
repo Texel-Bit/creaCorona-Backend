@@ -1,5 +1,5 @@
 const {
-    createDesignType,updateDesignType
+    createDesignType,updateDesignType, getAllDesignType
   
   } = require("../models/designType");
   
@@ -72,5 +72,24 @@ exports.createDesignType = async(req, res) => {
         user: result,
       });
     });
+  };
+
+  exports.getAllDesignType  = async (req, res) => {
+    try {
+      const allDesignType  = await getAllDesignType();
+  
+   
+  
+      // Enviar la respuesta con los usuarios
+      res.json({
+        status: true,
+        data: allDesignType,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({
+        message: 'No se pudo obtener las Design type',
+      });
+    }
   };
 //sin uso
