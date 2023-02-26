@@ -1,5 +1,5 @@
 const {
-  createEnvironment,updateEnvironment, getAllEnvironment
+  createEnvironment,updateEnvironment, getAllEnvironment, getEnvironmentById
   
   } = require("../models/environment");
   
@@ -11,10 +11,17 @@ const {
 exports.createEnvironment = async(req, res) => {
 
     try {
-    const { EnvironmentName,EnvironmentProfileImage ,idEnvironmentType,   } = req.body
+    const { EnvironmentName,idEnvironmentType,   } = req.body
+
+    const image = await subirArchivoImagen(
+      req.files,
+      ["jpg", "png", "jpeg"],
+      "uploads/Environment"
+    );
+  
   const  data= {
     EnvironmentName,
-    EnvironmentProfileImage,       
+    EnvironmentProfileImage:image,       
     EnvironmentType:{ connect: { idEnvironmentType: +idEnvironmentType } },
       }
 
@@ -43,8 +50,22 @@ exports.createEnvironment = async(req, res) => {
     const  data= {
       idEnvironment:+idEnvironment,
       EnvironmentName,
-      EnvironmentProfileImage,       
+             
       EnvironmentType:{ connect: { idEnvironmentType: +idEnvironmentType } },
+        }
+
+        if (req.files) {
+          const image = await subirArchivoImagen(
+            req.files,
+            ["jpg", "png", "jpeg"],
+            "uploads/Environment"
+          );
+      
+          const environment = await getEnvironmentById(data);
+      
+          const filePath = path.join(process.cwd(), environment.EnvironmentProfileImage);
+      
+          (data.EnvironmentProfileImage = image), fs.unlinkSync(filePath);
         }
     // Verificar si el cuerpo de la petición existe
     if (!req.body) {

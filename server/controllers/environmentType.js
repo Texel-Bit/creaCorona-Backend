@@ -11,10 +11,13 @@ const {
 exports.createEnvironmentType = async(req, res) => {
 
     try {
-    const { EnvironmentTypeName, EnvironmentTypeImage  } = req.body
+    const { EnvironmentTypeName  } = req.body
+
+    const image = await subirArchivoImagen(req.files, ["jpg", "png", "jpeg"], "uploads/EnvironmentType");
+
   const  data= {
     EnvironmentTypeName,
-    EnvironmentTypeImage,       
+    EnvironmentTypeImage:image,       
    
       }
 
@@ -55,7 +58,21 @@ exports.createEnvironmentType = async(req, res) => {
       EnvironmentTypeName,
       EnvironmentTypeImage,       
        }
-
+       if (req.files) {
+        const image = await subirArchivoImagen(
+          req.files,
+          ["jpg", "png", "jpeg"],
+          "uploads/EnvironmentType"
+        );
+  
+        const environmentType = await getAllEnvironmentType(data);
+  
+     
+        const filePath = path.join(process.cwd(), environmentType.EnvironmentTypeImage);
+  
+        
+        (data.EnvironmentTypeImage = image), fs.unlinkSync(filePath);
+      }
   
       updateEnvironmentType(data, (err, result) => {
       if (err) {

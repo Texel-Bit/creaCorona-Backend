@@ -2,10 +2,10 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 
-const createCompany = async (data) => {
+const createDesignCompany = async (data) => {
 
     try {
-      const result =  await prisma.company.create({
+      const result =  await prisma.designCompany.create({
         data
       })
 
@@ -21,35 +21,34 @@ const createCompany = async (data) => {
   };
 
 
-  const updateCompany = async (data) => {
+  const updateDesignCompany = async (data,resultado) => {
 
-
- const { idCompany, ...updateData } = data;
+ const { idDesignCompany, ...updateData } = data;
 
 
  try {
    // Actualizar usuario en la base de datos
-   const result = await prisma.company.update({
-     where: { idCompany },
+   const result = await prisma.designCompany.update({
+     where: { idDesignCompany },
      data: updateData
    });
+
    // Llamar a la función de devolución de llamada con el resultado exitoso
-   return result;
-  } catch (e) {
+   resultado(null, result);
+ } catch (e) {
    // Capturar excepción y llamar a la función de devolución de llamada con el error
    console.log(e);
-   throw e;
-  } finally {
+   resultado(e, null);
+ } finally {
    // Siempre desconectar la base de datos después de la operación
    await prisma.$disconnect();
  }
 };
 
-
-const getAllCompany= async () => {
+const getAllDesignCompany = async () => {
   try {
     // Se llama a Prisma para buscar todos las compañias
-    const result = await prisma.company.findMany();
+    const result = await prisma.designCompany.findMany();
     
     // Se cierra la conexión a Prisma
 
@@ -65,29 +64,5 @@ const getAllCompany= async () => {
     await prisma.$disconnect();
   }
 };
-
-
-const getCompanyById = async (data) => {
-
-  const { idCompany } = data;
- 
- 
-  try {
-    // Actualizar usuario en la base de datos
-    const result = await prisma.company.findUnique({
-      where: { idCompany },
-    });
- 
-    // Llamar a la función de devolución de llamada con el resultado exitoso
-    return result;
-  } catch (e) {
-    // Capturar excepción y llamar a la función de devolución de llamada con el error
-    throw e;
-
-  } finally {
-    // Siempre desconectar la base de datos después de la operación
-    await prisma.$disconnect();
-  }
- };
-module.exports = { createCompany,updateCompany,getAllCompany,getCompanyById };
+module.exports = { createDesignCompany,updateDesignCompany,getAllDesignCompany };
 

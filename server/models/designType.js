@@ -64,5 +64,29 @@ const getAllDesignType = async () => {
     await prisma.$disconnect();
   }
 };
-module.exports = { createDesignType,updateDesignType,getAllDesignType };
+
+
+const getDesignTypeById = async (data) => {
+
+  const { idDesignType } = data;
+ 
+ 
+  try {
+    // Actualizar usuario en la base de datos
+    const result = await prisma.designType.findUnique({
+      where: { idDesignType },
+    });
+ 
+    // Llamar a la función de devolución de llamada con el resultado exitoso
+    return result;
+  } catch (e) {
+    // Capturar excepción y llamar a la función de devolución de llamada con el error
+    throw e;
+
+  } finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
+  }
+ };
+module.exports = { createDesignType,updateDesignType,getAllDesignType,getDesignTypeById };
 

@@ -11,10 +11,13 @@ const {
 exports.createBrecha = async(req, res) => {
 
     try {
-    const { brechaName, brechaColorPath} = req.body
+    const { brechaName} = req.body
+    
+    const image = await subirArchivoImagen(req.files, ["jpg", "png", "jpeg"], "uploads/Design");
+
   const  data= {
     brechaName,
-    brechaColorPath,
+    brechaColorPath:image,
     
       }
 
@@ -48,6 +51,21 @@ exports.createBrecha = async(req, res) => {
         status: false,
         error: "error",
       });
+    }
+    if (req.files) {
+      const image = await subirArchivoImagen(
+        req.files,
+        ["jpg", "png", "jpeg"],
+        "uploads/Company"
+      );
+
+      const brecha = await getAllBrecha(data);
+
+   
+      const filePath = path.join(process.cwd(), brecha.brechaColorPath);
+
+      
+      (data.brechaColorPath = image), fs.unlinkSync(filePath);
     }
 
       const  data= {

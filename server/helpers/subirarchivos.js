@@ -52,12 +52,17 @@ const subirArchivoImagen = (files, extensionesValidas = ['jpg', 'png','jpeg'], c
         const nombreCortado = file.name.split('.');
         const extension = nombreCortado[nombreCortado.length - 1];
         // Validar la extension
+ 
         if (!extensionesValidas.includes(extension)) {
+
             return reject(`La extensión ${extension} no es permitida - ${extensionesValidas}`);
         }
 
 
+
         const nombreTemp = uuidv4() + '.' + extension;
+
+
 
 
         const uploadPath = path.join(carpeta, nombreTemp);

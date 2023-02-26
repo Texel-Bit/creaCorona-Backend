@@ -1,19 +1,22 @@
 const {
-  createDesign,updateDesign, getAllDesign
+  createDesign,updateDesign, getAllDesign, getDesignById
   
   } = require("../models/design");
-  
+  const { subirArchivoImagen } = require("../helpers/subirarchivos");
+
 
 
 
 
 
 exports.createDesign = async(req, res) => {
+  const image = await subirArchivoImagen(req.files, ["jpg", "png", "jpeg"], "uploads/Design");
+
 
     try {
-    const { DesignImagePath, DesignName,DesignSellPrice, idDesignType  } = req.body
+    const {  DesignName,DesignSellPrice, idDesignType  } = req.body
   const  data= {
-    DesignImagePath,
+    DesignImagePath:image,
     DesignName,       
     DesignSellPrice:+DesignSellPrice,
     DesignType:{ connect: { idDesignType: +idDesignType } },
@@ -40,7 +43,7 @@ exports.createDesign = async(req, res) => {
 
   exports.updateDesign =async (req, res, next) => {
     // Desestructurar los campos del cuerpo de la petición
-    const {idDesign, DesignImagePath, DesignName,DesignSellPrice, idDesignType  } = req.body
+    const {idDesign,  DesignName,DesignSellPrice, idDesignType  } = req.body
  
     // Verificar si el cuerpo de la petición existe
     if (!req.body) {
@@ -49,15 +52,32 @@ exports.createDesign = async(req, res) => {
         error: "error",
       });
     }
-  
     const  data= {
       idDesign:+idDesign,
-      DesignImagePath,
       DesignName,       
       DesignSellPrice:+DesignSellPrice,  
     
       DesignType:{ connect: { idDesignType: +idDesignType } },    }
 
+    
+      
+      if (req.files) {
+        const image = await subirArchivoImagen(
+          req.files,
+          ["jpg", "png", "jpeg"],
+          "uploads/Design"
+        );
+  
+        const design = await getDesignById(data);
+  
+     
+        const filePath = path.join(process.cwd(), design.DesignImagePath);
+  
+        
+        (data.DesignImagePath = image), fs.unlinkSync(filePath);
+      }
+ 
+    
   
       updateDesign(data, (err, result) => {
       if (err) {

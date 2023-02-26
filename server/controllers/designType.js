@@ -1,5 +1,5 @@
 const {
-    createDesignType,updateDesignType, getAllDesignType
+    createDesignType,updateDesignType, getAllDesignType, getDesignTypeById
   
   } = require("../models/designType");
   
@@ -11,10 +11,12 @@ const {
 exports.createDesignType = async(req, res) => {
 
     try {
-    const { DesignTypeName, DesignTypeIconPath} = req.body
+    const { DesignTypeName} = req.body
+    const image = await subirArchivoImagen(req.files, ["jpg", "png", "jpeg"], "uploads/DesignType");
+
   const  data= {
     DesignTypeName,
-    DesignTypeIconPath,
+    DesignTypeIconPath:image,
     
       }
 
@@ -39,7 +41,7 @@ exports.createDesignType = async(req, res) => {
 
   exports.updateDesignType =async (req, res, next) => {
     // Desestructurar los campos del cuerpo de la petición
-    const {idDesignType, DesignTypeName, DesignTypeIconPath} = req.body
+    const {idDesignType, DesignTypeName} = req.body
 
     // Verificar si el cuerpo de la petición existe
     if (!req.body) {
@@ -48,13 +50,26 @@ exports.createDesignType = async(req, res) => {
         error: "error",
       });
     }
-  
     const  data= {
-        idDesignType:+idDesignType,
-        DesignTypeName,
-        DesignTypeIconPath,
-    
+      idDesignType:+idDesignType,
+      DesignTypeName,
+  
+  }
+
+    if (req.files) {
+      const image = await subirArchivoImagen(
+        req.files,
+        ["jpg", "png", "jpeg"],
+        "uploads/DesignType"
+      );
+  
+      const designType = await getDesignTypeById(data);
+  
+      const filePath = path.join(process.cwd(), designType.DesignTypePath);
+  
+      (data.DesignTypePath = image), fs.unlinkSync(filePath);
     }
+  
 
   
     updateDesignType(data, (err, result) => {

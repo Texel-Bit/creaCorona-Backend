@@ -1,105 +1,137 @@
 const {
-    createCompany,updateCompany,getAllCompany
-  
-  } = require("../models/company");
-  
+  createCompany,
+  updateCompany,
+  getAllCompany,
+  getCompanyById,
+} = require("../models/company");
 
+const { subirArchivoImagen } = require("../helpers/subirarchivos");
 
+const fs = require("fs");
+const path = require("path");
 
+exports.createCompany = async (req, res) => {
+  const image = await subirArchivoImagen(
+    req.files,
+    ["jpg", "png", "jpeg"],
+    "uploads/Company"
+  );
 
-
-exports.createCompany = async(req, res) => {
-
-    try {
-    const { CompanyName, CompanyAddress, CompanyImagePath, CompanyNIT, CompanyPhone, idcompanyStatus, idCompanyRole } = req.body
-  const  data= {
-        CompanyName,
-        CompanyAddress,
-        CompanyImagePath,
-        CompanyNIT,
-        CompanyPhone,
-        companyStatus:{ connect: { idcompanyStatus: +idcompanyStatus } },
-        CompanyRole:{ connect: { idCompanyRole: +idCompanyRole } },
-      }
-
-   
-      const createdCompany = await createCompany(data);
-
-      res.json({
-        status: true,
-        data: createdCompany,
-      });
-    } catch (error) {
-  
-      return res.status(400).json({
-        ok: false,
-        err: {
-          message: 'No pudo ser creada la compañia',
-        },
-      });
-    }
-  };
-
-
-  exports.updateCompany =async (req, res, next) => {
-    // Desestructurar los campos del cuerpo de la petición
-    const {idCompany, CompanyName, CompanyAddress, CompanyImagePath, CompanyNIT, CompanyPhone, idcompanyStatus, idCompanyRole } = req.body
-  
-    // Verificar si el cuerpo de la petición existe
-    if (!req.body) {
-      return res.status(400).json({
-        status: false,
-        error: "error",
-      });
-    }
-  
-    const  data= {
-      idCompany:+idCompany,
+  try {
+    const {
       CompanyName,
       CompanyAddress,
-      CompanyImagePath,
       CompanyNIT,
       CompanyPhone,
-      companyStatus:{ connect: { idcompanyStatus: +idcompanyStatus } },
-      CompanyRole:{ connect: { idCompanyRole: +idCompanyRole } },
-    }
+      idcompanyStatus,
+      idCompanyRole,
+    } = req.body;
+    const data = {
+      CompanyName,
+      CompanyAddress,
+      CompanyImagePath: image,
+      CompanyNIT,
+      CompanyPhone,
+      companyStatus: { connect: { idcompanyStatus: +idcompanyStatus } },
+      CompanyRole: { connect: { idCompanyRole: +idCompanyRole } },
+    };
 
-  
-    updateCompany(data, (err, result) => {
-      if (err) {
-        return res.status(500).json({
-          status: false,
-          error: err,
-        });
-      }
-      
-  
-  
-      res.json({
-        status: true,
-        user: result,
-      });
+    const createdCompany = await createCompany(data);
+
+    res.json({
+      status: true,
+      data: createdCompany,
     });
-  };
+  } catch (error) {
+    return res.status(400).json({
+      ok: false,
+      err: {
+        message: "No pudo ser creada la compañia",
+      },
+    });
+  }
+};
 
-  
-  exports.getAllCompany = async (req, res) => {
-    try {
-      // Obtener todos los usuarios desde la base de datos
-      const allCompany = await getAllCompany();
-  
-   
-  
-      // Enviar la respuesta con los usuarios
-      res.json({
-        status: true,
-        data: allCompany,
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send({
-        message: 'No se pudo obtener las compañias',
+exports.updateCompany = async (req, res, next) => {
+  try {
+    const {
+      idCompany,
+      CompanyName,
+      CompanyAddress,
+      CompanyNIT,
+      CompanyPhone,
+      idcompanyStatus,
+      idCompanyRole,
+    } = req.body ?? {};
+
+    if (!idCompany) {
+      return res.status(400).json({
+        status: false,
+        error: "idCompany is required",
       });
     }
-  };
+    const data = {
+      idCompany: +idCompany,
+      CompanyName,
+      CompanyAddress,
+      CompanyNIT,
+      CompanyPhone,
+      companyStatus: { connect: { idcompanyStatus: +idcompanyStatus } },
+      CompanyRole: { connect: { idCompanyRole: +idCompanyRole } },
+    };
 
+
+    if (req.files) {
+      const image = await subirArchivoImagen(
+        req.files,
+        ["jpg", "png", "jpeg"],
+        "uploads/Company"
+      );
+
+      const company = await getCompanyById(data);
+
+   
+      const filePath = path.join(process.cwd(), company.CompanyImagePath);
+
+      
+      (data.CompanyImagePath = image), fs.unlinkSync(filePath);
+    }
+
+   
+
+    await updateCompany(data);
+
+    res.json({
+      status: true,
+    });
+  } catch (err) {
+    if (err.code === "ENOENT") {
+      return res.status(400).json({
+        status: false,
+        error: "File not found",
+      });
+    }
+    res.status(500).json({
+      status: false,
+      error: err.message,
+    });
+  }
+};
+
+exports.getAllCompany = async (req, res) => {
+  try {
+    // Obtener todos los usuarios desde la base de datos
+    const allCompany = await getAllCompany();
+
+    // Enviar la respuesta con los usuarios
+    res.json({
+      status: true,
+      data: allCompany,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      message: "No se pudo obtener las compañias",
+    });
+  }
+};

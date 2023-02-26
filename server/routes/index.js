@@ -9,6 +9,7 @@ const designRoutes = require('./design');
 const formatSizeTextureRoutes = require('./formatSizeTexture');
 const environmentTypeRoutes = require('./environmentType');
 const environmentRoutes = require('./environment');
+const designCompanyRoutes = require('./designCompany');
 
 
 
@@ -28,6 +29,7 @@ app.use('/formatSizeTexture',formatSizeTextureRoutes);
 app.use('/environmentType',environmentTypeRoutes);
 
 app.use('/environment',environmentRoutes);
+app.use('/designCompany',designCompanyRoutes);
 
 
 

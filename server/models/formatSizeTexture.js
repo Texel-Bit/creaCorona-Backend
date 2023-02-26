@@ -65,5 +65,28 @@ const getAllFormatSizeTexture = async () => {
   }
 };
 
-module.exports = { createFormatSizeTexture,updateFormatSizeTexture,getAllFormatSizeTexture };
+const getFormatSizeTextureById = async (data) => {
+
+  const { idFormatSizeTexture } = data;
+ 
+ 
+  try {
+    // Actualizar usuario en la base de datos
+    const result = await prisma.formatSizeTexture.findUnique({
+      where: { idFormatSizeTexture },
+    });
+ 
+    // Llamar a la función de devolución de llamada con el resultado exitoso
+    return result;
+  } catch (e) {
+    // Capturar excepción y llamar a la función de devolución de llamada con el error
+    throw e;
+
+  } finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
+  }
+ };
+
+module.exports = { createFormatSizeTexture,updateFormatSizeTexture,getAllFormatSizeTexture,getFormatSizeTextureById };
 

@@ -1,102 +1,100 @@
 const {
-    createDesignColors,updateDesignColors, getAllDesignColors
-  
-  } = require("../models/designColors");
-  
+  createDesignColors,
+  updateDesignColors,
+  getAllDesignColors,
+  getDesignColorsById,
+} = require("../models/designColors");
 
+exports.createDesignColors = async (req, res) => {
+  try {
+    const { DesignColorName,  idDesignType } = req.body;
 
+    const image = await subirArchivoImagen(req.files, ["jpg", "png", "jpeg"], "uploads/DesignColors");
 
+    const data = {
+      DesignColorName,
+      DesignColorPath:image,
+      DesignType: { connect: { idDesignType: +idDesignType } },
+    };
 
+    const createdDesignColors = await createDesignColors(data);
 
-exports.createDesignColors = async(req, res) => {
-
-    try {
-    const { DesignColorName, DesignColorPath, idDesignType  } = req.body
-  const  data= {
-    DesignColorName,
-    DesignColorPath,       
-    DesignType:{ connect: { idDesignType: +idDesignType } },
-      }
-
-   
-      const createdDesignColors = await createDesignColors(data);
-
-      res.json({
-        status: true,
-        data: createdDesignColors,
-      });
-    } catch (error) {
-  
-      return res.status(400).json({
-        status: false,
-        err: {
-          message: 'No pudo ser el color del diseño',
-        },
-      });
-    }
-  };
-
-
-  exports.updateDesignColors =async (req, res, next) => {
-    // Desestructurar los campos del cuerpo de la petición
-    const {idDesignColors,DesignColorName, DesignColorPath,  idDesignType,  } = req.body
-  
-    // Verificar si el cuerpo de la petición existe
-    if (!req.body) {
-      return res.status(400).json({
-        status: false,
-        error: "error",
-      });
-    }
-  
-    const  data= {
-        idDesignColors:+idDesignColors,
-        DesignColorName,
-        DesignColorPath,
-    
-      DesignType:{ connect: { idDesignType: +idDesignType } },    }
-
-  
-      updateDesignColors(data, (err, result) => {
-      if (err) {
-        return res.status(500).json({
-          status: false,
-          error: err,
-        });
-      }
-      
-  
-  
-      res.json({
-        status: true,
-        user: result,
-      });
+    res.json({
+      status: true,
+      data: createdDesignColors,
     });
+  } catch (error) {
+    return res.status(400).json({
+      status: false,
+      err: {
+        message: "No pudo ser el color del diseño",
+      },
+    });
+  }
+};
+
+exports.updateDesignColors = async (req, res, next) => {
+  // Desestructurar los campos del cuerpo de la petición
+  const { idDesignColors, DesignColorName, idDesignType } = req.body;
+
+  // Verificar si el cuerpo de la petición existe
+  if (!req.body) {
+    return res.status(400).json({
+      status: false,
+      error: "error",
+    });
+  }
+
+  const data = {
+    idDesignColors: +idDesignColors,
+    DesignColorName,
+
+    DesignType: { connect: { idDesignType: +idDesignType } },
   };
 
-  exports.getAllDesignColors  = async (req, res) => {
-    try {
-      // Obtener todos los usuarios desde la base de datos
-      const allDesignColors  = await getAllDesignColors();
-  
-   
-  
-      // Enviar la respuesta con los usuarios
-      res.json({
-        status: true,
-        data: allDesignColors,
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send({
-        message: 'No se pudo obtener las Design colors',
+  if (req.files) {
+    const image = await subirArchivoImagen(
+      req.files,
+      ["jpg", "png", "jpeg"],
+      "uploads/DesignColors"
+    );
+
+    const designColors = await getDesignColorsById(data);
+
+    const filePath = path.join(process.cwd(), designColors.DesignColorPath);
+
+    (data.DesignColorPath = image), fs.unlinkSync(filePath);
+  }
+  updateDesignColors(data, (err, result) => {
+    if (err) {
+      return res.status(500).json({
+        status: false,
+        error: err,
       });
     }
-  };
+
+    res.json({
+      status: true,
+      user: result,
+    });
+  });
+};
+
+exports.getAllDesignColors = async (req, res) => {
+  try {
+    // Obtener todos los usuarios desde la base de datos
+    const allDesignColors = await getAllDesignColors();
+
+    // Enviar la respuesta con los usuarios
+    res.json({
+      status: true,
+      data: allDesignColors,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      message: "No se pudo obtener las Design colors",
+    });
+  }
+};
 //sin uso
-
-
-
-
-
-
