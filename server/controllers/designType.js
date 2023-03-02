@@ -1,3 +1,4 @@
+const { subirArchivoImagen } = require("../helpers/subirarchivos");
 const {
     createDesignType,updateDesignType, getAllDesignType, getDesignTypeById
   
@@ -12,8 +13,24 @@ exports.createDesignType = async(req, res) => {
 
     try {
     const { DesignTypeName} = req.body
-    const image = await subirArchivoImagen(req.files, ["jpg", "png", "jpeg"], "uploads/DesignType");
 
+    if (!DesignTypeName) {
+      return res.status(400).json({
+        status: false,
+        err: {
+          message: "Datos de entrada incompletos",
+        },
+      });
+    }
+    const image = await subirArchivoImagen(req.files,  "uploads/DesignType");
+    if (!image) {
+      return res.status(400).json({
+        status: false,
+        err: {
+          message: "Error al subir la imagen",
+        },
+      });
+    }
   const  data= {
     DesignTypeName,
     DesignTypeIconPath:image,

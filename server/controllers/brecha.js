@@ -4,6 +4,7 @@ const {
   } = require("../models/brecha");
   
 
+  const { subirArchivoImagen } = require("../helpers/subirarchivos");
 
 
 
@@ -12,18 +13,37 @@ exports.createBrecha = async(req, res) => {
 
     try {
     const { brechaName} = req.body
-    
-    const image = await subirArchivoImagen(req.files, ["jpg", "png", "jpeg"], "uploads/Design");
+    if (!brechaName ) {
+      return res.status(400).json({
+        status: false,
+        err: {
+          message: "Datos de entrada incompletos",
+        },
+      });
+    }
 
+
+    const image = await subirArchivoImagen(req.files, "uploads/Brecha");
+    // Manejo de errores de subirArchivoImagen
+
+
+    if (!image) {
+      return res.status(400).json({
+        status: false,
+        err: {
+          message: "Error al subir la imagen",
+        },
+      });
+    }
   const  data= {
     brechaName,
     brechaColorPath:image,
     
       }
 
-   
       const createdBrecha = await createBrecha(data);
 
+      
       res.json({
         status: true,
         data: createdBrecha,
