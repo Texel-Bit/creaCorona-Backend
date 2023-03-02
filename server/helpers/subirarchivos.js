@@ -1,25 +1,15 @@
 
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
-const keyFilename = "client.json"; // Get this from Google Cloud -> Credentials -> Service Accounts
-const projectId = "mudi-view"; // Get this from Google Cloud
-const { Storage } = require('@google-cloud/storage');
-const { resolve } = require('path');
+
 const uuid = require('uuid');
 
 var fs = require('fs');
 
-const storage = new Storage({
-    keyFilename,
-    projectId
 
-});
-
-const bucketName = 'clientes-mudi-view';
 const subirArchivo = (files, extensionesValidas = ['xlsx'], carpeta = '') => {
     return new Promise((resolve, reject) => {
 
-        console.log(files);
         const file = files.files;
 
         const nombreCortado = file.name.split('.');
@@ -44,7 +34,7 @@ const subirArchivo = (files, extensionesValidas = ['xlsx'], carpeta = '') => {
 
 }
 
-const subirArchivoImagen = (files, extensionesValidas = ['jpg', 'png','jpeg'], carpeta = '') => {
+const subirArchivoImagen = (files, carpeta = '') => {
     return new Promise((resolve, reject) => {
 
         const file = files.files;
@@ -53,11 +43,7 @@ const subirArchivoImagen = (files, extensionesValidas = ['jpg', 'png','jpeg'], c
         const extension = nombreCortado[nombreCortado.length - 1];
         // Validar la extension
  
-        if (!extensionesValidas.includes(extension)) {
-
-            return reject(`La extensión ${extension} no es permitida - ${extensionesValidas}`);
-        }
-
+ 
 
 
         const nombreTemp = uuidv4() + '.' + extension;

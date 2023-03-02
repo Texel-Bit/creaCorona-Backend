@@ -20,7 +20,7 @@ const createDesign = async (data) => {
   };
 
 
-  const updateDesign= async (data,resultado) => {
+  const updateDesign= async (data) => {
 
  const { idDesign, ...updateData } = data;
 
@@ -33,13 +33,13 @@ const createDesign = async (data) => {
    });
 
    // Llamar a la función de devolución de llamada con el resultado exitoso
-   resultado(null, result);
- } catch (e) {
+   return result
+  } catch (e) {
 
   console.log(e);
    // Capturar excepción y llamar a la función de devolución de llamada con el error
-   resultado(e, null);
- } finally {
+   return e
+  } finally {
    // Siempre desconectar la base de datos después de la operación
    await prisma.$disconnect();
  }
@@ -65,10 +65,7 @@ const getAllDesign= async () => {
     await prisma.$disconnect();
   }
 };
-const getDesignById = async (data) => {
-
-  const { idDesign } = data;
- 
+const getDesignById = async (idDesign) => {
  
   try {
     // Actualizar usuario en la base de datos

@@ -9,9 +9,10 @@ const { createBrecha,updateBrecha,getAllBrecha} = require('../controllers/brecha
 
 // Importa los middlewares que se utilizan en las rutas
 const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacion');
+const { validarArchivoImagen } = require('../middlewares/validar-archivo');
 
 // Define las rutas con los controladores correspondientes y los middlewares necesarios
-app.post('/createBrecha', [verificaToken, verificaAdminRol], createBrecha);
+app.post('/createBrecha', [verificaToken, verificaAdminRol,validarArchivoImagen], createBrecha);
 app.post('/updateBrecha', [verificaToken, verificaAdminRol], updateBrecha);
 app.get('/getAllBrecha', [verificaToken, verificaAdminRol], getAllBrecha);
 

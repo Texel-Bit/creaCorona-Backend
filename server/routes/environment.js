@@ -9,9 +9,10 @@ const { createEnvironment,updateEnvironment,getAllEnvironment} = require('../con
 
 // Importa los middlewares que se utilizan en las rutas
 const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacion');
+const { validarArchivoImagen } = require('../middlewares/validar-archivo');
 
 // Define las rutas con los controladores correspondientes y los middlewares necesarios
-app.post('/createEnvironment', [verificaToken, verificaAdminRol], createEnvironment);
+app.post('/createEnvironment', [verificaToken, verificaAdminRol,validarArchivoImagen], createEnvironment);
 app.post('/updateEnvironment', [verificaToken, verificaAdminRol], updateEnvironment);
 app.get('/getAllEnvironment', [verificaToken, verificaAdminRol], getAllEnvironment);
 

@@ -9,9 +9,10 @@ const { createDesignType,updateDesignType,getAllDesignType} = require('../contro
 
 // Importa los middlewares que se utilizan en las rutas
 const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacion');
+const { validarArchivoImagen } = require('../middlewares/validar-archivo');
 
 // Define las rutas con los controladores correspondientes y los middlewares necesarios
-app.post('/createDesignType', [verificaToken, verificaAdminRol], createDesignType);
+app.post('/createDesignType', [verificaToken, verificaAdminRol,validarArchivoImagen], createDesignType);
 app.post('/updateDesignType', [verificaToken, verificaAdminRol], updateDesignType);
 app.get('/getAllDesignType', [verificaToken, verificaAdminRol], getAllDesignType);
 
