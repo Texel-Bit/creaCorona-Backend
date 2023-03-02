@@ -22,7 +22,7 @@ exports.createDesignType = async(req, res) => {
         },
       });
     }
-    const image = await subirArchivoImagen(req.files,  "uploads/DesignType");
+    const image = await subirArchivoImagen(req.files.DesignTypeIconPath,  "uploads/DesignType");
     if (!image) {
       return res.status(400).json({
         status: false,
