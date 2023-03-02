@@ -4,16 +4,33 @@ const {
   getAllFormatSizeTexture,
   getFormatSizeTextureById,
 } = require("../models/formatSizeTexture");
+const { subirArchivoImagen } = require("../helpers/subirarchivos");
 
 exports.createFormatSizeTexture = async (req, res) => {
   try {
     const { FormatSizeTextureName, idDesignTypeFormatSize } = req.body;
-
+    if (!FormatSizeTextureName || !idDesignTypeFormatSize) {
+      return res.status(400).json({
+        status: false,
+        err: {
+          message: "Datos de entrada incompletos",
+        },
+      });
+    }
     const image = await subirArchivoImagen(
-      req.files,
-      ["jpg", "png", "jpeg"],
+      req.files.FormatSizeTextureMaskPath,
       "uploads/FormatSizeTexture"
     );
+
+       // Manejo de errores de subirArchivoImagen
+       if (!image) {
+        return res.status(400).json({
+          status: false,
+          err: {
+            message: "Error al subir la imagen",
+          },
+        });
+      }
 
     const data = {
       FormatSizeTextureName,
@@ -33,7 +50,7 @@ exports.createFormatSizeTexture = async (req, res) => {
     return res.status(400).json({
       status: false,
       err: {
-        message: "No pudo ser el color del diseño",
+        message: "No pudo ser creado el formato  tamaño textura",
       },
     });
   }
