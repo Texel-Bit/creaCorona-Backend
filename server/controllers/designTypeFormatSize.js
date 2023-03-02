@@ -23,8 +23,8 @@ exports.createDesignTypeFormatSize = async(req, res) => {
       });
     }
     
-    const DesignTypeFormatSizeHeight = await subirArchivoImagen(req.files.filesHeight, "uploads/DesignTypeFormatSize");
-    const DesignTypeFormatSizeWidht = await subirArchivoImagen(req.files.filesWidht, "uploads/DesignTypeFormatSize");
+    const DesignTypeFormatSizeHeight = await subirArchivoImagen(req.files.DesignTypeFormatSizeHeight, "uploads/DesignTypeFormatSize");
+    const DesignTypeFormatSizeWidht = await subirArchivoImagen(req.files.DesignTypeFormatSizeWidht, "uploads/DesignTypeFormatSize");
 
 
     if (!DesignTypeFormatSizeHeight || !DesignTypeFormatSizeWidht) {
