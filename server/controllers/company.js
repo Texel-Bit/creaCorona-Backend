@@ -31,7 +31,7 @@ exports.createCompany = async (req, res) => {
       });
     }
     const image = await subirArchivoImagen(
-      req.files,
+      req.files.CompanyImagePath,
     
       "uploads/Company"
     );

@@ -12,6 +12,15 @@ exports.createDesignCompany = async(req, res) => {
 
     try {
     const { DesignCompanyBuyPrice, idCompany,idDesign} = req.body
+
+    if (!DesignCompanyBuyPrice || !idCompany || !idDesign) {
+      return res.status(400).json({
+        status: false,
+        err: {
+          message: "Datos de entrada incompletos",
+        },
+      });
+    }
   const  data= {
     DesignCompanyBuyPrice:+DesignCompanyBuyPrice,
 

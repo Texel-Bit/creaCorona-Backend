@@ -4,7 +4,7 @@ const {
   } = require("../models/environmentType");
   
 
-
+  const { subirArchivoImagen } = require("../helpers/subirarchivos");
 
 
 
