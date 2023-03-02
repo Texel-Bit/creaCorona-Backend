@@ -4,6 +4,7 @@ const {
   getAllDesignColors,
   getDesignColorsById,
 } = require("../models/designColors");
+const { subirArchivoImagen } = require("../helpers/subirarchivos");
 
 exports.createDesignColors = async (req, res) => {
   try {
@@ -40,6 +41,8 @@ exports.createDesignColors = async (req, res) => {
       data: createdDesignColors,
     });
   } catch (error) {
+
+    console.log(error);
     return res.status(400).json({
       status: false,
       err: {

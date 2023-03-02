@@ -12,9 +12,23 @@ exports.createEnvironmentType = async(req, res) => {
 
     try {
     const { EnvironmentTypeName  } = req.body
-
-    const image = await subirArchivoImagen(req.files, ["jpg", "png", "jpeg"], "uploads/EnvironmentType");
-
+    if (!EnvironmentTypeName ) {
+      return res.status(400).json({
+        status: false,
+        err: {
+          message: "Datos de entrada incompletos",
+        },
+      });
+    }
+    const image = await subirArchivoImagen(req.files.EnvironmentTypeImage, ["jpg", "png", "jpeg"], "uploads/EnvironmentType");
+    if (!image) {
+      return res.status(400).json({
+        status: false,
+        err: {
+          message: "Error al subir la imagen",
+        },
+      });
+    }
   const  data= {
     EnvironmentTypeName,
     EnvironmentTypeImage:image,       
@@ -33,7 +47,7 @@ exports.createEnvironmentType = async(req, res) => {
       return res.status(400).json({
         status: false,
         err: {
-          message: 'No pudo ser el Enviromenttype',
+          message: 'No pudo ser el tipo de ambiente',
         },
       });
     }
