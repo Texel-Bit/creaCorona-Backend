@@ -52,7 +52,6 @@ const getAllDesignTypeFormatSize = async () => {
     // Se llama a Prisma para buscar todos 
     const result = await prisma.designTypeFormatSize.findMany();
     
-    // Se cierra la conexión a Prisma
 
     // Se devuelve el resultado exitoso
     return result;

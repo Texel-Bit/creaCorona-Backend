@@ -112,6 +112,8 @@ exports.createDesignTypeFormatSize = async(req, res) => {
     } catch (error) {
       console.error(error);
       res.status(500).send({
+
+        status:false,
         message: 'No se pudo obtener las Design type format size',
       });
     }
