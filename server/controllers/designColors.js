@@ -17,7 +17,7 @@ exports.createDesignColors = async (req, res) => {
       });
     }
 
-    const image = await subirArchivoImagen(req.files, "uploads/DesignColors");
+    const image = await subirArchivoImagen(req.files.DesignColorPath, "uploads/DesignColors");
   // Manejo de errores de subirArchivoImagen
   if (!image) {
     return res.status(400).json({

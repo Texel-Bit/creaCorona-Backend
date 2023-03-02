@@ -12,13 +12,27 @@ exports.createEnvironment = async(req, res) => {
 
     try {
     const { EnvironmentName,idEnvironmentType,   } = req.body
-
+    if (!EnvironmentName||!idEnvironmentType ) {
+      return res.status(400).json({
+        status: false,
+        err: {
+          message: "Datos de entrada incompletos",
+        },
+      });
+    }
     const image = await subirArchivoImagen(
-      req.files,
-      ["jpg", "png", "jpeg"],
+      req.files.EnvironmentProfileImage,
+
       "uploads/Environment"
     );
-  
+    if (!image) {
+      return res.status(400).json({
+        status: false,
+        err: {
+          message: "Error al subir la imagen",
+        },
+      });
+    }
   const  data= {
     EnvironmentName,
     EnvironmentProfileImage:image,       
@@ -37,7 +51,7 @@ exports.createEnvironment = async(req, res) => {
       return res.status(400).json({
         status: false,
         err: {
-          message: 'No pudo ser el color del diseño',
+          message: 'No pudo ser el Ambiente',
         },
       });
     }
