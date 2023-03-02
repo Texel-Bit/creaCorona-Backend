@@ -1,6 +1,5 @@
 const {
-  createEnvironmentType,updateEnvironmentType, getAllEnvironmentType
-  
+  createEnvironmentType,updateEnvironmentType, getAllEnvironmentType  
   } = require("../models/environmentType");
   
 
@@ -20,7 +19,7 @@ exports.createEnvironmentType = async(req, res) => {
         },
       });
     }
-    const image = await subirArchivoImagen(req.files.EnvironmentTypeImage, ["jpg", "png", "jpeg"], "uploads/EnvironmentType");
+    const image = await subirArchivoImagen(req.files.EnvironmentTypeImage,"uploads/EnvironmentType");
     if (!image) {
       return res.status(400).json({
         status: false,
@@ -43,6 +42,7 @@ exports.createEnvironmentType = async(req, res) => {
         data: createdEnvironmentType,
       });
     } catch (error) {
+      console.log(error);
   
       return res.status(400).json({
         status: false,
@@ -119,6 +119,8 @@ exports.createEnvironmentType = async(req, res) => {
     } catch (error) {
       console.error(error);
       res.status(500).send({
+        status: false,
+
         message: 'No se pudo obtener las EnvironmentType',
       });
     }

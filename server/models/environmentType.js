@@ -87,5 +87,7 @@ const getEnvironmentTypeById = async (data) => {
     // Siempre desconectar la base de datos después de la operación
     await prisma.$disconnect();
   }
- };ports = { createEnvironmentType,updateEnvironmentType,getAllEnvironmentType,getEnvironmentTypeById };
+ };
+ 
+ module.exports = { createEnvironmentType,updateEnvironmentType,getAllEnvironmentType,getEnvironmentTypeById };
 
