@@ -19,7 +19,7 @@ exports.createDesign = async (req, res) => {
       });
     }
 
-    const image = await subirArchivoImagen(req.files, "uploads/Design");
+    const image = await subirArchivoImagen(req.files.DesignImagePath, "uploads/Design");
 
     // Manejo de errores de subirArchivoImagen
     if (!image) {

@@ -8,9 +8,25 @@ const {
 exports.createDesignColors = async (req, res) => {
   try {
     const { DesignColorName,  idDesignType } = req.body;
+    if (!DesignColorName || !idDesignType) {
+      return res.status(400).json({
+        status: false,
+        err: {
+          message: "Datos de entrada incompletos",
+        },
+      });
+    }
 
-    const image = await subirArchivoImagen(req.files, ["jpg", "png", "jpeg"], "uploads/DesignColors");
-
+    const image = await subirArchivoImagen(req.files, "uploads/DesignColors");
+  // Manejo de errores de subirArchivoImagen
+  if (!image) {
+    return res.status(400).json({
+      status: false,
+      err: {
+        message: "Error al subir la imagen",
+      },
+    });
+  }
     const data = {
       DesignColorName,
       DesignColorPath:image,

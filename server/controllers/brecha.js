@@ -23,7 +23,7 @@ exports.createBrecha = async(req, res) => {
     }
 
 
-    const image = await subirArchivoImagen(req.files, "uploads/Brecha");
+    const image = await subirArchivoImagen(req.files.brechaColorPath, "uploads/Brecha");
     // Manejo de errores de subirArchivoImagen
 
 

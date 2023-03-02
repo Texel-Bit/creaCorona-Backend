@@ -11,8 +11,11 @@ const createDesignTypeFormatSize = async (data) => {
 
   return result
     } catch (e) {
+      console.log(e);
+
       return e
     }finally {
+
       // Siempre desconectar la base de datos después de la operación
       await prisma.$disconnect();
     }

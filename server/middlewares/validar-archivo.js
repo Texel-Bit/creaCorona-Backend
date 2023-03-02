@@ -27,7 +27,9 @@ const validarArchivoImagen = (req, res = response, next ) => {
             msg: 'No hay archivos que subir - validarArchivoSubir'
         });
     }
-    const file = req.files.files;
+
+    const keys = Object.keys(req.files);
+    const file = req.files[keys[0]];
 
     const nameShort = file.name.split('.');
     const extension = nameShort[nameShort.length - 1];

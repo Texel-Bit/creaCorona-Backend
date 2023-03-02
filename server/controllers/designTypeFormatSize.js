@@ -1,3 +1,4 @@
+const { subirArchivoImagen } = require("../helpers/subirarchivos");
 const {
     createDesignTypeFormatSize,updateDesignTypeFormatSize, getAllDesignTypeFormatSize
   
@@ -11,11 +12,33 @@ const {
 exports.createDesignTypeFormatSize = async(req, res) => {
 
     try {
-    const { DesignTypeFormatSizeName, DesignTypeFormatSizeHeight, DesignTypeFormatSizeWidht,idDesignType  } = req.body
+    const { DesignTypeFormatSizeName,idDesignType  } = req.body
+
+    if (!DesignTypeFormatSizeName || !idDesignType ) {
+      return res.status(400).json({
+        status: false,
+        err: {
+          message: "Datos de entrada incompletos",
+        },
+      });
+    }
+    
+    const DesignTypeFormatSizeHeight = await subirArchivoImagen(req.files.filesHeight, "uploads/DesignTypeFormatSize");
+    const DesignTypeFormatSizeWidht = await subirArchivoImagen(req.files.filesWidht, "uploads/DesignTypeFormatSize");
+
+
+    if (!DesignTypeFormatSizeHeight || !DesignTypeFormatSizeWidht) {
+      return res.status(400).json({
+        status: false,
+        err: {
+          message: "Error al subir la imagen",
+        },
+      });
+    }
   const  data= {
     DesignTypeFormatSizeName,
-    DesignTypeFormatSizeHeight:+DesignTypeFormatSizeHeight,
-    DesignTypeFormatSizeWidht:+DesignTypeFormatSizeHeight,       
+    DesignTypeFormatSizeHeight:DesignTypeFormatSizeHeight,
+    DesignTypeFormatSizeWidht:DesignTypeFormatSizeWidht,       
     DesignType:{ connect: { idDesignType: +idDesignType } },
       }
 
@@ -27,11 +50,11 @@ exports.createDesignTypeFormatSize = async(req, res) => {
         data: createdDesignTypeFormatSize,
       });
     } catch (error) {
-  
+  console.log(error);
       return res.status(400).json({
         status: false,
         err: {
-          message: 'No pudo ser el color del diseño',
+          message: 'No pudo ser creado el diseño formato diseño',
         },
       });
     }

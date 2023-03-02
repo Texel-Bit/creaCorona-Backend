@@ -34,10 +34,10 @@ const subirArchivo = (files, extensionesValidas = ['xlsx'], carpeta = '') => {
 
 }
 
-const subirArchivoImagen = (files, carpeta = '') => {
+const subirArchivoImagen = (file, carpeta = '') => {
     return new Promise((resolve, reject) => {
 
-        const file = files.files;
+
 
         const nombreCortado = file.name.split('.');
         const extension = nombreCortado[nombreCortado.length - 1];

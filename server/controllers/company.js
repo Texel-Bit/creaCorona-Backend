@@ -11,11 +11,6 @@ const fs = require("fs");
 const path = require("path");
 
 exports.createCompany = async (req, res) => {
-  const image = await subirArchivoImagen(
-    req.files,
-    ["jpg", "png", "jpeg"],
-    "uploads/Company"
-  );
 
   try {
     const {
@@ -26,6 +21,29 @@ exports.createCompany = async (req, res) => {
       idcompanyStatus,
       idCompanyRole,
     } = req.body;
+
+    if (!CompanyName || !CompanyAddress || !CompanyNIT || !CompanyPhone || !idcompanyStatus || !idCompanyRole) {
+      return res.status(400).json({
+        status: false,
+        err: {
+          message: "Datos de entrada incompletos",
+        },
+      });
+    }
+    const image = await subirArchivoImagen(
+      req.files,
+    
+      "uploads/Company"
+    );
+   // Manejo de errores de subirArchivoImagen
+   if (!image) {
+    return res.status(400).json({
+      status: false,
+      err: {
+        message: "Error al subir la imagen",
+      },
+    });
+  }
     const data = {
       CompanyName,
       CompanyAddress,
