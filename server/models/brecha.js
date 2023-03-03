@@ -33,10 +33,10 @@ const createBrecha = async (data) => {
    });
 
    // Llamar a la función de devolución de llamada con el resultado exitoso
-   resultado(null, result);
+   return result
  } catch (e) {
    // Capturar excepción y llamar a la función de devolución de llamada con el error
-   resultado(e, null);
+   return e
  } finally {
    // Siempre desconectar la base de datos después de la operación
    await prisma.$disconnect();
@@ -66,9 +66,7 @@ const getBrechaById = async (data) => {
 
   const { idbrecha } = data;
  
- 
   try {
-    // Actualizar usuario en la base de datos
     const result = await prisma.brecha.findUnique({
       where: { idbrecha },
     });

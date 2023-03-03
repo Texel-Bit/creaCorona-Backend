@@ -11,7 +11,6 @@ const fs = require("fs");
 const path = require("path");
 
 exports.createCompany = async (req, res) => {
-
   try {
     const {
       CompanyName,
@@ -22,7 +21,14 @@ exports.createCompany = async (req, res) => {
       idCompanyRole,
     } = req.body;
 
-    if (!CompanyName || !CompanyAddress || !CompanyNIT || !CompanyPhone || !idcompanyStatus || !idCompanyRole) {
+    if (
+      !CompanyName ||
+      !CompanyAddress ||
+      !CompanyNIT ||
+      !CompanyPhone ||
+      !idcompanyStatus ||
+      !idCompanyRole
+    ) {
       return res.status(400).json({
         status: false,
         err: {
@@ -32,18 +38,18 @@ exports.createCompany = async (req, res) => {
     }
     const image = await subirArchivoImagen(
       req.files.CompanyImagePath,
-    
+
       "uploads/Company"
     );
-   // Manejo de errores de subirArchivoImagen
-   if (!image) {
-    return res.status(400).json({
-      status: false,
-      err: {
-        message: "Error al subir la imagen",
-      },
-    });
-  }
+    // Manejo de errores de subirArchivoImagen
+    if (!image) {
+      return res.status(400).json({
+        status: false,
+        err: {
+          message: "Error al subir la imagen",
+        },
+      });
+    }
     const data = {
       CompanyName,
       CompanyAddress,
@@ -80,14 +86,23 @@ exports.updateCompany = async (req, res, next) => {
       CompanyPhone,
       idcompanyStatus,
       idCompanyRole,
-    } = req.body ?? {};
+    } = req.body;
 
-    if (!idCompany) {
+    if (
+      !idCompany ||
+      !CompanyName ||
+      !CompanyAddress ||
+      !CompanyNIT ||
+      !CompanyPhone ||
+      !idcompanyStatus ||
+      !idCompanyRole
+    ) {
       return res.status(400).json({
         status: false,
-        error: "idCompany is required",
+        err: { message: "Datos de entrada incompletos" },
       });
     }
+    
     const data = {
       idCompany: +idCompany,
       CompanyName,
@@ -97,42 +112,23 @@ exports.updateCompany = async (req, res, next) => {
       companyStatus: { connect: { idcompanyStatus: +idcompanyStatus } },
       CompanyRole: { connect: { idCompanyRole: +idCompanyRole } },
     };
+    const company = await getCompanyById(data);
 
-
-    if (req.files) {
+    if (req.files && req.files.CompanyImagePath) {
       const image = await subirArchivoImagen(
-        req.files,
-        ["jpg", "png", "jpeg"],
+        req.files.CompanyImagePath,
         "uploads/Company"
       );
-
-      const company = await getCompanyById(data);
-
-   
       const filePath = path.join(process.cwd(), company.CompanyImagePath);
-
-      
-      (data.CompanyImagePath = image), fs.unlinkSync(filePath);
+      fs.unlinkSync(filePath);
+      data.CompanyImagePath = image;
     }
 
-   
+    const result = await updateCompany(data);
+    res.json({ status: true, data: result });
+  } catch (error) {
 
-    await updateCompany(data);
-
-    res.json({
-      status: true,
-    });
-  } catch (err) {
-    if (err.code === "ENOENT") {
-      return res.status(400).json({
-        status: false,
-        error: "File not found",
-      });
-    }
-    res.status(500).json({
-      status: false,
-      error: err.message,
-    });
+    res.status(500).json({ status: false, error });
   }
 };
 

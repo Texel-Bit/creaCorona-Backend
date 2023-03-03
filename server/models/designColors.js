@@ -20,7 +20,7 @@ const createDesignColors = async (data) => {
   };
 
 
-  const updateDesignColors = async (data,resultado) => {
+  const updateDesignColors = async (data) => {
 
  const { idDesignColors, ...updateData } = data;
 
@@ -33,11 +33,13 @@ const createDesignColors = async (data) => {
    });
 
    // Llamar a la función de devolución de llamada con el resultado exitoso
-   resultado(null, result);
- } catch (e) {
+
+   console.log(result);
+   return result
+  } catch (e) {
    // Capturar excepción y llamar a la función de devolución de llamada con el error
-   resultado(e, null);
- } finally {
+   return e
+  } finally {
    // Siempre desconectar la base de datos después de la operación
    await prisma.$disconnect();
  }
@@ -68,14 +70,12 @@ const getAllDesignColors= async () => {
 const getDesignColorsById = async (data) => {
 
   const { idDesignColors } = data;
- 
- 
+
   try {
-    // Actualizar usuario en la base de datos
+
     const result = await prisma.designColors.findUnique({
       where: { idDesignColors },
     });
- 
     // Llamar a la función de devolución de llamada con el resultado exitoso
     return result;
   } catch (e) {

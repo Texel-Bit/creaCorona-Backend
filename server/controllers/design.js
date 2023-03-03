@@ -5,7 +5,8 @@ const {
   getDesignById,
 } = require("../models/design");
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
-
+const fs = require("fs");
+const path = require("path");
 exports.createDesign = async (req, res) => {
   try {
     // Validar datos de entrada
@@ -19,7 +20,10 @@ exports.createDesign = async (req, res) => {
       });
     }
 
-    const image = await subirArchivoImagen(req.files.DesignImagePath, "uploads/Design");
+    const image = await subirArchivoImagen(
+      req.files.DesignImagePath,
+      "uploads/Design"
+    );
 
     // Manejo de errores de subirArchivoImagen
     if (!image) {
@@ -38,11 +42,11 @@ exports.createDesign = async (req, res) => {
       DesignType: { connect: { idDesignType: +idDesignType } },
     };
 
-    const createdDesign = await createDesign(data);
+    const result = await createDesign(data);
 
     res.json({
       status: true,
-      data: createdDesign,
+      data: result,
     });
   } catch (error) {
     return res.status(400).json({
@@ -56,21 +60,9 @@ exports.createDesign = async (req, res) => {
 
 exports.updateDesign = async (req, res, next) => {
   try {
-    // Verificar si el idDesign existe
-    const { idDesign } = req.body;
-
-    const design = await getDesignById(+idDesign);
-
-    if (!design) {
-      return res.status(404).json({
-        status: false,
-        error: "Diseño no encontrado",
-      });
-    }
-
     // Validar datos de entrada
-    const { DesignName, DesignSellPrice, idDesignType } = req.body;
-    if (!DesignName || !DesignSellPrice || !idDesignType) {
+    const { idDesign, DesignName, DesignSellPrice, idDesignType } = req.body;
+    if (!idDesign || !DesignName || !DesignSellPrice || !idDesignType) {
       return res.status(400).json({
         status: false,
         error: "Datos de entrada incompletos",
@@ -83,43 +75,25 @@ exports.updateDesign = async (req, res, next) => {
       DesignSellPrice: +DesignSellPrice,
       DesignType: { connect: { idDesignType: +idDesignType } },
     };
+    const design = await getDesignById(+idDesign);
 
     // Separar la lógica de subir la imagen
-    if (req.files) {
-      const allowedExtensions = ["jpg", "png", "jpeg"];
+    if (req.files && req.files.DesignImagePath) {
       const image = await subirArchivoImagen(
-        req.files,
-        allowedExtensions,
+        req.files.DesignImagePath,
         "uploads/Design"
       );
 
-      // Manejo de errores de subirArchivoImagen
-      if (!image) {
-        return res.status(400).json({
-          status: false,
-          error: "Error al subir la imagen",
-        });
-      }
-
       const filePath = path.join(process.cwd(), design.DesignImagePath);
       fs.unlinkSync(filePath);
-
       data.DesignImagePath = image;
     }
 
-    const updatedDesign = await updateDesign(data);
+    const result = await updateDesign(data);
 
-    res.json({
-      status: true,
-      data: updatedDesign,
-    });
+    res.json({ status: true, data: result });
   } catch (error) {
-    return res.status(400).json({
-      status: false,
-      err: {
-        message: "No se logró actualizar el Diseño",
-      },
-    });
+    res.status(500).json({ status: false, error });
   }
 };
 

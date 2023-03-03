@@ -4,7 +4,8 @@ const {
   } = require("../models/designCompany");
   
 
-
+  const fs = require("fs");
+  const path = require("path");
 
 
 
@@ -50,17 +51,21 @@ exports.createDesignCompany = async(req, res) => {
 
 
   exports.updateDesignCompany =async (req, res, next) => {
-    // Desestructurar los campos del cuerpo de la petición
- 
-    // Verificar si el cuerpo de la petición existe
-    if (!req.body) {
+
+    try {
+
+    const { idDesignCompany,DesignCompanyBuyPrice, idCompany,idDesign} = req.body
+   
+    if (!idDesignCompany || !DesignCompanyBuyPrice || !idCompany || !idDesign) {
       return res.status(400).json({
         status: false,
-        error: "error",
+        err: {
+          message: "Datos de entrada incompletos",
+        },
       });
     }
-  
-    const { idDesignCompany,DesignCompanyBuyPrice, idCompany,idDesign} = req.body
+   
+   
     const  data= {
       idDesignCompany:+idDesignCompany,
       DesignCompanyBuyPrice:+DesignCompanyBuyPrice,
@@ -69,24 +74,22 @@ exports.createDesignCompany = async(req, res) => {
   
       Design:{ connect: { idDesign: +idDesign } },
     }
+    const result = await updateDesignCompany(data);
 
   
-    updateDesignCompany(data, (err, result) => {
-      if (err) {
-        return res.status(500).json({
-          status: false,
-          error: err,
-        });
-      }
-      
-  
-  
-      res.json({
-        status: true,
-        user: result,
-      });
+    res.json({
+      status: true,
+      data: result,
     });
-  };
+  } catch (error) {
+    return res.status(400).json({
+      status: false,
+      err: {
+        message: "No se logró crear el Diseño",
+      },
+    });
+  }
+};
 
   exports.getAllDesignCompany  = async (req, res) => {
     try {
