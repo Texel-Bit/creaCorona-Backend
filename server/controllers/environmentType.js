@@ -9,6 +9,7 @@ const {
   const fs = require('fs');
 
 exports.createEnvironmentType = async(req, res) => {
+ 
 
     try {
     const { EnvironmentTypeName  } = req.body
@@ -30,13 +31,20 @@ exports.createEnvironmentType = async(req, res) => {
       });
     }
   const  data= {
-    EnvironmentTypeName,
-    EnvironmentTypeImage:image,       
+    enviroment:{    EnvironmentTypeName,
+      EnvironmentTypeImage:image 
+      
+    }
+
+    
+  
    
       }
+ const arr = req.body.designTypeEnvironmentType.map(type => ({ idDesignType: type }));
 
-   
+data.designTypeEnvironmentType = arr;
       const createdEnvironmentType = await createEnvironmentType(data);
+
 
       res.json({
         status: true,

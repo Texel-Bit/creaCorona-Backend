@@ -4,11 +4,26 @@ const prisma = new PrismaClient();
 
 const createEnvironmentType = async (data) => {
 
+
+  console.log(data);
+  const { enviroment, ...updateData } = data;
+
+  console.log(enviroment,"Enviromet");
+  console.log(updateData.designTypeEnvironmentType,"sub");
+
     try {
       const result =  await prisma.environmentType.create({
-        data
+        enviroment,
+        DesignType_EnvironmentType:{
+          create:[
+            updateData.designTypeEnvironmentType
+          ]
+
+        }
       })
 
+
+      console.log(result);
   return result
     } catch (e) {
       return e

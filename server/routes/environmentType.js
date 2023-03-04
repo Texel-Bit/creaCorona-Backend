@@ -12,7 +12,7 @@ const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacio
 const { validarArchivoImagen } = require('../middlewares/validar-archivo');
 
 // Define las rutas con los controladores correspondientes y los middlewares necesarios
-app.post('/createEnvironmentType', [verificaToken, verificaAdminRol,validarArchivoImagen], createEnvironmentType);
+app.post('/createEnvironmentType', [verificaToken, verificaAdminRol], createEnvironmentType);
 app.post('/updateEnvironmentType', [verificaToken, verificaAdminRol], updateEnvironmentType);
 app.get('/getAllEnvironmentType', [verificaToken, verificaAdminRol], getAllEnvironmentType);
 
