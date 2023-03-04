@@ -5,7 +5,8 @@ const {
   getFormatSizeTextureById,
 } = require("../models/formatSizeTexture");
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
-
+const path = require('path');
+const fs = require('fs');
 exports.createFormatSizeTexture = async (req, res) => {
   try {
     const { FormatSizeTextureName, idDesignTypeFormatSize } = req.body;
@@ -57,56 +58,49 @@ exports.createFormatSizeTexture = async (req, res) => {
 };
 
 exports.updateFormatSizeTexture = async (req, res, next) => {
+  try {
+
   // Desestructurar los campos del cuerpo de la petición
   const {
     idFormatSizeTexture,
     FormatSizeTextureName,
-    FormatSizeTextureMaskPath,
+    
     idDesignTypeFormatSize,
   } = req.body;
 
-  // Verificar si el cuerpo de la petición existe
-  if (!req.body) {
-    return res.status(400).json({
-      status: false,
-      error: "error",
-    });
+  if (!idFormatSizeTexture||!FormatSizeTextureName||!idDesignTypeFormatSize) {
+    return res.status(400).json({ status: false, err: { message: "Datos de entrada incompletos" } });
   }
 
   const data = {
     idFormatSizeTexture: +idFormatSizeTexture,
     FormatSizeTextureName,
-    FormatSizeTextureMaskPath,
-    DesignTypeFormatSize: {
+        DesignTypeFormatSize: {
       connect: { idDesignTypeFormatSize: +idDesignTypeFormatSize },
     },
   };
-  if (req.files) {
+  const formatSizeTexture = await getFormatSizeTextureById(data);
+
+  if (req.files && req.files.FormatSizeTextureMaskPath) {
     const image = await subirArchivoImagen(
-      req.files,
-      ["jpg", "png", "jpeg"],
+      req.files.FormatSizeTextureMaskPath,
       "uploads/FormatSizeTexture"
     );
 
-    const formatSizeTexture = await getFormatSizeTextureById(data);
-
     const filePath = path.join(process.cwd(), formatSizeTexture.FormatSizeTextureMaskPath);
 
-    (data.FormatSizeTextureMaskPath = image), fs.unlinkSync(filePath);
-  }
-  updateFormatSizeTexture(data, (err, result) => {
-    if (err) {
-      return res.status(500).json({
-        status: false,
-        error: err,
-      });
-    }
+    fs.unlinkSync(filePath);
+    data.FormatSizeTextureMaskPath = image;
+  }  
+  
+  const result = await updateFormatSizeTexture(data);
 
-    res.json({
-      status: true,
-      user: result,
-    });
-  });
+  res.json({ status: true, data: result });
+} catch (error) {
+
+  res.status(500).json({ status: false, error });
+}
+
 };
 
 exports.getAllFormatSizeTexture = async (req, res) => {

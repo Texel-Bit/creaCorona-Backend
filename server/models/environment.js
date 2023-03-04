@@ -33,13 +33,12 @@ const createEnvironment = async (data) => {
    });
 
    // Llamar a la función de devolución de llamada con el resultado exitoso
-   resultado(null, result);
- } catch (e) {
+   return result
+  } catch (e) {
 
-  console.log(e);
    // Capturar excepción y llamar a la función de devolución de llamada con el error
-   resultado(e, null);
- } finally {
+   return e
+  } finally {
    // Siempre desconectar la base de datos después de la operación
    await prisma.$disconnect();
  }

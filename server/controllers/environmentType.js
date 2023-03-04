@@ -1,11 +1,12 @@
 const {
-  createEnvironmentType,updateEnvironmentType, getAllEnvironmentType  
+  createEnvironmentType,updateEnvironmentType, getAllEnvironmentType, getEnvironmentTypeById  
   } = require("../models/environmentType");
   
 
   const { subirArchivoImagen } = require("../helpers/subirarchivos");
 
-
+  const path = require('path');
+  const fs = require('fs');
 
 exports.createEnvironmentType = async(req, res) => {
 
@@ -55,55 +56,39 @@ exports.createEnvironmentType = async(req, res) => {
 
 
   exports.updateEnvironmentType =async (req, res, next) => {
+    try {
+
     // Desestructurar los campos del cuerpo de la petición
-    const { idEnvironmentType,EnvironmentTypeName, EnvironmentTypeImage  } = req.body
+    const { idEnvironmentType,EnvironmentTypeName  } = req.body
     
         
-    // Verificar si el cuerpo de la petición existe
-    if (!req.body) {
-      return res.status(400).json({
-        status: false,
-        error: "error",
-      });
+    if (!idEnvironmentType||!EnvironmentTypeName) {
+      return res.status(400).json({ status: false, err: { message: "Datos de entrada incompletos" } });
     }
-  
     const  data= {
       idEnvironmentType:+idEnvironmentType,
       EnvironmentTypeName,
-      EnvironmentTypeImage,       
        }
-       if (req.files) {
-        const image = await subirArchivoImagen(
-          req.files,
-          ["jpg", "png", "jpeg"],
-          "uploads/EnvironmentType"
-        );
-  
-        const environmentType = await getAllEnvironmentType(data);
-  
-     
+    const environmentType = await getEnvironmentTypeById(data);
+
+
+    console.log(environmentType,"hola");
+       if (req.files && req.files.EnvironmentTypeImage) {
+        const image = await subirArchivoImagen(req.files.EnvironmentTypeImage, "uploads/EnvironmentType");
         const filePath = path.join(process.cwd(), environmentType.EnvironmentTypeImage);
-  
-        
-        (data.EnvironmentTypeImage = image), fs.unlinkSync(filePath);
+        fs.unlinkSync(filePath);
+        data.EnvironmentTypeImage = image;
       }
   
-      updateEnvironmentType(data, (err, result) => {
-      if (err) {
-        return res.status(500).json({
-          status: false,
-          error: err,
-        });
-      }
       
+    const result = await updateEnvironmentType(data);
+    res.json({ status: true, data: result });
+  } catch (error) {
+    res.status(500).json({ status: false, error });
+  }
+
+};
   
-  
-      res.json({
-        status: true,
-        user: result,
-      });
-    });
-  };
 
   exports.getAllEnvironmentType  = async (req, res) => {
     try {
