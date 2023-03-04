@@ -5,7 +5,8 @@ const {
   } = require("../models/designType");
   
 
-
+  const fs = require("fs");
+  const path = require("path");
 
 
 
@@ -76,27 +77,25 @@ exports.createDesignType = async(req, res) => {
   }
   const designType = await getDesignTypeById(data);
 
-  if (req.files && req.files.DesignTypePath) {
+
+  if (req.files && req.files.DesignTypeIconPath) {
     const image = await subirArchivoImagen(
-        req.files.DesignTypePath,
+        req.files.DesignTypeIconPath,
         "uploads/DesignType"
       );
   
   
-      const filePath = path.join(process.cwd(), designType.DesignTypePath);
+      const filePath = path.join(process.cwd(), designType.DesignTypeIconPath);
 
       fs.unlinkSync(filePath);
-      data.DesignTypePath = image;
+      data.DesignTypeIconPath = image;
         }
   
         const result = await updateDesignType(data);
-
-  
-
-  
-  
         res.json({ status: true, data: result });
       } catch (error) {
+
+        console.log(error);
       res.status(500).json({ status: false, error });
     }
   };

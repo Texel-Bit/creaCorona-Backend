@@ -9,6 +9,7 @@ const createDesignType = async (data) => {
         data
       })
 
+
   return result
     } catch (e) {
   console.log(e);
@@ -21,7 +22,7 @@ const createDesignType = async (data) => {
   };
 
 
-  const updateDesignType = async (data,resultado) => {
+  const updateDesignType = async (data) => {
 
  const { idDesignType, ...updateData } = data;
 
