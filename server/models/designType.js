@@ -34,11 +34,11 @@ const createDesignType = async (data) => {
    });
 
    // Llamar a la función de devolución de llamada con el resultado exitoso
-   resultado(null, result);
- } catch (e) {
+   return result
+  } catch (e) {
    // Capturar excepción y llamar a la función de devolución de llamada con el error
-   console.log(e);
-   resultado(e, null);
+   return e
+
  } finally {
    // Siempre desconectar la base de datos después de la operación
    await prisma.$disconnect();

@@ -57,14 +57,16 @@ exports.createDesignType = async(req, res) => {
 
 
   exports.updateDesignType =async (req, res, next) => {
+    try {
+
     // Desestructurar los campos del cuerpo de la petición
     const {idDesignType, DesignTypeName} = req.body
 
     // Verificar si el cuerpo de la petición existe
-    if (!req.body) {
+    if (!idDesignType || !DesignTypeName ) {
       return res.status(400).json({
         status: false,
-        error: "error",
+        error: "Datos de entrada incompletos",
       });
     }
     const  data= {
@@ -72,38 +74,31 @@ exports.createDesignType = async(req, res) => {
       DesignTypeName,
   
   }
+  const designType = await getDesignTypeById(data);
 
-    if (req.files) {
-      const image = await subirArchivoImagen(
-        req.files,
-        ["jpg", "png", "jpeg"],
+  if (req.files && req.files.DesignTypePath) {
+    const image = await subirArchivoImagen(
+        req.files.DesignTypePath,
         "uploads/DesignType"
       );
   
-      const designType = await getDesignTypeById(data);
   
-      const filePath = path.join(process.cwd(), designType.DesignTypePath);
+      const filePath = path.join(process.cwd(), design.DesignTypePath);
+
+      fs.unlinkSync(filePath);
+      data.DesignTypePath = image;
+        }
   
-      (data.DesignTypePath = image), fs.unlinkSync(filePath);
-    }
+        const result = await updateDesignType(data);
+
   
 
   
-    updateDesignType(data, (err, result) => {
-      if (err) {
-        return res.status(500).json({
-          status: false,
-          error: err,
-        });
-      }
-      
   
-  
-      res.json({
-        status: true,
-        user: result,
-      });
-    });
+        res.json({ status: true, data: result });
+      } catch (error) {
+      res.status(500).json({ status: false, error });
+    }
   };
 
   exports.getAllDesignType  = async (req, res) => {
