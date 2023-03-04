@@ -83,7 +83,7 @@ exports.createDesignType = async(req, res) => {
       );
   
   
-      const filePath = path.join(process.cwd(), design.DesignTypePath);
+      const filePath = path.join(process.cwd(), designType.DesignTypePath);
 
       fs.unlinkSync(filePath);
       data.DesignTypePath = image;
