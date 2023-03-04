@@ -11,7 +11,6 @@ const createDesignTypeFormatSize = async (data) => {
 
   return result
     } catch (e) {
-      console.log(e);
 
       return e
     }finally {
@@ -22,7 +21,7 @@ const createDesignTypeFormatSize = async (data) => {
   };
 
 
-  const updateDesignTypeFormatSize = async (data,resultado) => {
+  const updateDesignTypeFormatSize = async (data) => {
 
  const { idDesignTypeFormatSize, ...updateData } = data;
 
@@ -33,15 +32,13 @@ const createDesignTypeFormatSize = async (data) => {
      where: { idDesignTypeFormatSize },
      data: updateData
    });
-
    // Llamar a la función de devolución de llamada con el resultado exitoso
-   resultado(null, result);
- } catch (e) {
-  console.log(e);
+   return result
+  } catch (e) {
 
    // Capturar excepción y llamar a la función de devolución de llamada con el error
-   resultado(e, null);
- } finally {
+   return e
+  } finally {
    // Siempre desconectar la base de datos después de la operación
    await prisma.$disconnect();
  }

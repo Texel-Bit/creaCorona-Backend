@@ -12,9 +12,9 @@ const {
 exports.createDesignTypeFormatSize = async(req, res) => {
 
     try {
-    const { DesignTypeFormatSizeName,idDesignType  } = req.body
+    const { DesignTypeFormatSizeName,idDesignType,DesignTypeFormatSizeHeight,DesignTypeFormatSizeWidht  } = req.body
 
-    if (!DesignTypeFormatSizeName || !idDesignType ) {
+    if (!DesignTypeFormatSizeName || !idDesignType|| !DesignTypeFormatSizeHeight|| !idDesignType ) {
       return res.status(400).json({
         status: false,
         err: {
@@ -23,18 +23,7 @@ exports.createDesignTypeFormatSize = async(req, res) => {
       });
     }
     
-    const DesignTypeFormatSizeHeight = await subirArchivoImagen(req.files.DesignTypeFormatSizeHeight, "uploads/DesignTypeFormatSize");
-    const DesignTypeFormatSizeWidht = await subirArchivoImagen(req.files.DesignTypeFormatSizeWidht, "uploads/DesignTypeFormatSize");
-
-
-    if (!DesignTypeFormatSizeHeight || !DesignTypeFormatSizeWidht) {
-      return res.status(400).json({
-        status: false,
-        err: {
-          message: "Error al subir la imagen",
-        },
-      });
-    }
+ 
   const  data= {
     DesignTypeFormatSizeName,
     DesignTypeFormatSizeHeight:DesignTypeFormatSizeHeight,
@@ -50,7 +39,6 @@ exports.createDesignTypeFormatSize = async(req, res) => {
         data: createdDesignTypeFormatSize,
       });
     } catch (error) {
-  console.log(error);
       return res.status(400).json({
         status: false,
         err: {
@@ -62,41 +50,33 @@ exports.createDesignTypeFormatSize = async(req, res) => {
 
 
   exports.updateDesignTypeFormatSize =async (req, res, next) => {
+    try {
+
     // Desestructurar los campos del cuerpo de la petición
     const {idDesignTypeFormatSize,DesignTypeFormatSizeName, DesignTypeFormatSizeHeight, DesignTypeFormatSizeWidht, idDesignType,  } = req.body
-  
-    // Verificar si el cuerpo de la petición existe
-    if (!req.body) {
+    if (!idDesignTypeFormatSize || !DesignTypeFormatSizeName || !DesignTypeFormatSizeHeight || !DesignTypeFormatSizeWidht ||!idDesignType) {
       return res.status(400).json({
         status: false,
-        error: "error",
+        error: "Datos de entrada incompletos",
       });
     }
   
     const  data= {
         idDesignTypeFormatSize:+idDesignTypeFormatSize,
         DesignTypeFormatSizeName,
-        DesignTypeFormatSizeHeight:+DesignTypeFormatSizeHeight,
-        DesignTypeFormatSizeWidht:+DesignTypeFormatSizeHeight, 
+        DesignTypeFormatSizeHeight:DesignTypeFormatSizeHeight,
+        DesignTypeFormatSizeWidht:DesignTypeFormatSizeHeight, 
       DesignType:{ connect: { idDesignType: +idDesignType } },    }
 
-  
-      updateDesignTypeFormatSize(data, (err, result) => {
-      if (err) {
-        return res.status(500).json({
-          status: false,
-          error: err,
-        });
-      }
-      
-  
-  
-      res.json({
-        status: true,
-        user: result,
-      });
-    });
-  };
+      const result = await updateDesignTypeFormatSize(data);
+console.log(result);
+      res.json({ status: true, data: result });
+
+  } catch (error) {
+    res.status(500).json({ status: false, error });
+  }
+};
+
 
   exports.getAllDesignTypeFormatSize  = async (req, res) => {
     try {

@@ -12,7 +12,7 @@ const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacio
 const { validarArchivoImagen, validarArchivoSubir } = require('../middlewares/validar-archivo');
 
 // Define las rutas con los controladores correspondientes y los middlewares necesarios
-app.post('/createDesignTypeFormatSize', [verificaToken, verificaAdminRol,validarArchivoSubir], createDesignTypeFormatSize);
+app.post('/createDesignTypeFormatSize', [verificaToken, verificaAdminRol], createDesignTypeFormatSize);
 app.post('/updateDesignTypeFormatSize', [verificaToken, verificaAdminRol], updateDesignTypeFormatSize);
 app.get('/getAllDesignTypeFormatSize', [verificaToken, verificaAdminRol], getAllDesignTypeFormatSize);
 
