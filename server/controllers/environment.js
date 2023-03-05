@@ -43,6 +43,7 @@ exports.createEnvironment = async (req, res) => {
       EnvironmentName,
       EnvironmentProfileImage: image,
       EnvironmentMaksImage:imageMask,
+      EnvironmentAngle:+EnvironmentAngle,
       EnvironmentType: { connect: { idEnvironmentType: +idEnvironmentType } },
     };
 
