@@ -12,7 +12,6 @@ const path = require("path");
 const fs = require("fs");
 
 exports.createEnvironmentType = async (req, res) => {
-  console.log("hola");
 
   try {
     const { EnvironmentTypeName } = req.body;
@@ -102,7 +101,19 @@ exports.updateEnvironmentType = async (req, res, next) => {
     }
 
     const result = await updateEnvironmentType(data);
-    res.json({ status: true, data: result });
+
+    const arr = req.body.designTypeEnvironmentType
+      .split(",")
+      .map((type) => ({
+        EnvironmentType_idEnvironmentType:
+        idEnvironmentType,
+        DesignType_idDesignType: +type,
+      }));
+    const designTypeEnvironmentType = await createDesignTypeEnvironmentType(
+      arr
+    );
+
+    res.json({ status: true, data: {result,designTypeEnvironmentType} });
   } catch (error) {
     res.status(500).json({ status: false, error });
   }

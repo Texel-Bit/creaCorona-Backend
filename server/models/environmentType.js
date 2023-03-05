@@ -22,6 +22,14 @@ const createEnvironmentType = async (data) => {
 
 const createDesignTypeEnvironmentType = async (data) => {
   try {
+    const deleteDesignTypeEnvironmentType = await prisma.designType_EnvironmentType.deleteMany({
+    
+      where: {
+        EnvironmentType_idEnvironmentType: {
+          equals: data.DesignType_EnvironmentType,
+        },
+      }
+    });
     const result = await prisma.designType_EnvironmentType.createMany({
       data,
     });
