@@ -8,6 +8,8 @@ const {
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
 
 exports.createEnvironment = async (req, res) => {
+
+  console.log(req.body,"body");
   try {
     const { EnvironmentName, idEnvironmentType,EnvironmentAngle } = req.body;
     if (!EnvironmentName || !idEnvironmentType ||!EnvironmentAngle) {
@@ -48,12 +50,12 @@ exports.createEnvironment = async (req, res) => {
     };
 
     const createdEnvironment = await createEnvironment(data);
-
     res.json({
       status: true,
       data: createdEnvironment,
     });
   } catch (error) {
+
     return res.status(400).json({
       status: false,
       err: {

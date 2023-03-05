@@ -4,6 +4,8 @@ const prisma = new PrismaClient();
 
 const createEnvironment = async (data) => {
 
+
+  console.log(data);
     try {
       const result =  await prisma.environment.create({
         data
