@@ -102,7 +102,8 @@ model Environment {
   idEnvironment                     Int             @id @default(autoincrement())
   EnvironmentName                   String?         @db.VarChar(45)
   EnvironmentType_idEnvironmentType Int
-  EnvironmentProfileImage           String?         @db.VarChar(45)
+  EnvironmentProfileImage           String?         @db.VarChar(255)
+  EnvironmentMaksImage              String?         @db.VarChar(255)
   EnvironmentType                   EnvironmentType @relation(fields: [EnvironmentType_idEnvironmentType], references: [idEnvironmentType], onDelete: NoAction, onUpdate: NoAction, map: "fk_Environment_EnvironmentType1")
 
   @@index([EnvironmentType_idEnvironmentType], map: "fk_Environment_EnvironmentType1_idx")

@@ -23,7 +23,15 @@ exports.createEnvironment = async (req, res) => {
 
       "uploads/Environment"
     );
-    if (!image) {
+
+    const imageMask = await subirArchivoImagen(
+      req.files.EnvironmentMaksImage,
+
+      "uploads/Environment"
+    );
+
+    
+    if (!image||!imageMask) {
       return res.status(400).json({
         status: false,
         err: {
@@ -34,6 +42,7 @@ exports.createEnvironment = async (req, res) => {
     const data = {
       EnvironmentName,
       EnvironmentProfileImage: image,
+      EnvironmentMaksImage:imageMask,
       EnvironmentType: { connect: { idEnvironmentType: +idEnvironmentType } },
     };
 
