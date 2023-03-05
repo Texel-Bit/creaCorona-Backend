@@ -62,7 +62,14 @@ const updateEnvironmentType = async (data) => {
 const getAllEnvironmentType = async () => {
   try {
     // Se llama a Prisma para buscar todos
-    const result = await prisma.environmentType.findMany();
+    const result = await prisma.environmentType.findMany({
+      include: {
+        DesignType_EnvironmentType: {select: {
+          DesignType_idDesignType: true,
+        },
+      },
+      },
+    });
 
     // Se cierra la conexión a Prisma
 
