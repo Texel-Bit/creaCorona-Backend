@@ -104,6 +104,7 @@ model Environment {
   EnvironmentType_idEnvironmentType Int
   EnvironmentProfileImage           String?         @db.VarChar(255)
   EnvironmentMaksImage              String?         @db.VarChar(255)
+  EnvironmentAngle                  Float?
   EnvironmentType                   EnvironmentType @relation(fields: [EnvironmentType_idEnvironmentType], references: [idEnvironmentType], onDelete: NoAction, onUpdate: NoAction, map: "fk_Environment_EnvironmentType1")
 
   @@index([EnvironmentType_idEnvironmentType], map: "fk_Environment_EnvironmentType1_idx")
