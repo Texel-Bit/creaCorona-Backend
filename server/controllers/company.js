@@ -16,6 +16,8 @@ exports.createCompany = async (req, res) => {
       CompanyName,
       CompanyAddress,
       CompanyNIT,
+      CompanyEmail,
+      CompanyContactName,
       CompanyPhone,
       idcompanyStatus,
       idCompanyRole,
@@ -25,6 +27,8 @@ exports.createCompany = async (req, res) => {
       !CompanyName ||
       !CompanyAddress ||
       !CompanyNIT ||
+      !CompanyEmail||
+      !CompanyContactName||
       !CompanyPhone ||
       !idcompanyStatus ||
       !idCompanyRole
@@ -83,6 +87,8 @@ exports.updateCompany = async (req, res, next) => {
       CompanyName,
       CompanyAddress,
       CompanyNIT,
+      CompanyEmail,
+      CompanyContactName,
       CompanyPhone,
       idcompanyStatus,
       idCompanyRole,
@@ -91,6 +97,8 @@ exports.updateCompany = async (req, res, next) => {
     if (
       !idCompany ||
       !CompanyName ||
+      !CompanyEmail||
+      !CompanyContactName||
       !CompanyAddress ||
       !CompanyNIT ||
       !CompanyPhone ||
@@ -108,6 +116,8 @@ exports.updateCompany = async (req, res, next) => {
       CompanyName,
       CompanyAddress,
       CompanyNIT,
+      CompanyEmail,
+      CompanyContactName,
       CompanyPhone,
       companyStatus: { connect: { idcompanyStatus: +idcompanyStatus } },
       CompanyRole: { connect: { idCompanyRole: +idCompanyRole } },

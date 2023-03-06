@@ -12,6 +12,8 @@ model Company {
   CompanyName                   String          @db.VarChar(45)
   CompanyAddress                String?         @db.VarChar(80)
   CompanyImagePath              String?         @db.VarChar(255)
+  CompanyEmail                  String?         @db.VarChar(255)
+  CompanyContactName            String?         @db.VarChar(255)
   CompanyNIT                    String?         @db.VarChar(45)
   CompanyPhone                  String?         @db.VarChar(45)
   companyStatus_idcompanyStatus Int
