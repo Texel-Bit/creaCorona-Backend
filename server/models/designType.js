@@ -65,6 +65,36 @@ const getAllDesignType = async () => {
     await prisma.$disconnect();
   }
 };
+const getAllDesignTypeTest = async (data) => {
+  const { idDesignType } = data;
+
+  try {
+    // Se llama a Prisma para buscar todos las compañias
+    const result = await prisma.designType.findUnique({
+      where: { idDesignType },
+      include:{
+        DesignColors:true,
+        DesignTypeFormatSize:true,
+        Design:true
+      }
+    });
+    
+    // Se cierra la conexión a Prisma
+
+    // Se devuelve el resultado exitoso
+    return result;
+  } catch (e) {
+    // En caso de error, se cierra la conexión a Prisma
+    
+    // Se devuelve el error
+    throw e;
+  }finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
+  }
+};
+
+
 
 
 const getDesignTypeById = async (data) => {
@@ -89,5 +119,5 @@ const getDesignTypeById = async (data) => {
     await prisma.$disconnect();
   }
  };
-module.exports = { createDesignType,updateDesignType,getAllDesignType,getDesignTypeById };
+module.exports = { createDesignType,updateDesignType,getAllDesignType,getDesignTypeById,getAllDesignTypeTest };
 

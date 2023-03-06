@@ -1,6 +1,6 @@
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
 const {
-    createDesignType,updateDesignType, getAllDesignType, getDesignTypeById
+    createDesignType,updateDesignType, getAllDesignType, getDesignTypeById, getAllDesignTypeTest
   
   } = require("../models/designType");
   
@@ -113,6 +113,38 @@ exports.createDesignType = async(req, res) => {
       });
     } catch (error) {
       console.error(error);
+      res.status(500).send({
+        message: 'No se pudo obtener las Design type',
+      });
+    }
+  };
+  exports.getAllDesignTypeTest  = async (req, res) => {
+    try {
+
+      const {idDesignType} = req.body
+
+      // Verificar si el cuerpo de la petición existe
+      if (!idDesignType ) {
+        return res.status(400).json({
+          status: false,
+          error: "Datos de entrada incompletos",
+        });
+      }
+      const  data= {
+        idDesignType:+idDesignType,
+      }
+    
+
+      const allDesignTypeTest  = await getAllDesignTypeTest(data);
+  
+   
+  
+      // Enviar la respuesta con los usuarios
+      res.json({
+        status: true,
+        data: allDesignTypeTest,
+      });
+    } catch (error) {
       res.status(500).send({
         message: 'No se pudo obtener las Design type',
       });
