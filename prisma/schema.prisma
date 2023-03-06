@@ -153,6 +153,7 @@ model sysUser {
   userName                String     @db.VarChar(45)
   lastName                String     @db.VarChar(45)
   email                   String     @unique(map: "email_UNIQUE") @db.VarChar(80)
+  phone                   String?    @db.VarChar(50)
   password                String     @db.VarChar(255)
   tempPassword            String?    @db.VarChar(255)
   tempPasswordExpDate     DateTime?  @db.DateTime(0)
