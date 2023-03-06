@@ -85,6 +85,7 @@ exports.createUser = async (req, res) => {
       userName,
       lastName,
       email,
+      phone,
       password = "*********",
       creationDate = new Date(),
       iduserRole,
@@ -97,6 +98,7 @@ exports.createUser = async (req, res) => {
       userName,
       lastName,
       email,
+      phone,
       password,
       creationDate,
       userRole: { connect: { iduserRole: +iduserRole } },
@@ -313,7 +315,7 @@ exports.updateUser = (req, res, next) => {
   });
 
   // Desestructurar los campos del cuerpo de la petición
-  const { idsysuser, userName, lastName, email, iduserRole, idCompany } = req.body;
+  const { idsysuser, userName,phone, lastName, email, iduserRole, idCompany } = req.body;
 
   // Verificar si el cuerpo de la petición existe
   if (!req.body) {
@@ -328,6 +330,7 @@ exports.updateUser = (req, res, next) => {
     userName,
     lastName,
     email,
+    phone,
   };
 
   if (rol == 1) {
