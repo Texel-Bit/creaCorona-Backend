@@ -74,8 +74,14 @@ const getAllDesignTypeTest = async (data) => {
       where: { idDesignType },
       include:{
         DesignColors:true,
-        DesignTypeFormatSize:true,
-        Design:true
+        DesignTypeFormatSize:{
+          include:{
+            FormatSizeTexture:true
+          }
+        },
+        
+        Design:true,
+
       }
     });
     
