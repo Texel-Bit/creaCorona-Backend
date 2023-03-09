@@ -10,10 +10,13 @@ const formatSizeTextureRoutes = require("./formatSizeTexture");
 const environmentTypeRoutes = require("./environmentType");
 const environmentRoutes = require("./environment");
 const designCompanyRoutes = require("./designCompany");
+const mosaicTypeRoutes = require("./mosaicType");
 
 const app = express();
 
 app.use("/sysUser", sysUserRoutes);
+app.use("/mosaicType", mosaicTypeRoutes);
+
 app.use("/company", companyRoutes);
 app.use("/desingType", desingTypeRoutes);
 app.use("/brecha", brechaRoutes);
