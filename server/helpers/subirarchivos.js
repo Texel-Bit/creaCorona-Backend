@@ -66,7 +66,7 @@ const subirArchivoImagen = (file, carpeta = '') => {
 
 }
 
-const subirArchivoThumbnail = (files, extensionesValidas = ['jpg', 'png', 'jpeg'], carpeta = '') => {
+const subirArchivoThumbnail = (files, extensionesValidas = ['jpg', 'png', 'jpeg','svg'], carpeta = '') => {
     return new Promise((resolve, reject) => {
         const file = files.thumbnail;
         const nombreCortado = file.name.split('.');

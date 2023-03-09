@@ -13,9 +13,9 @@ const {
 exports.createDesignType = async(req, res) => {
 
     try {
-    const { DesignTypeName} = req.body
+    const { DesignTypeName,idMosaicType} = req.body
 
-    if (!DesignTypeName) {
+    if (!DesignTypeName||!idMosaicType) {
       return res.status(400).json({
         status: false,
         err: {
@@ -35,7 +35,8 @@ exports.createDesignType = async(req, res) => {
   const  data= {
     DesignTypeName,
     DesignTypeIconPath:image,
-    
+    MosaicType: { connect: { idMosaicType: +idMosaicType } },
+
       }
 
    
@@ -61,10 +62,10 @@ exports.createDesignType = async(req, res) => {
     try {
 
     // Desestructurar los campos del cuerpo de la petición
-    const {idDesignType, DesignTypeName} = req.body
+    const {idDesignType, DesignTypeName,idMosaicType} = req.body
 
     // Verificar si el cuerpo de la petición existe
-    if (!idDesignType || !DesignTypeName ) {
+    if (!idDesignType || !DesignTypeName  || !idMosaicType) {
       return res.status(400).json({
         status: false,
         error: "Datos de entrada incompletos",
@@ -73,7 +74,8 @@ exports.createDesignType = async(req, res) => {
     const  data= {
       idDesignType:+idDesignType,
       DesignTypeName,
-  
+      MosaicType: { connect: { idMosaicType: +idMosaicType } },
+
   }
   const designType = await getDesignTypeById(data);
 

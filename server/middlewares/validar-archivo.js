@@ -19,7 +19,7 @@ const validarArchivoSubir = (req, res = response, next ) => {
 
 const validarArchivoImagen = (req, res = response, next ) => {
 
-    const allowedExtensions = ["jpg", "png", "jpeg"];
+    const allowedExtensions = ["jpg", "png", "jpeg","svg"];
 
     if (!req.files || Object.keys(req.files).length === 0 ) {
         return res.status(400).json({

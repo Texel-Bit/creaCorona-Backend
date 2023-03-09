@@ -71,10 +71,14 @@ model DesignType {
   idDesignType               Int                          @id @default(autoincrement())
   DesignTypeName             String?                      @db.VarChar(45)
   DesignTypeIconPath         String?                      @db.VarChar(255)
+  MosaicType_idMosaicType    Int
   Design                     Design[]
   DesignColors               DesignColors[]
+  MosaicType                 MosaicType                   @relation(fields: [MosaicType_idMosaicType], references: [idMosaicType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignType_MosaicType1")
   DesignTypeFormatSize       DesignTypeFormatSize[]
   DesignType_EnvironmentType DesignType_EnvironmentType[]
+
+  @@index([MosaicType_idMosaicType], map: "fk_DesignType_MosaicType1_idx")
 }
 
 model DesignTypeFormatSize {
@@ -180,4 +184,11 @@ model userStatus {
   iduserStatus          Int       @id @default(autoincrement())
   userStatusDescription String    @db.VarChar(45)
   sysUser               sysUser[]
+}
+
+model MosaicType {
+  idMosaicType    Int          @id @default(autoincrement())
+  MosaicTypeName  String       @db.VarChar(45)
+  MosaicTypeValue Int
+  DesignType      DesignType[]
 }
