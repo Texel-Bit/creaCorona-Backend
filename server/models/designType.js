@@ -80,7 +80,14 @@ const getAllDesignTypeTest = async (data) => {
           }
         },
         
+        
         Design:true,
+        MosaicType:{
+          select:{
+            MosaicTypeValue:true
+          }
+
+        }
 
       }
     });
@@ -91,7 +98,7 @@ const getAllDesignTypeTest = async (data) => {
     return result;
   } catch (e) {
     // En caso de error, se cierra la conexión a Prisma
-    
+    console.log(e);
     // Se devuelve el error
     throw e;
   }finally {
