@@ -11,8 +11,16 @@ const environmentTypeRoutes = require("./environmentType");
 const environmentRoutes = require("./environment");
 const designCompanyRoutes = require("./designCompany");
 const mosaicTypeRoutes = require("./mosaicType");
+const companyZoneRoutes = require("./companyZone");
+
+const bundleRoutes = require("./bundle");
+
+const officeRoutes = require("./office");
 
 const app = express();
+app.use("/companyZone", companyZoneRoutes);
+app.use("/bundle", bundleRoutes);
+app.use("/office", officeRoutes);
 
 app.use("/sysUser", sysUserRoutes);
 app.use("/mosaicType", mosaicTypeRoutes);
