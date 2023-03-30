@@ -21,6 +21,7 @@ exports.createCompany = async (req, res) => {
       CompanyPhone,
       idcompanyStatus,
       idCompanyRole,
+      idcompanyType
     } = req.body;
 
     if (
@@ -31,7 +32,8 @@ exports.createCompany = async (req, res) => {
       !CompanyContactName||
       !CompanyPhone ||
       !idcompanyStatus ||
-      !idCompanyRole
+      !idCompanyRole ||
+      !idcompanyType
     ) {
       return res.status(400).json({
         status: false,
@@ -60,6 +62,8 @@ exports.createCompany = async (req, res) => {
       CompanyImagePath: image,
       CompanyNIT,
       CompanyPhone,
+      companyType: { connect: { idcompanyType: +idcompanyType } },
+
       companyStatus: { connect: { idcompanyStatus: +idcompanyStatus } },
       CompanyRole: { connect: { idCompanyRole: +idCompanyRole } },
     };
@@ -92,6 +96,7 @@ exports.updateCompany = async (req, res, next) => {
       CompanyPhone,
       idcompanyStatus,
       idCompanyRole,
+      idcompanyType
     } = req.body;
 
     if (
@@ -103,7 +108,8 @@ exports.updateCompany = async (req, res, next) => {
       !CompanyNIT ||
       !CompanyPhone ||
       !idcompanyStatus ||
-      !idCompanyRole
+      !idCompanyRole||
+      !idcompanyType
     ) {
       return res.status(400).json({
         status: false,
@@ -119,6 +125,9 @@ exports.updateCompany = async (req, res, next) => {
       CompanyEmail,
       CompanyContactName,
       CompanyPhone,
+      companyType: { connect: { idcompanyType: +idcompanyType } },
+
+      
       companyStatus: { connect: { idcompanyStatus: +idcompanyStatus } },
       CompanyRole: { connect: { idCompanyRole: +idCompanyRole } },
     };

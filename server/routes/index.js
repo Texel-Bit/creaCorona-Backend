@@ -16,8 +16,16 @@ const companyZoneRoutes = require("./companyZone");
 const bundleRoutes = require("./bundle");
 
 const officeRoutes = require("./office");
+const bundleCompanyPriceRoutes = require("./bundleCompanyPrice");
+const companyTypeRoutes = require("./companyType");
+
+
+
 
 const app = express();
+app.use("/bundleCompanyPrice", bundleCompanyPriceRoutes);
+app.use("/companyType", companyTypeRoutes);
+
 app.use("/companyZone", companyZoneRoutes);
 app.use("/bundle", bundleRoutes);
 app.use("/office", officeRoutes);
