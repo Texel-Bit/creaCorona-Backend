@@ -12,7 +12,6 @@ const createBundle = async (data) => {
 
   return result
     } catch (e) {
-  console.log(e);
       return e
     }finally {
       // Siempre desconectar la base de datos después de la operación
@@ -65,6 +64,32 @@ const getAllBundle = async () => {
 };
 
 
+const getBundleDesignTypeFormatSizeTexture = async (data) => {
 
-module.exports = { createBundle,updateBundle,getAllBundle };
+  const { idDesignType,idFormatSizeTexture, ...updateData } = data;
+ 
+  try {
+    // Actualizar usuario en la base de datos
+    const result = await prisma.bundle.findMany({
+      where: { DesignType_idDesignType:{
+        equals:idDesignType
+      },FormatSizeTexture_idFormatSizeTexture:{
+        equals:idFormatSizeTexture
+      } },
+    });
+ 
+    // Llamar a la función de devolución de llamada con el resultado exitoso
+    return result
+   } catch (e) {
+    // Capturar excepción y llamar a la función de devolución de llamada con el error
+    return e
+ 
+  } finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
+  }
+ };
+
+
+module.exports = { createBundle,updateBundle,getAllBundle,getBundleDesignTypeFormatSizeTexture };
 
