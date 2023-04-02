@@ -19,12 +19,12 @@ const officeRoutes = require("./office");
 const bundleCompanyPriceRoutes = require("./bundleCompanyPrice");
 const companyTypeRoutes = require("./companyType");
 
-
-
+const quotationRoutes = require("./quotation");
 
 const app = express();
 app.use("/bundleCompanyPrice", bundleCompanyPriceRoutes);
 app.use("/companyType", companyTypeRoutes);
+app.use("/quotation", quotationRoutes);
 
 app.use("/companyZone", companyZoneRoutes);
 app.use("/bundle", bundleRoutes);
