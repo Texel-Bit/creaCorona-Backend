@@ -82,7 +82,7 @@ const createquotation = async (data) => {
  }
 };
 
-const getAllquotation = async () => {
+const getAllQuotation = async () => {
   try {
     // Se llama a Prisma para buscar todos las compañias
     const result = await prisma.quotation.findMany();
@@ -104,5 +104,5 @@ const getAllquotation = async () => {
 
 
 
-module.exports = { createquotation,updatequotation,getAllquotation,createQuotationProductDetails,createDesignColorshasquotation};
+module.exports = { createquotation,getAllQuotation,createQuotationProductDetails,createDesignColorshasquotation};
 

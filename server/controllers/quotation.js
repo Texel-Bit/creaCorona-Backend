@@ -1,7 +1,7 @@
 const {
   createquotation,
   
-  getAllquotation,
+  getAllQuotation,
   createDesignColorshasquotation,
   createQuotationProductDetails
 } = require("../models/quotation.js");
@@ -95,14 +95,14 @@ const createdDesignColorshasquotation = await createDesignColorshasquotation(arr
 
 
 
-exports.getAllquotation = async (req, res) => {
+exports.getAllQuotation = async (req, res) => {
   try {
-    const allquotation = await getAllquotation();
+    const allQuotation = await getAllQuotation();
 
     // Enviar la respuesta con los usuarios
     res.json({
       status: true,
-      data: allquotation,
+      data: allQuotation,
     });
   } catch (error) {
     console.error(error);
