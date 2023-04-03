@@ -66,14 +66,12 @@ const getAllBundle = async () => {
 
 const getBundleDesignTypeFormatSizeTexture = async (data) => {
 
-  const { idDesignType,idFormatSizeTexture, ...updateData } = data;
+  const { idFormatSizeTexture, ...updateData } = data;
  
   try {
     // Actualizar usuario en la base de datos
     const result = await prisma.bundle.findMany({
-      where: { DesignType_idDesignType:{
-        equals:idDesignType
-      },FormatSizeTexture_idFormatSizeTexture:{
+      where: {FormatSizeTexture_idFormatSizeTexture:{
         equals:idFormatSizeTexture
       } },
     });

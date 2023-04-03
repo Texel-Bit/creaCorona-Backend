@@ -84,7 +84,6 @@ model DesignType {
   MosaicType                 MosaicType                   @relation(fields: [MosaicType_idMosaicType], references: [idMosaicType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignType_MosaicType1")
   DesignTypeFormatSize       DesignTypeFormatSize[]
   DesignType_EnvironmentType DesignType_EnvironmentType[]
-  bundle                     bundle[]
 
   @@index([MosaicType_idMosaicType], map: "fk_DesignType_MosaicType1_idx")
 }
@@ -217,15 +216,12 @@ model DesignColors_has_quotation {
 
 model bundle {
   idbundle                              Int                   @id @default(autoincrement())
-  DesignType_idDesignType               Int
   FormatSizeTexture_idFormatSizeTexture Int
   bundleBasePrice                       Float?
-  DesignType                            DesignType            @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_bundle_DesignType1")
   FormatSizeTexture                     FormatSizeTexture     @relation(fields: [FormatSizeTexture_idFormatSizeTexture], references: [idFormatSizeTexture], onDelete: NoAction, onUpdate: NoAction, map: "fk_bundle_FormatSizeTexture1")
   bundleCompanyPrice                    bundleCompanyPrice[]
   bundle_PricesByZone                   bundle_PricesByZone[]
 
-  @@index([DesignType_idDesignType], map: "fk_bundle_DesignType1_idx")
   @@index([FormatSizeTexture_idFormatSizeTexture], map: "fk_bundle_FormatSizeTexture1_idx")
 }
 

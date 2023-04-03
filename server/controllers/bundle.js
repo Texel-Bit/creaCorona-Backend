@@ -7,9 +7,9 @@ const {
 
 exports.createBundle = async (req, res) => {
   try {
-    const { idDesignType, idFormatSizeTexture, bundleBasePrice } = req.body;
+    const { idFormatSizeTexture, bundleBasePrice } = req.body;
 
-    if (!idDesignType || !idFormatSizeTexture || !bundleBasePrice) {
+    if (!idFormatSizeTexture || !bundleBasePrice) {
       return res.status(400).json({
         status: false,
         err: {
@@ -23,11 +23,9 @@ exports.createBundle = async (req, res) => {
       FormatSizeTexture: {
         connect: { idFormatSizeTexture: +idFormatSizeTexture },
       },
-      DesignType: { connect: { idDesignType: +idDesignType } },
     };
     const valideData = {
       idFormatSizeTexture: +idFormatSizeTexture,
-      idDesignType: +idDesignType,
     };
 
     const valideBundle = await getBundleDesignTypeFormatSizeTexture(valideData);
