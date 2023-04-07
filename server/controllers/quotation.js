@@ -5,16 +5,26 @@ const {
   createDesignColorshasquotation,
   createQuotationProductDetails
 } = require("../models/quotation.js");
+const jwt = require("jsonwebtoken");
+const { promisify } = require('util');
 
 exports.createquotation = async (req, res) => {
   try {
+    const token = req.get('JWT');
+
+
+    let { user: { idsysuser } } = await promisify(jwt.verify)(token, process.env.SEED);
+
+if (!idsysuser) {
+  idsysuser=1
+}
     const {
       customerName,
       customerLastname,
       customerEmail,
       customerPhoneNumber,
-      quotationBundlePrice,
-      quotationPrice,
+      // quotationBundlePrice,
+      // quotationPrice,
       quotationWidth,
       quotationHeight,
       
@@ -27,8 +37,8 @@ exports.createquotation = async (req, res) => {
       !customerLastname ||
       !customerEmail ||
       !customerPhoneNumber ||
-      !quotationBundlePrice ||
-      !quotationPrice ||
+      // !quotationBundlePrice ||
+      // !quotationPrice ||
       !quotationWidth ||
       !quotationHeight ||
       !idFormatSizeTexture ||
@@ -54,6 +64,8 @@ exports.createquotation = async (req, res) => {
       quotationDate:new Date(),
       FormatSizeTexture: { connect: { idFormatSizeTexture: +idFormatSizeTexture } },
       bundleCompanyPrice: { connect: { idbundleCompanyPrice: +idbundleCompanyPrice } },
+      sysUser: { connect: { idsysuser: +idsysuser } },
+
     };
 
     const createdquotation = await createquotation(data);
@@ -84,6 +96,7 @@ const createdDesignColorshasquotation = await createDesignColorshasquotation(arr
       data: createdquotation,
     });
   } catch (error) {
+    console.log(error);
     return res.status(400).json({
       ok: false,
       err: {

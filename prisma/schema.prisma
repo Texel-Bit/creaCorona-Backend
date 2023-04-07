@@ -117,7 +117,7 @@ model Environment {
   EnvironmentType_idEnvironmentType Int
   EnvironmentProfileImage           String?         @db.VarChar(255)
   EnvironmentMaksImage              String?         @db.VarChar(255)
-  EnvironmentAngle                  Float?
+  EnvironmentAngle                  String?         @db.VarChar(255)
   EnvironmentType                   EnvironmentType @relation(fields: [EnvironmentType_idEnvironmentType], references: [idEnvironmentType], onDelete: NoAction, onUpdate: NoAction, map: "fk_Environment_EnvironmentType1")
 
   @@index([EnvironmentType_idEnvironmentType], map: "fk_Environment_EnvironmentType1_idx")
@@ -162,21 +162,22 @@ model companyStatus {
 }
 
 model sysUser {
-  idsysuser               Int        @id @default(autoincrement())
-  userName                String     @db.VarChar(45)
-  lastName                String     @db.VarChar(45)
-  email                   String     @unique(map: "email_UNIQUE") @db.VarChar(80)
-  phone                   String?    @db.VarChar(50)
-  password                String     @db.VarChar(255)
-  tempPassword            String?    @db.VarChar(255)
-  tempPasswordExpDate     DateTime?  @db.DateTime(0)
-  creationDate            DateTime   @db.DateTime(0)
+  idsysuser               Int         @id @default(autoincrement())
+  userName                String      @db.VarChar(45)
+  lastName                String      @db.VarChar(45)
+  email                   String      @unique(map: "email_UNIQUE") @db.VarChar(80)
+  phone                   String?     @db.VarChar(50)
+  password                String      @db.VarChar(255)
+  tempPassword            String?     @db.VarChar(255)
+  tempPasswordExpDate     DateTime?   @db.DateTime(0)
+  creationDate            DateTime    @db.DateTime(0)
   userRole_iduserRole     Int
   userStatus_iduserStatus Int
   Company_idCompany       Int
-  Company                 Company    @relation(fields: [Company_idCompany], references: [idCompany], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysUser_Company1")
-  userRole                userRole   @relation(fields: [userRole_iduserRole], references: [iduserRole], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysuser_userRole")
-  userStatus              userStatus @relation(fields: [userStatus_iduserStatus], references: [iduserStatus], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysuser_userStatus1")
+  quotation               quotation[]
+  Company                 Company     @relation(fields: [Company_idCompany], references: [idCompany], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysUser_Company1")
+  userRole                userRole    @relation(fields: [userRole_iduserRole], references: [iduserRole], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysuser_userRole")
+  userStatus              userStatus  @relation(fields: [userStatus_iduserStatus], references: [iduserStatus], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysuser_userStatus1")
 
   @@index([Company_idCompany], map: "fk_sysUser_Company1_idx")
   @@index([userRole_iduserRole], map: "fk_sysuser_userRole_idx")
@@ -293,13 +294,16 @@ model quotation {
   quotationDate                           DateTime?                    @db.DateTime(0)
   FormatSizeTexture_idFormatSizeTexture   Int
   bundleCompanyPrice_idbundleCompanyPrice Int
+  sysUser_idsysuser                       Int
   DesignColors_has_quotation              DesignColors_has_quotation[]
   FormatSizeTexture                       FormatSizeTexture            @relation(fields: [FormatSizeTexture_idFormatSizeTexture], references: [idFormatSizeTexture], onDelete: NoAction, onUpdate: NoAction, map: "fk_quotation_FormatSizeTexture1")
   bundleCompanyPrice                      bundleCompanyPrice           @relation(fields: [bundleCompanyPrice_idbundleCompanyPrice], references: [idbundleCompanyPrice], onDelete: NoAction, onUpdate: NoAction, map: "fk_quotation_bundleCompanyPrice1")
+  sysUser                                 sysUser                      @relation(fields: [sysUser_idsysuser], references: [idsysuser], onDelete: NoAction, onUpdate: NoAction, map: "fk_quotation_sysUser1")
   quotationProductDetails                 quotationProductDetails[]
 
   @@index([FormatSizeTexture_idFormatSizeTexture], map: "fk_quotation_FormatSizeTexture1_idx")
   @@index([bundleCompanyPrice_idbundleCompanyPrice], map: "fk_quotation_bundleCompanyPrice1_idx")
+  @@index([sysUser_idsysuser], map: "fk_quotation_sysUser1_idx")
 }
 
 model quotationProductDetails {
