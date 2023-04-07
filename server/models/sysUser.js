@@ -35,11 +35,11 @@ const findOneLoginByEmail = async ({ email }) => {
       },
     });
 
-
     // Devolvemos el resultado de la búsqueda
-    return result;
-  } catch (error) {
-    
+    return result
+  } catch (e) {
+
+    return e
   }finally {
     // Siempre desconectar la base de datos después de la operación
     await prisma.$disconnect();

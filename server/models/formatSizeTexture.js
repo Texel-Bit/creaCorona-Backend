@@ -74,6 +74,9 @@ const getFormatSizeTextureById = async (data) => {
     // Actualizar usuario en la base de datos
     const result = await prisma.formatSizeTexture.findUnique({
       where: { idFormatSizeTexture },
+      include:{
+        DesignTypeFormatSize:true
+      }
     });
  
     // Llamar a la función de devolución de llamada con el resultado exitoso

@@ -7,13 +7,15 @@ const {
 } = require("../models/quotation.js");
 const jwt = require("jsonwebtoken");
 const { promisify } = require('util');
+const { getFormatSizeTextureById } = require("../models/formatSizeTexture.js");
+const { getBundleDesignTypeFormatSizeTexture } = require("../models/bundle.js");
 
 exports.createquotation = async (req, res) => {
   try {
     const token = req.get('JWT');
 
 
-    let { user: { idsysuser } } = await promisify(jwt.verify)(token, process.env.SEED);
+    let { user: { idsysuser,office_idoffice } } = await promisify(jwt.verify)(token, process.env.SEED);
 
 if (!idsysuser) {
   idsysuser=1
@@ -29,7 +31,7 @@ if (!idsysuser) {
       quotationHeight,
       
       idFormatSizeTexture,
-      idbundleCompanyPrice
+      // idbundleCompanyPrice
     } = req.body;
 
     if (
@@ -41,8 +43,8 @@ if (!idsysuser) {
       // !quotationPrice ||
       !quotationWidth ||
       !quotationHeight ||
-      !idFormatSizeTexture ||
-      !idbundleCompanyPrice
+      !idFormatSizeTexture 
+      // !idbundleCompanyPrice
     ) {
       return res.status(400).json({
         status: false,
@@ -52,12 +54,28 @@ if (!idsysuser) {
       });
     }
 
+   const fortmatTexture={
+      idFormatSizeTexture:+idFormatSizeTexture
+    }
+    const {DesignTypeFormatSize} = await getFormatSizeTextureById(fortmatTexture);
+
+const area=quotationWidth*quotationHeight;
+    const cantidadValdosas=(area )/(DesignTypeFormatSize.DesignTypeFormatSizeHeight*DesignTypeFormatSize.DesignTypeFormatSizeWidht);
+
+   console.log(area);
+console.log(cantidadValdosas);
+    const bundle =await getBundleDesignTypeFormatSizeTexture(fortmatTexture);
+console.log(bundle[0].bundleBasePrice);
+    const quotationPrice=((area/1000)*cantidadValdosas)*bundle[0].bundleBasePrice
+    console.log(quotationPrice);
+
+    
     const data = {
       customerName,
       customerLastname,
       customerEmail,
       customerPhoneNumber:customerPhoneNumber.toString(),
-      quotationBundlePrice:+quotationBundlePrice,
+      quotationBundlePrice:+bundle[0].bundleBasePrice,
       quotationPrice:+quotationPrice,
       quotationWidth:+quotationWidth,
       quotationHeight:+quotationHeight,

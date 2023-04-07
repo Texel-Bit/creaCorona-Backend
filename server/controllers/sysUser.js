@@ -90,7 +90,7 @@ exports.createUser = async (req, res) => {
       creationDate = new Date(),
       iduserRole,
       iduserStatus = 1,
-      idCompany,
+      idoffice,
     } = req.body;
 
     // Configurar los datos para el nuevo usuario
@@ -103,7 +103,7 @@ exports.createUser = async (req, res) => {
       creationDate,
       userRole: { connect: { iduserRole: +iduserRole } },
       userStatus: { connect: { iduserStatus } },
-      Company: { connect: { idCompany: +idCompany } },
+      office: { connect: { idoffice: +idoffice } },
     };
 
     // Buscar si ya existe un usuario con el mismo email o userName
@@ -150,7 +150,10 @@ exports.login = async (req, res, next) => {
 
   try {
     // Buscar al usuario por su email en la base de datos
+
+
     const result = await findOneLoginByEmail(user);
+
     const data = result[0];
 
     // Si el usuario no existe, devolver un error
@@ -229,6 +232,7 @@ exports.login = async (req, res, next) => {
       });
     }
   } catch (err) {
+    console.log(err);
     // Si hay un error, devolver un error 500 con el mensaje de error
     res.status(500).send({
       status: false,
@@ -315,7 +319,7 @@ exports.updateUser = (req, res, next) => {
   });
 
   // Desestructurar los campos del cuerpo de la petición
-  const { idsysuser, userName,phone, lastName, email, iduserRole, idCompany } = req.body;
+  const { idsysuser, userName,phone, lastName, email, iduserRole, idoffice } = req.body;
 
   // Verificar si el cuerpo de la petición existe
   if (!req.body) {
@@ -337,7 +341,7 @@ exports.updateUser = (req, res, next) => {
     // Si el rol es administrador, agregar los campos adicionales al objeto de datos
     data.idsysuser = +idsysuser;
     data.userRole = { connect: { iduserRole: +iduserRole } };
-    data.Company = { connect: { idCompany: +idCompany } };
+    data.office = { connect: { idoffice: +idoffice } };
   } else {
     // Si el rol no es administrador, utilizar el id del usuario actual
     data.idsysuser = id;

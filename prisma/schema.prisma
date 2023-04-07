@@ -25,7 +25,6 @@ model Company {
   companyType                   companyType     @relation(fields: [companyType_idcompanyType], references: [idcompanyType], onDelete: NoAction, onUpdate: NoAction, map: "fk_Company_companyType1")
   DesignCompany                 DesignCompany[]
   office                        office[]
-  sysUser                       sysUser[]
 
   @@index([CompanyRole_idCompanyRole], map: "fk_Company_CompanyRole1_idx")
   @@index([companyStatus_idcompanyStatus], map: "fk_Company_companyStatus1_idx")
@@ -149,10 +148,11 @@ model SystemSetup {
 }
 
 model brecha {
-  idbrecha        Int     @id @default(autoincrement())
-  brechaName      String? @db.VarChar(45)
-  brechaColorPath String? @db.VarChar(255)
-  brechacol       String? @db.VarChar(45)
+  idbrecha        Int         @id @default(autoincrement())
+  brechaName      String?     @db.VarChar(45)
+  brechaColorPath String?     @db.VarChar(255)
+  brechacol       String?     @db.VarChar(45)
+  quotation       quotation[]
 }
 
 model companyStatus {
@@ -173,15 +173,15 @@ model sysUser {
   creationDate            DateTime    @db.DateTime(0)
   userRole_iduserRole     Int
   userStatus_iduserStatus Int
-  Company_idCompany       Int
+  office_idoffice         Int
   quotation               quotation[]
-  Company                 Company     @relation(fields: [Company_idCompany], references: [idCompany], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysUser_Company1")
+  office                  office      @relation(fields: [office_idoffice], references: [idoffice], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysUser_office1")
   userRole                userRole    @relation(fields: [userRole_iduserRole], references: [iduserRole], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysuser_userRole")
   userStatus              userStatus  @relation(fields: [userStatus_iduserStatus], references: [iduserStatus], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysuser_userStatus1")
 
-  @@index([Company_idCompany], map: "fk_sysUser_Company1_idx")
   @@index([userRole_iduserRole], map: "fk_sysuser_userRole_idx")
   @@index([userStatus_iduserStatus], map: "fk_sysuser_userStatus1_idx")
+  @@index([office_idoffice], map: "fk_sysUser_office1_idx")
 }
 
 model userRole {
@@ -276,6 +276,7 @@ model office {
   companyZone_idcompanyZone Int
   Company                   Company     @relation(fields: [Company_idCompany], references: [idCompany], onDelete: NoAction, onUpdate: NoAction, map: "fk_office_Company1")
   companyZone               companyZone @relation(fields: [companyZone_idcompanyZone], references: [idcompanyZone], onDelete: NoAction, onUpdate: NoAction, map: "fk_office_companyZone1")
+  sysUser                   sysUser[]
 
   @@index([Company_idCompany], map: "fk_office_Company1_idx")
   @@index([companyZone_idcompanyZone], map: "fk_office_companyZone1_idx")
@@ -295,15 +296,21 @@ model quotation {
   FormatSizeTexture_idFormatSizeTexture   Int
   bundleCompanyPrice_idbundleCompanyPrice Int
   sysUser_idsysuser                       Int
+  quotationStatus_idquotationStatus       Int
+  brecha_idbrecha                         Int
   DesignColors_has_quotation              DesignColors_has_quotation[]
   FormatSizeTexture                       FormatSizeTexture            @relation(fields: [FormatSizeTexture_idFormatSizeTexture], references: [idFormatSizeTexture], onDelete: NoAction, onUpdate: NoAction, map: "fk_quotation_FormatSizeTexture1")
+  brecha                                  brecha                       @relation(fields: [brecha_idbrecha], references: [idbrecha], onDelete: NoAction, onUpdate: NoAction, map: "fk_quotation_brecha1")
   bundleCompanyPrice                      bundleCompanyPrice           @relation(fields: [bundleCompanyPrice_idbundleCompanyPrice], references: [idbundleCompanyPrice], onDelete: NoAction, onUpdate: NoAction, map: "fk_quotation_bundleCompanyPrice1")
+  quotationStatus                         quotationStatus              @relation(fields: [quotationStatus_idquotationStatus], references: [idquotationStatus], onDelete: NoAction, onUpdate: NoAction, map: "fk_quotation_quotationStatus1")
   sysUser                                 sysUser                      @relation(fields: [sysUser_idsysuser], references: [idsysuser], onDelete: NoAction, onUpdate: NoAction, map: "fk_quotation_sysUser1")
   quotationProductDetails                 quotationProductDetails[]
 
   @@index([FormatSizeTexture_idFormatSizeTexture], map: "fk_quotation_FormatSizeTexture1_idx")
   @@index([bundleCompanyPrice_idbundleCompanyPrice], map: "fk_quotation_bundleCompanyPrice1_idx")
   @@index([sysUser_idsysuser], map: "fk_quotation_sysUser1_idx")
+  @@index([brecha_idbrecha], map: "fk_quotation_brecha1_idx")
+  @@index([quotationStatus_idquotationStatus], map: "fk_quotation_quotationStatus1_idx")
 }
 
 model quotationProductDetails {
@@ -319,6 +326,7 @@ model quotationProductDetails {
 }
 
 model quotationStatus {
-  idquotationStatus          Int     @id @default(autoincrement())
-  quotationStatusDescription String? @db.VarChar(45)
+  idquotationStatus          Int         @id @default(autoincrement())
+  quotationStatusDescription String?     @db.VarChar(45)
+  quotation                  quotation[]
 }
