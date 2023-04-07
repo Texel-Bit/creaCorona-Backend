@@ -206,8 +206,8 @@ model MosaicType {
 model DesignColors_has_quotation {
   idDesignColorQuotation      Int          @id @default(autoincrement())
   DesignColors_idDesignColors Int
+  DesignColors_Index          Int
   quotation_idquotation       Int
-  DesignColors_Index          Int?
   DesignColors                DesignColors @relation(fields: [DesignColors_idDesignColors], references: [idDesignColors], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColors_has_quotation_DesignColors1")
   quotation                   quotation    @relation(fields: [quotation_idquotation], references: [idquotation], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColors_has_quotation_quotation1")
 
@@ -217,8 +217,8 @@ model DesignColors_has_quotation {
 
 model bundle {
   idbundle                              Int                   @id @default(autoincrement())
-  FormatSizeTexture_idFormatSizeTexture Int
   bundleBasePrice                       Float?
+  FormatSizeTexture_idFormatSizeTexture Int
   FormatSizeTexture                     FormatSizeTexture     @relation(fields: [FormatSizeTexture_idFormatSizeTexture], references: [idFormatSizeTexture], onDelete: NoAction, onUpdate: NoAction, map: "fk_bundle_FormatSizeTexture1")
   bundleCompanyPrice                    bundleCompanyPrice[]
   bundle_PricesByZone                   bundle_PricesByZone[]
@@ -284,15 +284,16 @@ model office {
 
 model quotation {
   idquotation                             Int                          @id @default(autoincrement())
-  customerName                            String?                      @db.VarChar(45)
-  customerLastname                        String?                      @db.VarChar(45)
-  customerEmail                           String?                      @db.VarChar(80)
-  customerPhoneNumber                     String?                      @db.VarChar(45)
-  quotationBundlePrice                    Float?
-  quotationPrice                          Float?
-  quotationWidth                          Float?
-  quotationHeight                         Float?
-  quotationDate                           DateTime?                    @db.DateTime(0)
+  customerName                            String                       @db.VarChar(45)
+  customerLastname                        String                       @db.VarChar(45)
+  customerEmail                           String                       @db.VarChar(80)
+  customerPhoneNumber                     String                       @db.VarChar(45)
+  quotationBundlePrice                    Float
+  quotationPrice                          Float
+  quotationWidth                          Float
+  quotationHeight                         Float
+  quotationDate                           DateTime                     @db.DateTime(0)
+  quotationCompanyPrice                   Float
   FormatSizeTexture_idFormatSizeTexture   Int
   bundleCompanyPrice_idbundleCompanyPrice Int
   sysUser_idsysuser                       Int

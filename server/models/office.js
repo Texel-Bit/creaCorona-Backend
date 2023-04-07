@@ -62,8 +62,28 @@ const getAllOffice = async () => {
     await prisma.$disconnect();
   }
 };
+const getAllOfficeByIdoffice = async (data) => {
+
+  const { idoffice } = data;
+ console.log(idoffice);
+  try {
+    // Actualizar usuario en la base de datos
+    const result = await prisma.office.findUnique({
+      where: { idoffice },
+    });
+ 
+    // Llamar a la función de devolución de llamada con el resultado exitoso
+    return result
+   } catch (e) {
+    // Capturar excepción y llamar a la función de devolución de llamada con el error
+    return e
+ 
+  } finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
+  }
+ };
 
 
-
-module.exports = { createOffice,updateOffice,getAllOffice};
+module.exports = { createOffice,updateOffice,getAllOffice,getAllOfficeByIdoffice};
 

@@ -63,5 +63,35 @@ const getAllBundleCompanyPrice = async () => {
   }
 };
 
-module.exports = { createBundleCompanyPrice,updateBundleCompanyPrice,getAllBundleCompanyPrice };
+
+const getBundleCompanyPriceByBundleCompanyTypeComopanyZone = async (data) => {
+
+  const { idbundle,idcompanyZone,idcompanyType } = data;
+  try {
+    const result = await prisma.bundleCompanyPrice.findFirst({
+      where: {
+        bundle_idbundle:idbundle,
+        companyZone_idcompanyZone:idcompanyZone,
+        companyType_idcompanyType:idcompanyType,
+        
+      },
+    });
+    
+    // Se cierra la conexión a Prisma
+
+    // Se devuelve el resultado exitoso
+    return result;
+  } catch (e) {
+    // En caso de error, se cierra la conexión a Prisma
+    
+    // Se devuelve el error
+    throw e;
+  }finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
+  }
+};
+
+
+module.exports = { createBundleCompanyPrice,updateBundleCompanyPrice,getAllBundleCompanyPrice,getBundleCompanyPriceByBundleCompanyTypeComopanyZone };
 
