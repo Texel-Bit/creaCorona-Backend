@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const { include } = require("underscore");
 const prisma = new PrismaClient();
 
 
@@ -85,7 +86,14 @@ const createquotation = async (data) => {
 const getAllQuotation = async () => {
   try {
     // Se llama a Prisma para buscar todos las compañias
-    const result = await prisma.quotation.findMany();
+    const result = await prisma.quotation.findMany(
+  {include:{
+    DesignColors_has_quotation:true,
+    quotationProductDetails:true
+  }
+
+  }
+    );
     
     // Se cierra la conexión a Prisma
 
