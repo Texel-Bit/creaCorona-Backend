@@ -9,7 +9,6 @@ const { subirArchivoImagen } = require("../helpers/subirarchivos");
 
 exports.createEnvironment = async (req, res) => {
 
-  console.log(req.body,"body");
   try {
     const { EnvironmentName, idEnvironmentType,EnvironmentAngle } = req.body;
     if (!EnvironmentName || !idEnvironmentType ||!EnvironmentAngle) {
@@ -68,9 +67,9 @@ exports.createEnvironment = async (req, res) => {
 exports.updateEnvironment = async (req, res, next) => {
   try {
     // Desestructurar los campos del cuerpo de la petición
-    const { idEnvironment, EnvironmentName, idEnvironmentType } = req.body;
+    const { idEnvironment, EnvironmentName, idEnvironmentType,EnvironmentAngle } = req.body;
 
-    if (!idEnvironment || !EnvironmentName || !idEnvironmentType) {
+    if (!idEnvironment || !EnvironmentName || !idEnvironmentType||!EnvironmentAngle) {
       return res.status(400).json({
         status: false,
         err: { message: "Datos de entrada incompletos" },
@@ -79,7 +78,7 @@ exports.updateEnvironment = async (req, res, next) => {
     const data = {
       idEnvironment: +idEnvironment,
       EnvironmentName,
-
+      EnvironmentAngle,
       EnvironmentType: { connect: { idEnvironmentType: +idEnvironmentType } },
     };
     const environment = await getEnvironmentById(data);

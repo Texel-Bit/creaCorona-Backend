@@ -25,7 +25,6 @@ const createEnvironment = async (data) => {
 
  const { idEnvironment, ...updateData } = data;
 
-
  try {
    // Actualizar usuario en la base de datos\
    const result = await prisma.environment.update({
