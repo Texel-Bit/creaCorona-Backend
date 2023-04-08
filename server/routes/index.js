@@ -12,27 +12,24 @@ const environmentRoutes = require("./environment");
 const designCompanyRoutes = require("./designCompany");
 const mosaicTypeRoutes = require("./mosaicType");
 const companyZoneRoutes = require("./companyZone");
-
 const bundleRoutes = require("./bundle");
-
 const officeRoutes = require("./office");
 const bundleCompanyPriceRoutes = require("./bundleCompanyPrice");
 const companyTypeRoutes = require("./companyType");
-
 const quotationRoutes = require("./quotation");
-
+const quotationStatusRoutes=require("./quotationStatus")
 const app = express();
+
+
+app.use("/quotationStatus", quotationStatusRoutes);
 app.use("/bundleCompanyPrice", bundleCompanyPriceRoutes);
 app.use("/companyType", companyTypeRoutes);
 app.use("/quotation", quotationRoutes);
-
 app.use("/companyZone", companyZoneRoutes);
 app.use("/bundle", bundleRoutes);
 app.use("/office", officeRoutes);
-
 app.use("/sysUser", sysUserRoutes);
 app.use("/mosaicType", mosaicTypeRoutes);
-
 app.use("/company", companyRoutes);
 app.use("/desingType", desingTypeRoutes);
 app.use("/brecha", brechaRoutes);
