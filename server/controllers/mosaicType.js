@@ -3,7 +3,6 @@ const {
     getAllMosaicType,
     
   } = require("../models/mosaicType");
-  const { subirArchivoImagen } = require("../helpers/subirarchivos");
   exports.getAllMosaicType = async (req, res) => {
     try {
       const allMosaicType= await getAllMosaicType();

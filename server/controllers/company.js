@@ -4,7 +4,8 @@ const {
   getAllCompany,
   getCompanyById,
 } = require("../models/company");
-
+const path = require('path');
+const fs = require('fs');
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
 
 const fs = require("fs");
@@ -144,8 +145,9 @@ exports.updateCompany = async (req, res, next) => {
         "uploads/Company"
       );
       const filePath = path.join(process.cwd(), company.CompanyImagePath);
-      fs.unlinkSync(filePath);
-      data.CompanyImagePath = image;
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync();
+      }      data.CompanyImagePath = image;
     }
 
     const result = await updateCompany(data);

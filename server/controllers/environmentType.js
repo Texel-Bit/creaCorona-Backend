@@ -96,8 +96,9 @@ exports.updateEnvironmentType = async (req, res, next) => {
         process.cwd(),
         environmentType.EnvironmentTypeImage
       );
-      fs.unlinkSync(filePath);
-      data.EnvironmentTypeImage = image;
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync();
+      }      data.EnvironmentTypeImage = image;
     }
 
     const result = await updateEnvironmentType(data);

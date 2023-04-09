@@ -85,8 +85,9 @@ exports.updateDesign = async (req, res, next) => {
       );
 
       const filePath = path.join(process.cwd(), design.DesignImagePath);
-      fs.unlinkSync(filePath);
-      data.DesignImagePath = image;
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync();
+      }      data.DesignImagePath = image;
     }
 
     const result = await updateDesign(data);
