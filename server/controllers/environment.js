@@ -6,12 +6,13 @@ const {
 } = require("../models/environment");
 
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
+const path = require('path');
+const fs = require('fs');
 
 exports.createEnvironment = async (req, res) => {
-
   try {
-    const { EnvironmentName, idEnvironmentType,EnvironmentAngle } = req.body;
-    if (!EnvironmentName || !idEnvironmentType ||!EnvironmentAngle) {
+    const { EnvironmentName, idEnvironmentType, EnvironmentAngle } = req.body;
+    if (!EnvironmentName || !idEnvironmentType || !EnvironmentAngle) {
       return res.status(400).json({
         status: false,
         err: {
@@ -31,8 +32,7 @@ exports.createEnvironment = async (req, res) => {
       "uploads/Environment"
     );
 
-    
-    if (!image||!imageMask) {
+    if (!image || !imageMask) {
       return res.status(400).json({
         status: false,
         err: {
@@ -43,8 +43,8 @@ exports.createEnvironment = async (req, res) => {
     const data = {
       EnvironmentName,
       EnvironmentProfileImage: image,
-      EnvironmentMaksImage:imageMask,
-      EnvironmentAngle:EnvironmentAngle,
+      EnvironmentMaksImage: imageMask,
+      EnvironmentAngle: EnvironmentAngle,
       EnvironmentType: { connect: { idEnvironmentType: +idEnvironmentType } },
     };
 
@@ -66,9 +66,19 @@ exports.createEnvironment = async (req, res) => {
 exports.updateEnvironment = async (req, res, next) => {
   try {
     // Desestructurar los campos del cuerpo de la petición
-    const { idEnvironment, EnvironmentName, idEnvironmentType,EnvironmentAngle } = req.body;
+    const {
+      idEnvironment,
+      EnvironmentName,
+      idEnvironmentType,
+      EnvironmentAngle,
+    } = req.body;
 
-    if (!idEnvironment || !EnvironmentName || !idEnvironmentType||!EnvironmentAngle) {
+    if (
+      !idEnvironment ||
+      !EnvironmentName ||
+      !idEnvironmentType ||
+      !EnvironmentAngle
+    ) {
       return res.status(400).json({
         status: false,
         err: { message: "Datos de entrada incompletos" },
@@ -80,18 +90,39 @@ exports.updateEnvironment = async (req, res, next) => {
       EnvironmentAngle,
       EnvironmentType: { connect: { idEnvironmentType: +idEnvironmentType } },
     };
-    const environment = await getEnvironmentById(data);
 
+    const environment = await getEnvironmentById(data);
     if (req.files && req.files.EnvironmentProfileImage) {
       const image = await subirArchivoImagen(
         req.files.EnvironmentProfileImage,
         "uploads/Environment"
       );
+      const filePath = path.join(
+        process.cwd(),
+        environment.EnvironmentProfileImage
+      );
 
-
-      const filePath = path.join(process.cwd(), environment.EnvironmentProfileImage);
-      fs.unlinkSync(filePath);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync();
+      }
       data.EnvironmentProfileImage = image;
+    }
+
+    if (req.files && req.files.EnvironmentMaksImage) {
+      const imageMask = await subirArchivoImagen(
+        req.files.EnvironmentMaksImage,
+        "uploads/Environment"
+      );
+
+      const filePath = path.join(
+        process.cwd(),
+        environment.EnvironmentMaksImage
+      );
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync();
+      }
+
+      data.EnvironmentMaksImage = imageMask;
     }
 
     const result = await updateEnvironment(data);
