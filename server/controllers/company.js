@@ -8,8 +8,7 @@ const path = require('path');
 const fs = require('fs');
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
 
-const fs = require("fs");
-const path = require("path");
+
 
 exports.createCompany = async (req, res) => {
   try {
