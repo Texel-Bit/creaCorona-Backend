@@ -8,6 +8,7 @@ const {
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
 const path = require('path');
 const fs = require('fs');
+const { log } = require("console");
 
 exports.createEnvironment = async (req, res) => {
   try {
@@ -97,10 +98,7 @@ exports.updateEnvironment = async (req, res, next) => {
         req.files.EnvironmentProfileImage,
         "uploads/Environment"
       );
-      const filePath = path.join(
-        process.cwd(),
-        environment.EnvironmentProfileImage
-      );
+      const filePath=path.join(__dirname, environment.EnvironmentMaksImage);
 
       if (fs.existsSync(filePath)) {
         fs.unlinkSync();
@@ -114,11 +112,10 @@ exports.updateEnvironment = async (req, res, next) => {
         "uploads/Environment"
       );
 
-      const filePath = path.join(
-        process.cwd(),
-        environment.EnvironmentMaksImage
-      );
-      if (fs.existsSync(filePath)) {
+  
+
+      const filePathMaksImage=path.join(__dirname, environment.EnvironmentMaksImage);
+      if (fs.existsSync(filePathMaksImage)) {
         fs.unlinkSync();
       }
 
