@@ -74,10 +74,11 @@ exports.updateBrecha = async (req, res, next) => {
 
   if (req.files && req.files.brechaColorPath) {
     const image = await subirArchivoImagen(req.files.brechaColorPath, "uploads/Brecha");
-    const filePath = path.join(process.cwd(), brecha.brechaColorPath);
+    const filePath=path.join(__dirname, brecha.brechaColorPath);
 
-    fs.unlinkSync(filePath);
-    data.brechaColorPath = image;
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync();
+    }     data.brechaColorPath = image;
   }
 
  

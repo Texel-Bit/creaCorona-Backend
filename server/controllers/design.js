@@ -84,7 +84,9 @@ exports.updateDesign = async (req, res, next) => {
         "uploads/Design"
       );
 
-      const filePath = path.join(process.cwd(), design.DesignImagePath);
+      const filePath=path.join(__dirname, design.DesignImagePath);
+
+      
       if (fs.existsSync(filePath)) {
         fs.unlinkSync();
       }      data.DesignImagePath = image;

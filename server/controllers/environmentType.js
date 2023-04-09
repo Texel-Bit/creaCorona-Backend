@@ -92,10 +92,10 @@ exports.updateEnvironmentType = async (req, res, next) => {
         req.files.EnvironmentTypeImage,
         "uploads/EnvironmentType"
       );
-      const filePath = path.join(
-        process.cwd(),
-        environmentType.EnvironmentTypeImage
-      );
+
+      const filePath=path.join(__dirname,environmentType.EnvironmentTypeImage
+        );
+
       if (fs.existsSync(filePath)) {
         fs.unlinkSync();
       }      data.EnvironmentTypeImage = image;

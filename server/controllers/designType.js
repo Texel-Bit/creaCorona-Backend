@@ -87,7 +87,7 @@ exports.createDesignType = async(req, res) => {
       );
   
   
-      const filePath = path.join(process.cwd(), designType.DesignTypeIconPath);
+      const filePath=path.join(__dirname,designType.DesignTypeIconPath);
 
       if (fs.existsSync(filePath)) {
         fs.unlinkSync();

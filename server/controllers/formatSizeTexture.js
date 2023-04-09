@@ -87,7 +87,7 @@ exports.updateFormatSizeTexture = async (req, res, next) => {
       "uploads/FormatSizeTexture"
     );
 
-    const filePath = path.join(process.cwd(), formatSizeTexture.FormatSizeTextureMaskPath);
+    const filePath=path.join(__dirname,formatSizeTexture.FormatSizeTextureMaskPath);
 
     if (fs.existsSync(filePath)) {
       fs.unlinkSync();

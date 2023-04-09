@@ -77,7 +77,8 @@ exports.updateDesignColors = async (req, res, next) => {
 
     if (req.files && req.files.DesignColorPath) {
       const image = await subirArchivoImagen(req.files.DesignColorPath, "uploads/DesignColors");
-      const filePath = path.join(process.cwd(), designColors.DesignColorPath);
+
+      const filePath=path.join(__dirname,designColors.DesignColorPath);
       if (fs.existsSync(filePath)) {
         fs.unlinkSync();
       }      data.DesignColorPath = image;

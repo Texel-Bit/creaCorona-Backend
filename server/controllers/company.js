@@ -143,7 +143,9 @@ exports.updateCompany = async (req, res, next) => {
         req.files.CompanyImagePath,
         "uploads/Company"
       );
-      const filePath = path.join(process.cwd(), company.CompanyImagePath);
+
+      const filePath=path.join(__dirname, company.CompanyImagePath);
+
       if (fs.existsSync(filePath)) {
         fs.unlinkSync();
       }      data.CompanyImagePath = image;
