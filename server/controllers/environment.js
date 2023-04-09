@@ -44,7 +44,7 @@ exports.createEnvironment = async (req, res) => {
       EnvironmentName,
       EnvironmentProfileImage: image,
       EnvironmentMaksImage:imageMask,
-      EnvironmentAngle:+EnvironmentAngle,
+      EnvironmentAngle:EnvironmentAngle,
       EnvironmentType: { connect: { idEnvironmentType: +idEnvironmentType } },
     };
 
@@ -54,7 +54,6 @@ exports.createEnvironment = async (req, res) => {
       data: createdEnvironment,
     });
   } catch (error) {
-
     return res.status(400).json({
       status: false,
       err: {

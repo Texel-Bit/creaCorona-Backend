@@ -12,7 +12,6 @@ const createEnvironment = async (data) => {
 
   return result
     } catch (e) {
-  
       return e
     }finally {
       // Siempre desconectar la base de datos después de la operación
