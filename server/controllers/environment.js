@@ -104,7 +104,7 @@ exports.updateEnvironment = async (req, res, next) => {
 
       if (fs.existsSync(filePath)) {
         fs.unlinkSync();
-      }
+      } 
       data.EnvironmentProfileImage = image;
     }
 
