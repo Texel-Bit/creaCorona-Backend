@@ -15,6 +15,8 @@ const { getBundleCompanyPriceByBundleCompanyTypeComopanyZone } = require("../mod
 
 exports.createquotation = async (req, res) => {
   try {
+
+
     const token = req.get("JWT");
 
     let {
@@ -74,6 +76,8 @@ exports.createquotation = async (req, res) => {
 
     const quotationPrice =
       (area / 1000) * cantidadValdosas * bundle[0].bundleBasePrice;
+      console.log(12);
+
       const {companyZone_idcompanyZone,Company_idCompany}=await getAllOfficeByIdoffice(office);
 
       const company={
@@ -86,10 +90,19 @@ exports.createquotation = async (req, res) => {
         idbundle:bundle[0].idbundle,
         idcompanyType:companyType_idcompanyType
       }
+
+
 const {price,idbundleCompanyPrice}=await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(bundleCompanyPrice);
 
-
-    const data = {
+if (price == undefined) {
+  return res.status(400).json({
+    ok: false,
+    err: {
+      message: "No pudo ser creado la cotizacion no existe bundleCompanyPrice",
+      
+    },
+  });
+}    const data = {
       customerName,
       customerLastname,
       customerEmail,
@@ -114,10 +127,10 @@ const {price,idbundleCompanyPrice}=await getBundleCompanyPriceByBundleCompanyTyp
       sysUser: { connect: { idsysuser: +idsysuser } },
     };
 
+
     const createdquotation = await createquotation(data);
 
 
-    console.log(createdquotation,"echo1");
 
     const arrProductDetails = req.body.quotationProductDetails;
 
@@ -148,6 +161,7 @@ const {price,idbundleCompanyPrice}=await getBundleCompanyPriceByBundleCompanyTyp
       ok: false,
       err: {
         message: "No pudo ser creado la cotizacion",
+        error
       },
     });
   }
