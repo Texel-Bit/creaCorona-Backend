@@ -154,7 +154,7 @@ if (price == undefined) {
 
     const createdDesignColorshasquotation =
       await createDesignColorshasquotation(arrDesignColorshasquotation);
-createdquotation.cantidadValdosas=cantidadValdosas
+createdquotation[0].cantidadValdosas=cantidadValdosas
     res.json({
       status: true,
       data: createdquotation,
