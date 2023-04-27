@@ -154,10 +154,11 @@ if (price == undefined) {
 
     const createdDesignColorshasquotation =
       await createDesignColorshasquotation(arrDesignColorshasquotation);
-
+createdquotation.cantidadValdosas=cantidadValdosas
     res.json({
       status: true,
       data: createdquotation,
+      
     });
   } catch (error) {
     return res.status(400).json({
