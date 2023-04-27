@@ -78,12 +78,12 @@ const getBundleCompanyPriceByBundleCompanyTypeComopanyZone = async (data) => {
     });
     if (result==null) {
 
-      console.log("gg");
-    
+      return result;
+
     }
 
     // Se devuelve el resultado exitoso
-    return result;
+    return result[0];
   } catch (e) {
 
     console.log(e);

@@ -12,6 +12,7 @@ const { getBundleDesignTypeFormatSizeTexture } = require("../models/bundle.js");
 const { getAllOfficeByIdoffice } = require("../models/office.js");
 const { getCompanyById } = require("../models/company.js");
 const { getBundleCompanyPriceByBundleCompanyTypeComopanyZone } = require("../models/bundleCompanyPrice.js");
+const { log } = require("console");
 
 exports.createquotation = async (req, res) => {
   try {
@@ -91,9 +92,11 @@ exports.createquotation = async (req, res) => {
         idcompanyType:companyType_idcompanyType
       }
 
+      console.log(bundleCompanyPrice);
 
 const {price,idbundleCompanyPrice}=await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(bundleCompanyPrice);
 
+console.log(price);
 if (price == undefined) {
   return res.status(400).json({
     ok: false,
