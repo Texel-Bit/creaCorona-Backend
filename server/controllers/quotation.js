@@ -154,7 +154,7 @@ if (price == undefined) {
 
     const createdDesignColorshasquotation =
       await createDesignColorshasquotation(arrDesignColorshasquotation);
-createdquotation[0].cantidadValdosas=cantidadValdosas
+createdquotation.cantidadValdosas=cantidadValdosas
     res.json({
       status: true,
       data: createdquotation,
@@ -162,7 +162,7 @@ createdquotation[0].cantidadValdosas=cantidadValdosas
     });
   } catch (error) {
     return res.status(400).json({
-      ok: false,
+      status: false,
       err: {
         message: "No pudo ser creado la cotizacion",
         error
