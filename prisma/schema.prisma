@@ -290,8 +290,9 @@ model quotation {
   customerPhoneNumber                     String                       @db.VarChar(45)
   quotationBundlePrice                    Float
   quotationPrice                          Float
-  quotationWidth                          Float
-  quotationHeight                         Float
+  quotationWidth                          Float?
+  quotationHeight                         Float?
+  quatitionArea                           Float
   quotationDate                           DateTime                     @db.DateTime(0)
   quotationCompanyPrice                   Float
   FormatSizeTexture_idFormatSizeTexture   Int

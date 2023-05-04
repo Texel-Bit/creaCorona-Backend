@@ -112,6 +112,7 @@ exports.createquotation = async (req, res) => {
       customerName,
       customerLastname,
       customerEmail,
+      quatitionArea:+quatitionArea,
       customerPhoneNumber: customerPhoneNumber.toString(),
       quotationBundlePrice: +bundle[0].bundleBasePrice,
       quotationPrice: +quotationPrice,
