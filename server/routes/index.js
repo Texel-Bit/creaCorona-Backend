@@ -18,8 +18,11 @@ const bundleCompanyPriceRoutes = require("./bundleCompanyPrice");
 const companyTypeRoutes = require("./companyType");
 const quotationRoutes = require("./quotation");
 const quotationStatusRoutes=require("./quotationStatus")
+const userRoleRoutes=require("./userRole")
+
 const app = express();
 
+app.use("/userRole", userRoleRoutes);
 
 app.use("/quotationStatus", quotationStatusRoutes);
 app.use("/bundleCompanyPrice", bundleCompanyPriceRoutes);
