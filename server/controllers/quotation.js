@@ -36,6 +36,7 @@ exports.createquotation = async (req, res) => {
       quotationHeight,
       idbrecha,
       idFormatSizeTexture,
+      quatitionArea
       // idbundleCompanyPrice
     } = req.body;
 
@@ -44,8 +45,7 @@ exports.createquotation = async (req, res) => {
       !customerLastname ||
       !customerEmail ||
       !customerPhoneNumber ||
-      !quotationWidth ||
-      !quotationHeight ||
+      !quatitionArea ||
       !idbrecha||
       !idFormatSizeTexture
     ) {
@@ -67,17 +67,15 @@ exports.createquotation = async (req, res) => {
     const office={
       idoffice:office_idoffice
     }
-    const area = quotationWidth * quotationHeight*100;
     const cantidadValdosas =
-      area /
+    quatitionArea /
       (DesignTypeFormatSize.DesignTypeFormatSizeHeight *
         DesignTypeFormatSize.DesignTypeFormatSizeWidht);
 
     const bundle = await getBundleDesignTypeFormatSizeTexture(fortmatTexture);
 
     const quotationPrice =
-      (area / 1000) * cantidadValdosas * bundle[0].bundleBasePrice;
-      console.log(12);
+      (quatitionArea / 1000) * cantidadValdosas * bundle[0].bundleBasePrice;
 
       const {companyZone_idcompanyZone,Company_idCompany}=await getAllOfficeByIdoffice(office);
 
@@ -95,7 +93,6 @@ exports.createquotation = async (req, res) => {
 
 const {price,idbundleCompanyPrice}=await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(bundleCompanyPrice);
 
-console.log(price);
 if (price == undefined) {
   return res.status(400).json({
     ok: false,
