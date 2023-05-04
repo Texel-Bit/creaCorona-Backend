@@ -67,7 +67,7 @@ exports.createquotation = async (req, res) => {
     const office={
       idoffice:office_idoffice
     }
-    const area = quotationWidth * quotationHeight;
+    const area = quotationWidth * quotationHeight*100;
     const cantidadValdosas =
       area /
       (DesignTypeFormatSize.DesignTypeFormatSizeHeight *
@@ -92,7 +92,6 @@ exports.createquotation = async (req, res) => {
         idcompanyType:companyType_idcompanyType
       }
 
-      console.log(bundleCompanyPrice);
 
 const {price,idbundleCompanyPrice}=await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(bundleCompanyPrice);
 
