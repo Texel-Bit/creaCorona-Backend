@@ -71,13 +71,14 @@ exports.createquotation = async (req, res) => {
     const areaValdosa =
       (DesignTypeFormatSize.DesignTypeFormatSizeHeight *
         DesignTypeFormatSize.DesignTypeFormatSizeWidht) /
-      100;
-    const cantidadValdosas = quatitionArea / areaValdosa;
+        10000;
+
+      //redondear al nyumero mayor
+    const cantidadValdosas =Math.ceil(quatitionArea / areaValdosa) 
 
     const bundle = await getBundleDesignTypeFormatSizeTexture(fortmatTexture);
 
-    const quotationPrice =
-      quatitionArea * cantidadValdosas * bundle[0].bundleBasePrice;
+    const quotationPrice =areaValdosa * cantidadValdosas * bundle[0].bundleBasePrice;
 
     const { companyZone_idcompanyZone, Company_idCompany } =
       await getAllOfficeByIdoffice(office);
