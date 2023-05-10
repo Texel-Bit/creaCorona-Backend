@@ -51,14 +51,17 @@ model Design {
 }
 
 model DesignColors {
-  idDesignColors             Int                          @id @default(autoincrement())
-  DesignColorName            String?                      @db.VarChar(45)
-  DesignColorPath            String?                      @db.VarChar(255)
-  DesignType_idDesignType    Int
-  DesignType                 DesignType                   @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColors_DesignType1")
-  DesignColors_has_quotation DesignColors_has_quotation[]
+  idDesignColors                                                Int                          @id @default(autoincrement())
+  DesignColorName                                               String?                      @db.VarChar(45)
+  DesignColorPath                                               String?                      @db.VarChar(255)
+  DesignType_idDesignType                                       Int
+  DesignColorType                                               Int?
+  DesignColorType_DesignColors_DesignColorTypeToDesignColorType DesignColorType?             @relation("DesignColors_DesignColorTypeToDesignColorType", fields: [DesignColorType], references: [IdDesignColorType], onDelete: NoAction, onUpdate: NoAction, map: "FK_DesignColors_DesignColorType")
+  DesignType                                                    DesignType                   @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColors_DesignType1")
+  DesignColors_has_quotation                                    DesignColors_has_quotation[]
 
   @@index([DesignType_idDesignType], map: "fk_DesignColors_DesignType1_idx")
+  @@index([DesignColorType], map: "Index 3")
 }
 
 model DesignCompany {
@@ -74,15 +77,16 @@ model DesignCompany {
 }
 
 model DesignType {
-  idDesignType               Int                          @id @default(autoincrement())
-  DesignTypeName             String?                      @db.VarChar(45)
-  DesignTypeIconPath         String?                      @db.VarChar(255)
-  MosaicType_idMosaicType    Int
-  Design                     Design[]
-  DesignColors               DesignColors[]
-  MosaicType                 MosaicType                   @relation(fields: [MosaicType_idMosaicType], references: [idMosaicType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignType_MosaicType1")
-  DesignTypeFormatSize       DesignTypeFormatSize[]
-  DesignType_EnvironmentType DesignType_EnvironmentType[]
+  idDesignType                   Int                              @id @default(autoincrement())
+  DesignTypeName                 String?                          @db.VarChar(45)
+  DesignTypeIconPath             String?                          @db.VarChar(255)
+  MosaicType_idMosaicType        Int
+  Design                         Design[]
+  DesignColorType_has_DesignType DesignColorType_has_DesignType[]
+  DesignColors                   DesignColors[]
+  MosaicType                     MosaicType                       @relation(fields: [MosaicType_idMosaicType], references: [idMosaicType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignType_MosaicType1")
+  DesignTypeFormatSize           DesignTypeFormatSize[]
+  DesignType_EnvironmentType     DesignType_EnvironmentType[]
 
   @@index([MosaicType_idMosaicType], map: "fk_DesignType_MosaicType1_idx")
 }
@@ -126,6 +130,7 @@ model EnvironmentType {
   idEnvironmentType          Int                          @id @default(autoincrement())
   EnvironmentTypeName        String?                      @db.VarChar(45)
   EnvironmentTypeImage       String?                      @db.VarChar(255)
+  WorkWithStructure          Int?                         @default(1) @db.TinyInt
   DesignType_EnvironmentType DesignType_EnvironmentType[]
   Environment                Environment[]
 }
@@ -331,4 +336,22 @@ model quotationStatus {
   idquotationStatus          Int         @id @default(autoincrement())
   quotationStatusDescription String?     @db.VarChar(45)
   quotation                  quotation[]
+}
+
+model DesignColorType {
+  IdDesignColorType                                          Int                              @id @default(autoincrement())
+  DesignColorTypeDescription                                 String?                          @db.VarChar(50)
+  DesignColorType_has_DesignType                             DesignColorType_has_DesignType[]
+  DesignColors_DesignColors_DesignColorTypeToDesignColorType DesignColors[]                   @relation("DesignColors_DesignColorTypeToDesignColorType")
+}
+
+model DesignColorType_has_DesignType {
+  DesignColorType_IdDesignColorType Int
+  DesignType_idDesignType           Int
+  DesignColorType                   DesignColorType @relation(fields: [DesignColorType_IdDesignColorType], references: [IdDesignColorType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorType_has_DesignType_DesignColorType1")
+  DesignType                        DesignType      @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorType_has_DesignType_DesignType1")
+
+  @@id([DesignColorType_IdDesignColorType, DesignType_idDesignType])
+  @@index([DesignColorType_IdDesignColorType], map: "fk_DesignColorType_has_DesignType_DesignColorType1_idx")
+  @@index([DesignType_idDesignType], map: "fk_DesignColorType_has_DesignType_DesignType1_idx")
 }

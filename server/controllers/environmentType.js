@@ -14,8 +14,8 @@ const fs = require("fs");
 exports.createEnvironmentType = async (req, res) => {
 
   try {
-    const { EnvironmentTypeName } = req.body;
-    if (!EnvironmentTypeName) {
+    const { EnvironmentTypeName,WorkWithStructure } = req.body;
+    if (!EnvironmentTypeName||!WorkWithStructure) {
       return res.status(400).json({
         status: false,
         err: {
@@ -37,6 +37,7 @@ exports.createEnvironmentType = async (req, res) => {
     }
     const data = {
       EnvironmentTypeName,
+      WorkWithStructure,
       EnvironmentTypeImage: image,
     };
 
