@@ -72,9 +72,9 @@ exports.createEnvironmentType = async (req, res) => {
 exports.updateEnvironmentType = async (req, res, next) => {
   try {
     // Desestructurar los campos del cuerpo de la petición
-    const { idEnvironmentType, EnvironmentTypeName } = req.body;
+    const { idEnvironmentType, EnvironmentTypeName,WorkWithStructure } = req.body;
 
-    if (!idEnvironmentType || !EnvironmentTypeName) {
+    if (!idEnvironmentType || !EnvironmentTypeName ||!WorkWithStructure) {
       return res
         .status(400)
         .json({
@@ -84,6 +84,7 @@ exports.updateEnvironmentType = async (req, res, next) => {
     }
     const data = {
       idEnvironmentType: +idEnvironmentType,
+      WorkWithStructure,
       EnvironmentTypeName,
     };
     const environmentType = await getEnvironmentTypeById(data);
