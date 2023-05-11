@@ -20,7 +20,11 @@ const quotationRoutes = require("./quotation");
 const quotationStatusRoutes=require("./quotationStatus")
 const userRoleRoutes=require("./userRole")
 
+const designColorTypeRoutes=require("./designColorType")
+
+
 const app = express();
+app.use("/designColorType", designColorTypeRoutes);
 
 app.use("/userRole", userRoleRoutes);
 

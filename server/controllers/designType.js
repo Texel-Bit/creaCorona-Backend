@@ -1,6 +1,6 @@
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
 const {
-    createDesignType,updateDesignType, getAllDesignType, getDesignTypeById, getAllDesignTypeTest
+    createDesignType,updateDesignType, getAllDesignType, getDesignTypeById ,createDesignColorTypehasDesignType,getAllDesignTypeTest
   
   } = require("../models/designType");
   
@@ -13,9 +13,9 @@ const {
 exports.createDesignType = async(req, res) => {
 
     try {
-    const { DesignTypeName,idMosaicType} = req.body
+    const { DesignTypeName,idMosaicType,DesignColorType} = req.body
 
-    if (!DesignTypeName||!idMosaicType) {
+    if (!DesignTypeName||!idMosaicType||!DesignColorType) {
       return res.status(400).json({
         status: false,
         err: {
@@ -42,9 +42,24 @@ exports.createDesignType = async(req, res) => {
    
       const createdDesignType = await createDesignType(data);
 
+
+      const arr = req.body.DesignColorType
+      .split(",")
+      .map((idEnvironmentType) => ({
+        EnvironmentType_idEnvironmentType:
+        createdDesignType.idEnvironmentType,
+        DesignColorType_IdDesignColorType: +idEnvironmentType,
+      }));
+    const DesignColorTypehasDesignType = await createDesignColorTypehasDesignType(
+      arr
+    );
+
+
+
       res.json({
         status: true,
         data: createdDesignType,
+        DesignColorTypehasDesignType
       });
     } catch (error) {
   

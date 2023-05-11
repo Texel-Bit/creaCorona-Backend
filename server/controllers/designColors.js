@@ -9,8 +9,8 @@ const fs = require("fs");
 const path = require("path");
 exports.createDesignColors = async (req, res) => {
   try {
-    const { DesignColorName, idDesignType } = req.body;
-    if (!DesignColorName || !idDesignType) {
+    const { DesignColorName, idDesignType,IdDesignColorType } = req.body;
+    if (!DesignColorName || !idDesignType||!IdDesignColorType) {
       return res.status(400).json({
         status: false,
         err: {
@@ -36,6 +36,7 @@ exports.createDesignColors = async (req, res) => {
       DesignColorName,
       DesignColorPath: image,
       DesignType: { connect: { idDesignType: +idDesignType } },
+      DesignColorType:{ connect: { IdDesignColorType: +IdDesignColorType } },
     };
 
     const createdDesignColors = await createDesignColors(data);
@@ -59,9 +60,9 @@ exports.updateDesignColors = async (req, res, next) => {
   // Desestructurar los campos del cuerpo de la petición
 
   try {
-    const { idDesignColors, DesignColorName, idDesignType } = req.body;
+    const { idDesignColors, DesignColorName, idDesignType,IdDesignColorType } = req.body;
 
-    if (!idDesignColors || !DesignColorName || !idDesignType) {
+    if (!idDesignColors || !DesignColorName || !idDesignType||IdDesignColorType) {
       return res.status(400).json({
         status: false,
         err: { message: "Datos de entrada incompletos" },
@@ -72,6 +73,8 @@ exports.updateDesignColors = async (req, res, next) => {
       idDesignColors: +idDesignColors,
       DesignColorName,
       DesignType: { connect: { idDesignType: +idDesignType } },
+      DesignColorType:{ connect: { IdDesignColorType: +IdDesignColorType } },
+
     };
     const designColors = await getDesignColorsById(data);
 

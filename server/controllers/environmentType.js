@@ -37,7 +37,7 @@ exports.createEnvironmentType = async (req, res) => {
     }
     const data = {
       EnvironmentTypeName,
-      WorkWithStructure,
+      WorkWithStructure:+WorkWithStructure,
       EnvironmentTypeImage: image,
     };
 
@@ -84,7 +84,7 @@ exports.updateEnvironmentType = async (req, res, next) => {
     }
     const data = {
       idEnvironmentType: +idEnvironmentType,
-      WorkWithStructure,
+      WorkWithStructure:+WorkWithStructure,
       EnvironmentTypeName,
     };
     const environmentType = await getEnvironmentTypeById(data);

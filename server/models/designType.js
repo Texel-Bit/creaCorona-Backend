@@ -109,6 +109,26 @@ const getAllDesignTypeTest = async (data) => {
 
 
 
+const createDesignColorTypehasDesignType = async (data) => {
+
+  try {
+    const result =  await prisma.DesignColorType_has_DesignType.create({
+      data
+    })
+
+
+return result
+  } catch (e) {
+console.log(e);
+
+    return e
+  }finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
+  }
+};
+
+
 
 const getDesignTypeById = async (data) => {
 
@@ -132,5 +152,5 @@ const getDesignTypeById = async (data) => {
     await prisma.$disconnect();
   }
  };
-module.exports = { createDesignType,updateDesignType,getAllDesignType,getDesignTypeById,getAllDesignTypeTest };
+module.exports = { createDesignType,updateDesignType,getAllDesignType,getDesignTypeById,getAllDesignTypeTest,createDesignColorTypehasDesignType };
 
