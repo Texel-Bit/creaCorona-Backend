@@ -17,6 +17,8 @@ const {
 const { log } = require("console");
 
 exports.createquotation = async (req, res) => {
+
+  console.log(req.body);
   try {
     const token = req.get("JWT");
 
@@ -37,6 +39,7 @@ exports.createquotation = async (req, res) => {
       idbrecha,
       idFormatSizeTexture,
       quatitionArea,
+      demo
       // idbundleCompanyPrice
     } = req.body;
 
@@ -47,7 +50,8 @@ exports.createquotation = async (req, res) => {
       !customerPhoneNumber ||
       !quatitionArea ||
       !idbrecha ||
-      !idFormatSizeTexture
+      !idFormatSizeTexture||
+      !demo
     ) {
       return res.status(400).json({
         status: false,
@@ -56,7 +60,26 @@ exports.createquotation = async (req, res) => {
         },
       });
     }
+    const simulationImage = await subirArchivoImagen(
+      req.files.simulationImage,
+      "uploads/quotation"
+    );
+    const desingPatterImage = await subirArchivoImagen(
+      req.files.simulationImage,
+      "uploads/quotation"
+    );
 
+    
+
+    // Manejo de errores de subirArchivoImagen
+    if (!desingPatterImage||!simulationImage) {
+      return res.status(400).json({
+        status: false,
+        err: {
+          message: "Error al subir la imagen",
+        },
+      });
+    }
     const fortmatTexture = {
       idFormatSizeTexture: +idFormatSizeTexture,
     };
@@ -112,6 +135,7 @@ exports.createquotation = async (req, res) => {
       customerName,
       customerLastname,
       customerEmail,
+      simulationImage:simulationImage,
       quatitionArea:+quatitionArea,
       customerPhoneNumber: customerPhoneNumber.toString(),
       quotationBundlePrice: +bundle[0].bundleBasePrice,
@@ -135,32 +159,43 @@ exports.createquotation = async (req, res) => {
       sysUser: { connect: { idsysuser: +idsysuser } },
     };
 
-    const createdquotation = await createquotation(data);
+   
+if (demo==2) {
+  const createdquotation = await createquotation(data);
+console.log(createdquotation,"hola");
+  const arrProductDetails = req.body.quotationProductDetails;
 
-    const arrProductDetails = req.body.quotationProductDetails;
+  arrProductDetails.forEach((element, index) => {
+    arrProductDetails[index].quotation_idquotation =
+      +createdquotation.idquotation;
+  });
 
-    arrProductDetails.forEach((element, index) => {
-      arrProductDetails[index].quotation_idquotation =
-        +createdquotation.idquotation;
-    });
+  const createdQuotationProductDetails = await createQuotationProductDetails(
+    arrProductDetails
+  );
 
-    const createdQuotationProductDetails = await createQuotationProductDetails(
-      arrProductDetails
-    );
+  const arrDesignColorshasquotation = req.body.DesignColors_has_quotation;
+  arrDesignColorshasquotation.forEach((element, index) => {
+    arrDesignColorshasquotation[index].quotation_idquotation =
+      +createdquotation.idquotation;
+  });
 
-    const arrDesignColorshasquotation = req.body.DesignColors_has_quotation;
-    arrDesignColorshasquotation.forEach((element, index) => {
-      arrDesignColorshasquotation[index].quotation_idquotation =
-        +createdquotation.idquotation;
-    });
-
-    const createdDesignColorshasquotation =
-      await createDesignColorshasquotation(arrDesignColorshasquotation);
+  const createdDesignColorshasquotation =
+    await createDesignColorshasquotation(arrDesignColorshasquotation);
     createdquotation.cantidadValdosas = cantidadValdosas;
     res.json({
       status: true,
       data: createdquotation,
     });
+}else{
+  data.cantidadValdosas = cantidadValdosas;
+  res.json({
+    status: true,
+    data,
+  });
+}
+   
+   
   } catch (error) {
     return res.status(400).json({
       status: false,

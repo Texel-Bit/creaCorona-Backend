@@ -41,7 +41,6 @@ const getAllDesignColorType= async () => {
   };
 
   const deleteDesignColorTypehasDesignType = async (data) => {
-console.log(data);
     try {
       const result =  await prisma.designColorType_has_DesignType.deleteMany({
         where:{
