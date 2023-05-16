@@ -21,4 +21,57 @@ const getAllDesignColorType= async () => {
       await prisma.$disconnect();
     }
   };
-module.exports = { getAllDesignColorType };
+
+  const createDesignColorTypehasDesignType = async (data) => {
+
+    try {
+      const result =  await prisma.designColorType_has_DesignType.createMany({
+        data
+      })
+
+
+  return result
+    } catch (e) {
+      console.log(e);
+      return e
+    }finally {
+      // Siempre desconectar la base de datos después de la operación
+      await prisma.$disconnect();
+    }
+  };
+
+  const deleteDesignColorTypehasDesignType = async (data) => {
+console.log(data);
+    try {
+      const result =  await prisma.designColorType_has_DesignType.deleteMany({
+        where:{
+          
+         
+          AND:{
+            DesignType_idDesignType:{
+              equals:data.DesignType_idDesignType
+            },
+            DesignColorType_idEnvironmentType:{
+              equals:data.DesignColorTypeidEnvironmentType
+            },
+            DesignColorType_IdDesignColorType:{
+              equals:data.DesignColorTypeIdDesignColorType
+            }
+
+          }
+
+        }
+      })
+
+      console.log(result);
+
+  return result
+    } catch (e) {
+      console.log(e);
+      return e
+    }finally {
+      // Siempre desconectar la base de datos después de la operación
+      await prisma.$disconnect();
+    }
+  };
+module.exports = { getAllDesignColorType,createDesignColorTypehasDesignType,deleteDesignColorTypehasDesignType };

@@ -43,23 +43,23 @@ exports.createDesignType = async(req, res) => {
       const createdDesignType = await createDesignType(data);
 
 
-      const arr = req.body.DesignColorType
-      .split(",")
-      .map((idEnvironmentType) => ({
-        EnvironmentType_idEnvironmentType:
-        createdDesignType.idEnvironmentType,
-        DesignColorType_IdDesignColorType: +idEnvironmentType,
-      }));
-    const DesignColorTypehasDesignType = await createDesignColorTypehasDesignType(
-      arr
-    );
+    //   const arr = req.body.DesignColorType
+    //   .split(",")
+    //   .map((idEnvironmentType) => ({
+    //     EnvironmentType_idEnvironmentType:
+    //     createdDesignType.idEnvironmentType,
+    //     DesignColorType_IdDesignColorType: +idEnvironmentType,
+    //   }));
+    // const DesignColorTypehasDesignType = await createDesignColorTypehasDesignType(
+    //   arr
+    // );
 
 
 
       res.json({
         status: true,
         data: createdDesignType,
-        DesignColorTypehasDesignType
+        // DesignColorTypehasDesignType
       });
     } catch (error) {
   

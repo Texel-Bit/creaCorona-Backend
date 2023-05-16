@@ -127,12 +127,13 @@ model Environment {
 }
 
 model EnvironmentType {
-  idEnvironmentType          Int                          @id @default(autoincrement())
-  EnvironmentTypeName        String?                      @db.VarChar(45)
-  EnvironmentTypeImage       String?                      @db.VarChar(255)
-  WorkWithStructure          Int?                         @default(1) @db.TinyInt
-  DesignType_EnvironmentType DesignType_EnvironmentType[]
-  Environment                Environment[]
+  idEnvironmentType              Int                              @id @default(autoincrement())
+  EnvironmentTypeName            String?                          @db.VarChar(45)
+  EnvironmentTypeImage           String?                          @db.VarChar(255)
+  WorkWithStructure              Int?                             @default(1) @db.TinyInt
+  DesignColorType_has_DesignType DesignColorType_has_DesignType[]
+  DesignType_EnvironmentType     DesignType_EnvironmentType[]
+  Environment                    Environment[]
 }
 
 model FormatSizeTexture {
@@ -293,6 +294,8 @@ model quotation {
   customerLastname                        String                       @db.VarChar(45)
   customerEmail                           String                       @db.VarChar(80)
   customerPhoneNumber                     String                       @db.VarChar(45)
+  simulationImage                         String                       @db.VarChar(255)
+  desingPatternImage                      String                       @db.VarChar(255)
   quotationBundlePrice                    Float
   quotationPrice                          Float
   quotationWidth                          Float?
@@ -348,10 +351,13 @@ model DesignColorType {
 model DesignColorType_has_DesignType {
   DesignColorType_IdDesignColorType Int
   DesignType_idDesignType           Int
-  DesignColorType                   DesignColorType @relation(fields: [DesignColorType_IdDesignColorType], references: [IdDesignColorType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorType_has_DesignType_DesignColorType1")
-  DesignType                        DesignType      @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorType_has_DesignType_DesignType1")
+  DesignColorType_idEnvironmentType Int?
+  DesignColorType                   DesignColorType  @relation(fields: [DesignColorType_IdDesignColorType], references: [IdDesignColorType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorType_has_DesignType_DesignColorType1")
+  DesignType                        DesignType       @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorType_has_DesignType_DesignType1")
+  EnvironmentType                   EnvironmentType? @relation(fields: [DesignColorType_idEnvironmentType], references: [idEnvironmentType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorType_idEnvironmentType1")
 
   @@id([DesignColorType_IdDesignColorType, DesignType_idDesignType])
   @@index([DesignColorType_IdDesignColorType], map: "fk_DesignColorType_has_DesignType_DesignColorType1_idx")
   @@index([DesignType_idDesignType], map: "fk_DesignColorType_has_DesignType_DesignType1_idx")
+  @@index([DesignColorType_idEnvironmentType], map: "fk_DesignColorType_idEnvironmentType1_idx")
 }
