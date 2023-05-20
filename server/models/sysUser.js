@@ -3,6 +3,7 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
+
 const createUser = async (data) => {
   try {
     const result = await prisma.sysUser.create({
@@ -14,7 +15,7 @@ delete result.tempPassword
 delete result.tempPasswordExpDate
 return result
   } catch (e) {
-
+console.log(e);
 
     return e
   }finally {
@@ -176,6 +177,23 @@ const updateUserStatus = async (data, resultado) => {
 
 
 
+const createUserMasive = async (data) => {
+  try {
+    console.log(data);
+    const result = await prisma.sysUser.createMany({
+      data,
+    });
+    await prisma.$disconnect();
 
+return result
+  } catch (e) {
 
-module.exports = { createUser, findOneLoginByEmail,recoverPassword,changePassword,getAllUsers,updateUser,updateUserStatus };
+console.log(e);
+    return e
+  }finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
+  }
+};
+
+module.exports = { createUser, findOneLoginByEmail,recoverPassword,changePassword,getAllUsers,updateUser,updateUserStatus,createUserMasive };

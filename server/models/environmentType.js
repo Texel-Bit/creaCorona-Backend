@@ -79,7 +79,9 @@ const getAllEnvironmentType = async () => {
         DesignType_EnvironmentType: {select: {
           DesignType_idDesignType: true,
         },
+
       },
+      
       },
     });
 

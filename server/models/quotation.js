@@ -77,11 +77,11 @@ const getAllQuotation = async () => {
       include: {
         DesignColors_has_quotation: true,
         quotationProductDetails: true,
-
+        FormatSizeTexture: true,
         sysUser: {
           select: {
-            userName:true,
-            lastName:true,
+            userName: true,
+            lastName: true,
             office: {
               select: {
                 Company: true,

@@ -49,7 +49,15 @@ const createDesignColors = async (data) => {
 const getAllDesignColors= async () => {
   try {
     // Se llama a Prisma para buscar todos las compañias
-    const result = await prisma.designColors.findMany();
+    const result = await prisma.designColors.findMany(
+      {
+        orderBy:[{
+
+          DesignColorName:'asc'
+        }
+        ]
+      }
+    );
     
     // Se cierra la conexión a Prisma
 

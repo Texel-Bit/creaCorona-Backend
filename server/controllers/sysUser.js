@@ -5,17 +5,19 @@ const {
   changePassword,
   getAllUsers,
   updateUser,
-  updateUserStatus
+  updateUserStatus,
+  createUserMasive,
 } = require("../models/sysUser");
 const randompassword = require("secure-random-password");
-const { promisify } = require('util');
+const { promisify } = require("util");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const date = require("date-and-time");
 const emailSend = require("../helpers/email");
 const hashRounds = 15;
-
+const fs = require("fs");
+const csvToJSON = require("csv-file-to-json");
 exports.recoverPassword = async (req, res) => {
   try {
     // Obtener el correo electrónico de la petición
@@ -45,7 +47,7 @@ exports.recoverPassword = async (req, res) => {
       // Si el correo electrónico no existe en la base de datos, enviar una respuesta 200
       res.status(200).json({
         status: false,
-        message: 'El correo electrónico no existe',
+        message: "El correo electrónico no existe",
       });
       return;
     }
@@ -62,7 +64,7 @@ exports.recoverPassword = async (req, res) => {
     res.status(400).json({
       status: false,
       error: {
-        message: 'Error al recuperar la contraseña',
+        message: "Error al recuperar la contraseña",
       },
     });
   }
@@ -133,9 +135,6 @@ exports.createUser = async (req, res) => {
   }
 };
 
-
-
-
 exports.login = async (req, res, next) => {
   // Constantes para los mensajes de error
   const INVALID_USER_OR_PASSWORD = "Incorrect user or password";
@@ -150,7 +149,6 @@ exports.login = async (req, res, next) => {
 
   try {
     // Buscar al usuario por su email en la base de datos
-
 
     const result = await findOneLoginByEmail(user);
 
@@ -183,7 +181,6 @@ exports.login = async (req, res, next) => {
 
       // Si la contraseña temporal es incorrecta, devolver un error
       if (!bcrypt.compareSync(user.password, data.tempPassword)) {
-        console.log("clave temporal");
         return res.status(400).json({
           status: false,
           message: INVALID_CREDENTIALS,
@@ -232,7 +229,6 @@ exports.login = async (req, res, next) => {
       });
     }
   } catch (err) {
-    console.log(err);
     // Si hay un error, devolver un error 500 con el mensaje de error
     res.status(500).send({
       status: false,
@@ -241,19 +237,22 @@ exports.login = async (req, res, next) => {
   }
 };
 
-
-
 exports.changePassword = async (req, res) => {
   try {
     // Obtener token y desestructurar id del usuario
-    const token = req.get('JWT');
-    const { user: { idsysuser } } = await promisify(jwt.verify)(token, process.env.SEED);
+    const token = req.get("JWT");
+    const {
+      user: { idsysuser },
+    } = await promisify(jwt.verify)(token, process.env.SEED);
 
     // Generar nueva contraseña hasheada
     const newPassword = bcrypt.hashSync(req.body.password, hashRounds);
 
     // Actualizar contraseña en la base de datos
-    const updatedData = await changePassword({ idsysuser, password: newPassword });
+    const updatedData = await changePassword({
+      idsysuser,
+      password: newPassword,
+    });
 
     // Devolver respuesta con datos actualizados
     res.json({
@@ -261,17 +260,15 @@ exports.changePassword = async (req, res) => {
       data: updatedData,
     });
   } catch (error) {
-
     // Devolver respuesta con error si falla
     return res.status(400).json({
       ok: false,
       err: {
-        message: 'Usuario o (contraseña) incorrectos',
+        message: "Usuario o (contraseña) incorrectos",
       },
     });
   }
 };
-
 
 exports.getAllUsers = async (req, res) => {
   try {
@@ -292,11 +289,10 @@ exports.getAllUsers = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send({
-      message: 'No se pudo obtener los usuarios.',
+      message: "No se pudo obtener los usuarios.",
     });
   }
 };
-
 
 exports.updateUser = (req, res, next) => {
   const token = req.get("JWT");
@@ -319,7 +315,8 @@ exports.updateUser = (req, res, next) => {
   });
 
   // Desestructurar los campos del cuerpo de la petición
-  const { idsysuser, userName,phone, lastName, email, iduserRole, idoffice } = req.body;
+  const { idsysuser, userName, phone, lastName, email, iduserRole, idoffice } =
+    req.body;
 
   // Verificar si el cuerpo de la petición existe
   if (!req.body) {
@@ -356,7 +353,7 @@ exports.updateUser = (req, res, next) => {
         error: err,
       });
     }
-    
+
     // Eliminar campos sensibles del objeto de resultado
     delete result.password;
     delete result.tempPassword;
@@ -386,11 +383,9 @@ exports.updateUserStatus = (req, res, next) => {
 
   // Crear el objeto de datos para actualizar el usuario
   const data = {
-    idsysuser:+idsysuser,
-    userStatus: { connect: { iduserStatus: +iduserStatus } }
-
+    idsysuser: +idsysuser,
+    userStatus: { connect: { iduserStatus: +iduserStatus } },
   };
-
 
   // Actualizar el usuario
   updateUserStatus(data, (err, result) => {
@@ -401,8 +396,6 @@ exports.updateUserStatus = (req, res, next) => {
         error: err,
       });
     }
-    
-
 
     // Enviar el resultado de la actualización al cliente
     res.json({
@@ -411,6 +404,88 @@ exports.updateUserStatus = (req, res, next) => {
     });
   });
 };
+
+exports.createUserMasive = async (req, res) => {
+  try {
+    // Validar que la solicitud contenga datos
+    if (!req.files.users) {
+      res.status(400).json({
+        status: false,
+        error: "La solicitud debe conterner archivo csv",
+      });
+      return;
+    }
+    const dataInJSON = csvToJSON({
+      filePath: req.files.users.tempFilePath,
+      hasHeader: true,
+      separator: ";",
+    });
+
+    // Desestructurar los datos de la solicitud
+    // const {
+    //   userName,
+    //   lastName,
+    //   email,
+    //   phone,
+    //   password = "*********",
+    //   creationDate = new Date(),
+    //   iduserRole,
+    //   iduserStatus = 1,
+    //   idoffice,
+    // } = req.body;
+
+    // Configurar los datos para el nuevo usuario
+    // const userData = {
+    //   userName,
+    //   lastName,
+    //   email,
+    //   phone,
+    //   password,
+    //   creationDate,
+    //   userRole: { connect: { iduserRole: +iduserRole } },
+    //   userStatus: { connect: { iduserStatus:+iduserStatus } },
+    //   office: { connect: { idoffice: +idoffice } },
+
+    // };
+    var userNoCreated = [];
+    const updatedDataInJSON = [];
+
+    for (const element of dataInJSON) {
+      const { idoffice, iduserRole, ...rest } = element;
+    
+      const updatedElement = {
+        office_idoffice: +idoffice,
+        userStatus_iduserStatus: 1,
+        userRole_iduserRole: +iduserRole,
+        creationDate: new Date(),
+        password: "*********",
+        ...rest,
+      };
+    
+      const result = await findOneLoginByEmail(updatedElement);
+      if (result?.length) {
+        userNoCreated.push(element);
+      } else {
+        updatedDataInJSON.push(updatedElement);
+      }
+    }
+    
+    const createdUserMasive = await createUserMasive(updatedDataInJSON);
+    
+    res.json({
+      status: true,
+      userNoCreated,
+    });
+    
+  } catch (error) {
+
+    res.status(500).json({
+      status: false,
+      message: "Error al crear los usuario",
+    });
+  }
+};
+
 // exports.getUserById = (req, res) => {
 //   // Validate request
 

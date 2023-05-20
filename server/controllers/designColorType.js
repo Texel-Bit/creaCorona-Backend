@@ -47,7 +47,6 @@ exports.createDesignColorTypehasDesignType = async (req, res) => {
     data[0].DesignType_idDesignType = +DesignTypeidDesignType;
     data[0].DesignColorType_idEnvironmentType =
       +DesignColorTypeidEnvironmentType;
-      console.log(22);
 
     const createdDesignColorTypehasDesignType =
       await createDesignColorTypehasDesignType(data);

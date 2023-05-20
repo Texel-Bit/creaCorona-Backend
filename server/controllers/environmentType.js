@@ -43,19 +43,10 @@ exports.createEnvironmentType = async (req, res) => {
 
     const createdEnvironmentType = await createEnvironmentType(data);
 
-    const arr = req.body.designTypeEnvironmentType
-      .split(",")
-      .map((type) => ({
-        EnvironmentType_idEnvironmentType:
-          createdEnvironmentType.idEnvironmentType,
-        DesignType_idDesignType: +type,
-      }));
-    const designTypeEnvironmentType = await createDesignTypeEnvironmentType(
-      arr
-    );
+
     res.json({
       status: true,
-      data: { createdEnvironmentType, designTypeEnvironmentType },
+      data: { createdEnvironmentType },
     });
   } catch (error) {
 

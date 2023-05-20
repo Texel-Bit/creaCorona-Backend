@@ -9,9 +9,10 @@ const { createquotation,updatequotation,getAllQuotation} = require('../controlle
 
 // Importa los middlewares que se utilizan en las rutas
 const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacion');
+const {  validarArchivoImagen } = require('../middlewares/validar-archivo');
 
 // Define las rutas con los controladores correspondientes y los middlewares necesarios
-app.post('/createquotation', [verificaToken, verificaAdminRol], createquotation);
+app.post('/createquotation', [verificaToken, verificaAdminRol,validarArchivoImagen], createquotation);
 app.get('/getAllQuotation', [verificaToken, verificaAdminRol], getAllQuotation);
 
 
