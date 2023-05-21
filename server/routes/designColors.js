@@ -2,7 +2,7 @@
 const express = require('express');
 
 // Crea una instancia de Router de Express
-const app = express.Router();
+const app = express.Router(); 
 
 // Importa los controladores que manejan las peticiones a las rutas
 const { createDesignColors,updateDesignColors,getAllDesignColors} = require('../controllers/designColors');
