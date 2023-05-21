@@ -206,22 +206,38 @@ console.log(createdquotation,"hola");
     });
   }
 };
-
 exports.getAllQuotation = async (req, res) => {
   try {
     const allQuotation = await getAllQuotation();
-
-    // Enviar la respuesta con los usuarios
+    
+    const updatedQuotation = await Promise.all(allQuotation.map(async (element) => {
+      const fortmatTexture = {
+        idFormatSizeTexture: +element.FormatSizeTexture_idFormatSizeTexture,
+      };
+      const { DesignTypeFormatSize } = await getFormatSizeTextureById(fortmatTexture);
+  
+      const areaValdosa =
+        (DesignTypeFormatSize.DesignTypeFormatSizeHeight *
+          DesignTypeFormatSize.DesignTypeFormatSizeWidht) /
+        10000;
+  
+      const cantidadValdosas = Math.ceil(element.quatitionArea / areaValdosa);
+  
+      return { ...element, cantidadValdosas };
+    }));
+    
+    // Enviar la respuesta con las cotizaciones actualizadas
     res.json({
       status: true,
-      data: allQuotation,
+      data: updatedQuotation,
     });
   } catch (error) {
     console.error(error);
     res.status(500).send({
-      message: "No se pudo obtener las oficinas",
+      message: "No se pudo obtener las cotizaciones",
     });
   }
 };
+
 
 //sin uso

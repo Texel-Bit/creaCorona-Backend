@@ -68,7 +68,6 @@ const getAllFormatSizeTexture = async () => {
 const getFormatSizeTextureById = async (data) => {
 
   const { idFormatSizeTexture } = data;
- console.log(data);
  
   try {
     // Actualizar usuario en la base de datos

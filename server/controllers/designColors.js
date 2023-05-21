@@ -36,9 +36,10 @@ exports.createDesignColors = async (req, res) => {
       DesignColorName,
       DesignColorPath: image,
       DesignType: { connect: { idDesignType: +idDesignType } },
-      DesignColorType:{ connect: { IdDesignColorType: +IdDesignColorType } },
+      DesignColorType_DesignColors_DesignColorTypeToDesignColorType:{ connect: { IdDesignColorType: +IdDesignColorType } }
     };
 
+    
     const createdDesignColors = await createDesignColors(data);
 
     res.json({
@@ -46,7 +47,6 @@ exports.createDesignColors = async (req, res) => {
       data: createdDesignColors,
     });
   } catch (error) {
-    console.log(error);
     return res.status(400).json({
       status: false,
       err: {
@@ -73,7 +73,7 @@ exports.updateDesignColors = async (req, res, next) => {
       idDesignColors: +idDesignColors,
       DesignColorName,
       DesignType: { connect: { idDesignType: +idDesignType } },
-      DesignColorType:{ connect: { IdDesignColorType: +IdDesignColorType } },
+      DesignColorType_DesignColors_DesignColorTypeToDesignColorType:{ connect: { IdDesignColorType: +IdDesignColorType } }
 
     };
     const designColors = await getDesignColorsById(data);

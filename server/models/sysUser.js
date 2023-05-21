@@ -179,7 +179,6 @@ const updateUserStatus = async (data, resultado) => {
 
 const createUserMasive = async (data) => {
   try {
-    console.log(data);
     const result = await prisma.sysUser.createMany({
       data,
     });
@@ -188,7 +187,6 @@ const createUserMasive = async (data) => {
 return result
   } catch (e) {
 
-console.log(e);
     return e
   }finally {
     // Siempre desconectar la base de datos después de la operación

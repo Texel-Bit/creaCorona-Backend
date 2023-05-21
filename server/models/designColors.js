@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 
 const createDesignColors = async (data) => {
-
+console.log(data);
     try {
       const result =  await prisma.designColors.create({
         data
@@ -11,7 +11,7 @@ const createDesignColors = async (data) => {
 
   return result
     } catch (e) {
-  
+  console.log(e);
       return e
     }finally {
       // Siempre desconectar la base de datos después de la operación
