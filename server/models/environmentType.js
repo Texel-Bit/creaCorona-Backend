@@ -8,8 +8,6 @@ const createEnvironmentType = async (data) => {
       data,
     });
 
-
-
     return result;
   } catch (e) {
 
@@ -100,6 +98,38 @@ const getAllEnvironmentType = async () => {
   }
 };
 
+
+const getDesignColorTypeByEnvironmentType = async (environmentTypeId,designType_idDesignType)  => {
+  try {
+    const designColorTypes = await prisma.designColorType_has_DesignType.findMany({
+    where: {
+      EnvironmentType_idEnvironmentType: environmentTypeId,
+      DesignType_idDesignType:designType_idDesignType
+    },
+    select: {
+      DesignColorType: {
+        select: {
+          idDesignColorType: true,
+          DesignColorTypeDescription: true,
+        },
+      },
+    },
+  });
+
+  return designColorTypes.map((item) => item.DesignColorType);
+    // Se cierra la conexión a Prisma
+
+  } catch (e) {
+    // En caso de error, se cierra la conexión a Prisma
+
+    // Se devuelve el error
+    throw e;
+  } finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
+  }
+};
+
 const getEnvironmentTypeById = async (data) => {
   const { idEnvironmentType } = data;
 
@@ -125,5 +155,6 @@ module.exports = {
   updateEnvironmentType,
   getAllEnvironmentType,
   getEnvironmentTypeById,
-  createDesignTypeEnvironmentType
+  createDesignTypeEnvironmentType,
+  getDesignColorTypeByEnvironmentType
 };

@@ -5,7 +5,7 @@ const express = require('express');
 const app = express.Router();
 
 // Importa los controladores que manejan las peticiones a las rutas
-const { createEnvironmentType,updateEnvironmentType,getAllEnvironmentType} = require('../controllers/environmentType');
+const { createEnvironmentType,updateEnvironmentType,getAllEnvironmentType,getDesignColorTypeByEnvironmentType} = require('../controllers/environmentType');
 
 // Importa los middlewares que se utilizan en las rutas
 const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacion');
@@ -15,7 +15,7 @@ const { validarArchivoImagen } = require('../middlewares/validar-archivo');
 app.post('/createEnvironmentType', [verificaToken, verificaAdminRol], createEnvironmentType);
 app.post('/updateEnvironmentType', [verificaToken, verificaAdminRol], updateEnvironmentType);
 app.get('/getAllEnvironmentType', [verificaToken, verificaAdminRol], getAllEnvironmentType);
-
+app.post('/getDesignColorTypeByEnvironmentType', [], getDesignColorTypeByEnvironmentType);
 
  
 // Exporta el Router de Express

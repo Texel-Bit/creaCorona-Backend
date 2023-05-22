@@ -4,6 +4,7 @@ const {
   getAllEnvironmentType,
   getEnvironmentTypeById,
   createDesignTypeEnvironmentType,
+  getDesignColorTypeByEnvironmentType,
 } = require("../models/environmentType");
 
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
@@ -126,6 +127,25 @@ exports.getAllEnvironmentType = async (req, res) => {
     res.status(500).send({
       status: false,
 
+      message: "No se pudo obtener las EnvironmentType",
+    });
+  }
+};
+
+exports.getDesignColorTypeByEnvironmentType = async (req, res) => {
+  try {
+    const allEnvironmentType = await getDesignColorTypeByEnvironmentType(req.body.environmentTypeId,req.body.designType_idDesignType);
+
+    // Enviar la respuesta con los usuarios
+    res.json({
+      status: true,
+      data: allEnvironmentType,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      status: false,
+      data:error,
       message: "No se pudo obtener las EnvironmentType",
     });
   }
