@@ -50,18 +50,51 @@ model Design {
   @@index([DesignType_idDesignType], map: "fk_Design_DesignType1_idx")
 }
 
-model DesignColors {
-  idDesignColors                                                Int                          @id @default(autoincrement())
-  DesignColorName                                               String?                      @db.VarChar(45)
-  DesignColorPath                                               String?                      @db.VarChar(255)
-  DesignType_idDesignType                                       Int
-  DesignColorType                                               Int                          @default(1)
-  DesignColorType_DesignColors_DesignColorTypeToDesignColorType DesignColorType              @relation("DesignColors_DesignColorTypeToDesignColorType", fields: [DesignColorType], references: [IdDesignColorType], onDelete: NoAction, onUpdate: NoAction, map: "FK_DesignColors_DesignColorType")
-  DesignType                                                    DesignType                   @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColors_DesignType1")
-  DesignColors_has_quotation                                    DesignColors_has_quotation[]
+model DesignColorType {
+  idDesignColorType              Int                              @id @default(autoincrement())
+  DesignColorTypeDescription     String?                          @db.VarChar(45)
+  DesignColorType_has_DesignType DesignColorType_has_DesignType[]
+  DesignColors                   DesignColors[]
+}
 
+model DesignColorType_has_DesignType {
+  idDesignColorType_has_DesignType  Int             @id @default(autoincrement())
+  EnvironmentType_idEnvironmentType Int
+  DesignType_idDesignType           Int
+  DesignColorType_idDesignColorType Int
+  DesignColorType                   DesignColorType @relation(fields: [DesignColorType_idDesignColorType], references: [idDesignColorType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorType_has_DesignType_DesignColorType1")
+  DesignType                        DesignType      @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorType_has_DesignType_DesignType1")
+  EnvironmentType                   EnvironmentType @relation(fields: [EnvironmentType_idEnvironmentType], references: [idEnvironmentType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorType_has_DesignType_EnvironmentType1")
+
+  @@index([DesignColorType_idDesignColorType], map: "fk_DesignColorType_has_DesignType_DesignColorType1_idx")
+  @@index([DesignType_idDesignType], map: "fk_DesignColorType_has_DesignType_DesignType1_idx")
+  @@index([EnvironmentType_idEnvironmentType], map: "fk_DesignColorType_has_DesignType_EnvironmentType1_idx")
+}
+
+model DesignColors {
+  idDesignColors                    Int                          @id @default(autoincrement())
+  DesignColorName                   String?                      @db.VarChar(45)
+  DesignColorPath                   String?                      @db.VarChar(255)
+  DesignType_idDesignType           Int
+  DesignColorType_idDesignColorType Int
+  DesignColorType                   DesignColorType              @relation(fields: [DesignColorType_idDesignColorType], references: [idDesignColorType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColors_DesignColorType1")
+  DesignType                        DesignType                   @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColors_DesignType1")
+  DesignColors_has_quotation        DesignColors_has_quotation[]
+
+  @@index([DesignColorType_idDesignColorType], map: "fk_DesignColors_DesignColorType1_idx")
   @@index([DesignType_idDesignType], map: "fk_DesignColors_DesignType1_idx")
-  @@index([DesignColorType], map: "Index 3")
+}
+
+model DesignColors_has_quotation {
+  idDesignColorQuotation      Int          @id @default(autoincrement())
+  DesignColors_idDesignColors Int
+  DesignColors_Index          Int
+  quotation_idquotation       Int
+  DesignColors                DesignColors @relation(fields: [DesignColors_idDesignColors], references: [idDesignColors], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColors_has_quotation_DesignColors1")
+  quotation                   quotation    @relation(fields: [quotation_idquotation], references: [idquotation], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColors_has_quotation_quotation1")
+
+  @@index([DesignColors_idDesignColors], map: "fk_DesignColors_has_quotation_DesignColors1_idx")
+  @@index([quotation_idquotation], map: "fk_DesignColors_has_quotation_quotation1_idx")
 }
 
 model DesignCompany {
@@ -148,6 +181,13 @@ model FormatSizeTexture {
   @@index([DesignTypeFormatSize_idDesignTypeFormatSize], map: "fk_FormatSizeTexture_DesignTypeFormatSize1_idx")
 }
 
+model MosaicType {
+  idMosaicType    Int          @id @default(autoincrement())
+  MosaicTypeName  String       @db.VarChar(45)
+  MosaicTypeValue Int
+  DesignType      DesignType[]
+}
+
 model SystemSetup {
   idSystemSetup                 Int    @id @default(autoincrement())
   SystemSetupGarbagePercenttage Float?
@@ -159,66 +199,6 @@ model brecha {
   brechaColorPath String?     @db.VarChar(255)
   brechacol       String?     @db.VarChar(45)
   quotation       quotation[]
-}
-
-model companyStatus {
-  idcompanyStatus   Int       @id @default(autoincrement())
-  companyStatusName String    @db.VarChar(45)
-  Company           Company[]
-}
-
-model sysUser {
-  idsysuser               Int         @id @default(autoincrement())
-  userName                String      @db.VarChar(45)
-  lastName                String      @db.VarChar(45)
-  email                   String      @unique(map: "email_UNIQUE") @db.VarChar(80)
-  phone                   String?     @db.VarChar(50)
-  password                String      @db.VarChar(255)
-  tempPassword            String?     @db.VarChar(255)
-  tempPasswordExpDate     DateTime?   @db.DateTime(0)
-  creationDate            DateTime    @db.DateTime(0)
-  userRole_iduserRole     Int
-  userStatus_iduserStatus Int
-  office_idoffice         Int
-  quotation               quotation[]
-  office                  office      @relation(fields: [office_idoffice], references: [idoffice], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysUser_office1")
-  userRole                userRole    @relation(fields: [userRole_iduserRole], references: [iduserRole], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysuser_userRole")
-  userStatus              userStatus  @relation(fields: [userStatus_iduserStatus], references: [iduserStatus], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysuser_userStatus1")
-
-  @@index([userRole_iduserRole], map: "fk_sysuser_userRole_idx")
-  @@index([userStatus_iduserStatus], map: "fk_sysuser_userStatus1_idx")
-  @@index([office_idoffice], map: "fk_sysUser_office1_idx")
-}
-
-model userRole {
-  iduserRole Int       @id @default(autoincrement())
-  roleName   String    @db.VarChar(45)
-  sysUser    sysUser[]
-}
-
-model userStatus {
-  iduserStatus          Int       @id @default(autoincrement())
-  userStatusDescription String    @db.VarChar(45)
-  sysUser               sysUser[]
-}
-
-model MosaicType {
-  idMosaicType    Int          @id @default(autoincrement())
-  MosaicTypeName  String       @db.VarChar(45)
-  MosaicTypeValue Int
-  DesignType      DesignType[]
-}
-
-model DesignColors_has_quotation {
-  idDesignColorQuotation      Int          @id @default(autoincrement())
-  DesignColors_idDesignColors Int
-  DesignColors_Index          Int
-  quotation_idquotation       Int
-  DesignColors                DesignColors @relation(fields: [DesignColors_idDesignColors], references: [idDesignColors], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColors_has_quotation_DesignColors1")
-  quotation                   quotation    @relation(fields: [quotation_idquotation], references: [idquotation], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColors_has_quotation_quotation1")
-
-  @@index([DesignColors_idDesignColors], map: "fk_DesignColors_has_quotation_DesignColors1_idx")
-  @@index([quotation_idquotation], map: "fk_DesignColors_has_quotation_quotation1_idx")
 }
 
 model bundle {
@@ -258,6 +238,12 @@ model bundle_PricesByZone {
 
   @@index([bundle_idbundle], map: "fk_bundle_has_companyZone_bundle1_idx")
   @@index([companyZone_idcompanyZone], map: "fk_bundle_has_companyZone_companyZone1_idx")
+}
+
+model companyStatus {
+  idcompanyStatus   Int       @id @default(autoincrement())
+  companyStatusName String    @db.VarChar(45)
+  Company           Company[]
 }
 
 model companyType {
@@ -317,10 +303,10 @@ model quotation {
   quotationProductDetails                 quotationProductDetails[]
 
   @@index([FormatSizeTexture_idFormatSizeTexture], map: "fk_quotation_FormatSizeTexture1_idx")
-  @@index([bundleCompanyPrice_idbundleCompanyPrice], map: "fk_quotation_bundleCompanyPrice1_idx")
-  @@index([sysUser_idsysuser], map: "fk_quotation_sysUser1_idx")
   @@index([brecha_idbrecha], map: "fk_quotation_brecha1_idx")
+  @@index([bundleCompanyPrice_idbundleCompanyPrice], map: "fk_quotation_bundleCompanyPrice1_idx")
   @@index([quotationStatus_idquotationStatus], map: "fk_quotation_quotationStatus1_idx")
+  @@index([sysUser_idsysuser], map: "fk_quotation_sysUser1_idx")
 }
 
 model quotationProductDetails {
@@ -341,23 +327,37 @@ model quotationStatus {
   quotation                  quotation[]
 }
 
-model DesignColorType {
-  IdDesignColorType                                          Int                              @id @default(autoincrement())
-  DesignColorTypeDescription                                 String?                          @db.VarChar(50)
-  DesignColorType_has_DesignType                             DesignColorType_has_DesignType[]
-  DesignColors_DesignColors_DesignColorTypeToDesignColorType DesignColors[]                   @relation("DesignColors_DesignColorTypeToDesignColorType")
+model sysUser {
+  idsysuser               Int         @id @default(autoincrement())
+  userName                String      @db.VarChar(45)
+  lastName                String      @db.VarChar(45)
+  email                   String      @unique(map: "email_UNIQUE") @db.VarChar(80)
+  phone                   String?     @db.VarChar(50)
+  password                String      @db.VarChar(255)
+  tempPassword            String?     @db.VarChar(255)
+  tempPasswordExpDate     DateTime?   @db.DateTime(0)
+  creationDate            DateTime    @db.DateTime(0)
+  userRole_iduserRole     Int
+  userStatus_iduserStatus Int
+  office_idoffice         Int
+  quotation               quotation[]
+  office                  office      @relation(fields: [office_idoffice], references: [idoffice], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysUser_office1")
+  userRole                userRole    @relation(fields: [userRole_iduserRole], references: [iduserRole], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysuser_userRole")
+  userStatus              userStatus  @relation(fields: [userStatus_iduserStatus], references: [iduserStatus], onDelete: NoAction, onUpdate: NoAction, map: "fk_sysuser_userStatus1")
+
+  @@index([office_idoffice], map: "fk_sysUser_office1_idx")
+  @@index([userRole_iduserRole], map: "fk_sysuser_userRole_idx")
+  @@index([userStatus_iduserStatus], map: "fk_sysuser_userStatus1_idx")
 }
 
-model DesignColorType_has_DesignType {
-  DesignColorType_IdDesignColorType Int
-  DesignType_idDesignType           Int
-  DesignColorType_idEnvironmentType Int
-  DesignColorType                   DesignColorType @relation(fields: [DesignColorType_IdDesignColorType], references: [IdDesignColorType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorType_has_DesignType_DesignColorType1")
-  DesignType                        DesignType      @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorType_has_DesignType_DesignType1")
-  EnvironmentType                   EnvironmentType @relation(fields: [DesignColorType_idEnvironmentType], references: [idEnvironmentType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorType_idEnvironmentType1")
+model userRole {
+  iduserRole Int       @id @default(autoincrement())
+  roleName   String    @db.VarChar(45)
+  sysUser    sysUser[]
+}
 
-  @@id([DesignColorType_IdDesignColorType, DesignType_idDesignType, DesignColorType_idEnvironmentType])
-  @@index([DesignColorType_IdDesignColorType], map: "fk_DesignColorType_has_DesignType_DesignColorType1_idx")
-  @@index([DesignType_idDesignType], map: "fk_DesignColorType_has_DesignType_DesignType1_idx")
-  @@index([DesignColorType_idEnvironmentType], map: "fk_DesignColorType_idEnvironmentType1_idx")
+model userStatus {
+  iduserStatus          Int       @id @default(autoincrement())
+  userStatusDescription String    @db.VarChar(45)
+  sysUser               sysUser[]
 }

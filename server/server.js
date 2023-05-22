@@ -39,7 +39,7 @@ app.use((err, req, res, next) => {
 //     console.log(`My HTTP server listening on port ${process.env.PORT}...`);
 // });
 
-// start HTTPS server
+//start HTTPS server
 const options = {
   key: fs.readFileSync("/etc/letsencrypt/live/corona.texelbit.com/privkey.pem"),
   cert: fs.readFileSync("/etc/letsencrypt/live/corona.texelbit.com/cert.pem"),

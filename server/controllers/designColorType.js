@@ -2,6 +2,7 @@ const {
   getAllDesignColorType,
   createDesignColorTypehasDesignType,
   deleteDesignColorTypehasDesignType,
+  getDesignColorTypeByDesignType
 } = require("../models/designColorType");
 exports.getAllDesignColorType = async (req, res) => {
   try {
@@ -16,6 +17,46 @@ exports.getAllDesignColorType = async (req, res) => {
     console.error(error);
     res.status(500).send({
       message: "No se pudo obtener los designColorType",
+    });
+  }
+};
+
+exports.getDesignColorTypeByDesignType = async (req, res) => {
+  try {
+    const {
+      designType_idDesignType,
+   
+    } = req.body;
+    if (
+ 
+      !designType_idDesignType
+    ) {
+      return res.status(400).json({
+        status: false,
+        err: {
+          message: "Datos de entrada incompletos",
+        },
+      });
+    }
+    const data = {
+      designType_idDesignType
+    };
+
+
+    const getData =
+      await getDesignColorTypeByDesignType(data);
+
+    res.json({
+      status: true,
+      data: getData,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      ok: false,
+      error,
+      err: {
+        message: "No pudo ser creada",
+      },
     });
   }
 };
