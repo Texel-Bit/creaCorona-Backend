@@ -154,9 +154,7 @@ exports.createDesignType = async(req, res) => {
     
 
       const allDesignTypeTest  = await getAllDesignTypeTest(data);
-  
-   
-  
+
       // Enviar la respuesta con los usuarios
       res.json({
         status: true,
@@ -165,6 +163,7 @@ exports.createDesignType = async(req, res) => {
     } catch (error) {
       res.status(500).send({
         message: 'No se pudo obtener las Design type',
+        data: error,
       });
     }
   };
