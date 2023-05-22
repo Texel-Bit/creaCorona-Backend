@@ -206,6 +206,142 @@ console.log(createdquotation,"hola");
     });
   }
 };
+exports.simulateQuotation = async (req, res) => {
+
+  try {
+    const token = req.get("JWT");
+
+    let {
+      user: { idsysuser, office_idoffice },
+    } = await promisify(jwt.verify)(token, process.env.SEED);
+
+    if (!idsysuser) {
+      idsysuser = 1;
+    }
+    const {
+    
+      quotationWidth,
+      quotationHeight,
+      idbrecha,
+      idFormatSizeTexture,
+      quatitionArea,
+      // idbundleCompanyPrice
+    } = req.body;
+
+    if (
+      
+      !quatitionArea ||
+      !idbrecha ||
+      !idFormatSizeTexture
+    ) {
+      return res.status(400).json({
+        status: false,
+        err: {
+          message: "Datos de entrada incompletos",
+        },
+      });
+    }
+
+
+    
+
+
+    const fortmatTexture = {
+      idFormatSizeTexture: +idFormatSizeTexture,
+    };
+    const { DesignTypeFormatSize } = await getFormatSizeTextureById(
+      fortmatTexture
+    );
+
+    const office = {
+      idoffice: office_idoffice,
+    };
+
+    const areaValdosa =
+      (DesignTypeFormatSize.DesignTypeFormatSizeHeight *
+        DesignTypeFormatSize.DesignTypeFormatSizeWidht) /
+        10000;
+
+      //redondear al nyumero mayor
+    const cantidadValdosas =Math.ceil(quatitionArea / areaValdosa) 
+
+    const bundle = await getBundleDesignTypeFormatSizeTexture(fortmatTexture);
+
+    const quotationPrice =areaValdosa * cantidadValdosas * bundle[0].bundleBasePrice;
+
+    const { companyZone_idcompanyZone, Company_idCompany } =
+      await getAllOfficeByIdoffice(office);
+
+    const company = {
+      idCompany: Company_idCompany,
+    };
+    const { companyType_idcompanyType } = await getCompanyById(company);
+
+    const bundleCompanyPrice = {
+      idcompanyZone: companyZone_idcompanyZone,
+      idbundle: bundle[0].idbundle,
+      idcompanyType: companyType_idcompanyType,
+    };
+
+    const { price, idbundleCompanyPrice } =
+      await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(
+        bundleCompanyPrice
+      );
+
+    if (price == undefined) {
+      return res.status(400).json({
+        ok: false,
+        err: {
+          message:
+            "No pudo ser creado la cotizacion no existe bundleCompanyPrice",
+        },
+      });
+    }
+
+    const data = {
+    
+      quatitionArea:+quatitionArea,
+      quotationBundlePrice: +bundle[0].bundleBasePrice,
+      quotationPrice: +quotationPrice,
+      quotationWidth: +quotationWidth,
+      quotationHeight: +quotationHeight,
+      quotationDate: new Date(),
+      quotationCompanyPrice: price,
+      FormatSizeTexture: {
+        connect: { idFormatSizeTexture: +idFormatSizeTexture },
+      },
+      quotationStatus: {
+        connect: { idquotationStatus: 1 },
+      },
+      brecha: {
+        connect: { idbrecha: +idbrecha },
+      },
+      bundleCompanyPrice: {
+        connect: { idbundleCompanyPrice: +idbundleCompanyPrice },
+      },
+      sysUser: { connect: { idsysuser: +idsysuser } },
+    };
+    console.log(1111);
+
+   
+  data.cantidadValdosas = cantidadValdosas;
+  res.json({
+    status: true,
+    data,
+  });
+
+   
+   
+  } catch (error) {
+    return res.status(400).json({
+      status: false,
+      err: {
+        message: "No pudo ser creado la cotizacion",
+        error,
+      },
+    });
+  }
+};
 exports.getAllQuotation = async (req, res) => {
   try {
     const allQuotation = await getAllQuotation();
