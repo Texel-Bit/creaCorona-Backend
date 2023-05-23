@@ -84,7 +84,6 @@ exports.createquotation = async (req, res) => {
     const { DesignTypeFormatSize } = await getFormatSizeTextureById(
       fortmatTexture
     );
-    console.log(5);
 
     const office = {
       idoffice: office_idoffice,
@@ -121,7 +120,6 @@ exports.createquotation = async (req, res) => {
       await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(
         bundleCompanyPrice
       );
-    console.log(10);
 
     if (price == undefined) {
       return res.status(400).json({
@@ -161,21 +159,14 @@ exports.createquotation = async (req, res) => {
       sysUser: { connect: { idsysuser: +idsysuser } },
     };
 
-    console.log(11);
-
     const createdquotation = await createquotation(data);
-    console.log(12);
     const arrProductDetails = JSON.parse(req.body.quotationProductDetails);
-    console.log(arrProductDetails, "13");
 
-    console.log(arrProductDetails, "arrProductDetails");
     arrProductDetails.forEach((element, index) => {
-      console.log(element, "185");
 
       arrProductDetails[index].quotation_idquotation =
         +createdquotation.idquotation;
     });
-    console.log(13);
 
     const createdQuotationProductDetails = await createQuotationProductDetails(
       arrProductDetails
@@ -186,7 +177,6 @@ exports.createquotation = async (req, res) => {
     );
     var arrDesignColorshasquotationFinal = [];
     arrDesignColorshasquotation.forEach((element, index) => {
-      console.log(element, "196");
       if (element.Design_idDesign != -1) {
         arrDesignColorshasquotationFinal[index] =
           arrDesignColorshasquotation[index];
@@ -199,28 +189,23 @@ exports.createquotation = async (req, res) => {
     const createdDesignColorshasquotation =
       await createDesignColorshasquotation(arrDesignColorshasquotationFinal);
     createdquotation.cantidadValdosas = cantidadValdosas;
- 
 
     data.cantidadValdosas = cantidadValdosas;
-    res.json({
-      status: true,
-      data:createdquotation
-    });
 
     return res.status(200).json({
       status: true,
       message: "cotizacion creada correctametne",
-      data: createdQuotation,
+      data: createdquotation,
     });
-} catch (error) {
-  return res.status(400).json({
-    status: false,
-    error: {
-      message: "error to create the quotation",
-      data: error,
-    },
-  });
-}
+  } catch (error) {
+    return res.status(400).json({
+      status: false,
+      error: {
+        message: "error to create the quotation",
+        data: error,
+      },
+    });
+  }
 };
 exports.simulateQuotation = async (req, res) => {
   try {
@@ -326,7 +311,6 @@ exports.simulateQuotation = async (req, res) => {
       },
       sysUser: { connect: { idsysuser: +idsysuser } },
     };
-    console.log(1111);
 
     data.cantidadValdosas = cantidadValdosas;
     res.json({
@@ -373,7 +357,6 @@ exports.getAllQuotation = async (req, res) => {
       data: updatedQuotation,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).send({
       message: "No se pudo obtener las cotizaciones",
     });
