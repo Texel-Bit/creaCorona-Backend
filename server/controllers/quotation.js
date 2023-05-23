@@ -200,8 +200,8 @@ console.log(createdquotation,"hola");
     return res.status(400).json({
       status: false,
       err: {
-        message: "No pudo ser creado la cotizacion",
-        error,
+        message: "No pudo ser creado la cotizacion msg 2 ",
+        data:error,
       },
     });
   }
@@ -336,8 +336,8 @@ exports.simulateQuotation = async (req, res) => {
     return res.status(400).json({
       status: false,
       err: {
-        message: "No pudo ser creado la cotizacion",
-        error,
+        message: "No pudo ser creado la cotizacion msg 1",
+        data:error,
       },
     });
   }
