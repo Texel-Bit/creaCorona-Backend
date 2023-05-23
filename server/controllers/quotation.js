@@ -14,7 +14,7 @@ const { getCompanyById } = require("../models/company.js");
 const {
   getBundleCompanyPriceByBundleCompanyTypeComopanyZone,
 } = require("../models/bundleCompanyPrice.js");
-const { log } = require("console");
+const { subirArchivoImagen } = require("../helpers/subirarchivos");
 
 exports.createquotation = async (req, res) => {
 
