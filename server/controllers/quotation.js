@@ -16,7 +16,6 @@ const {
 } = require("../models/bundleCompanyPrice.js");
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
 
-const { subirArchivoImagen } = require("../helpers/subirarchivos");
 
 exports.createquotation = async (req, res) => {
 
