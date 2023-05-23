@@ -190,6 +190,7 @@ console.log(arrProductDetails,"arrProductDetails");
 
     console.log(element,"196");
 if (element.Design_idDesign!=-1) {
+  arrDesignColorshasquotationFinal[index]=arrDesignColorshasquotation[index]
   arrDesignColorshasquotationFinal[index].quotation_idquotation =
   +createdquotation.idquotation;
 }else{
@@ -198,6 +199,8 @@ if (element.Design_idDesign!=-1) {
    
   });
 
+
+  console.log(arrDesignColorshasquotationFinal,"202");
   const createdDesignColorshasquotation =
     await createDesignColorshasquotation(arrDesignColorshasquotationFinal);
     createdquotation.cantidadValdosas = cantidadValdosas;
