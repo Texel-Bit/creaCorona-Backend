@@ -179,7 +179,7 @@ exports.createquotation = async (req, res) => {
   console.log(12);
 console.log(createdquotation,"hola");
   const arrProductDetails = req.body.quotationProductDetails;
-
+console.log(arrProductDetails,"arrProductDetails");
   arrProductDetails.forEach((element, index) => {
     arrProductDetails[index].quotation_idquotation =
       +createdquotation.idquotation;
@@ -189,14 +189,12 @@ console.log(createdquotation,"hola");
   const createdQuotationProductDetails = await createQuotationProductDetails(
     arrProductDetails
   );
-  console.log(14);
 
   const arrDesignColorshasquotation = req.body.DesignColors_has_quotation;
   arrDesignColorshasquotation.forEach((element, index) => {
     arrDesignColorshasquotation[index].quotation_idquotation =
       +createdquotation.idquotation;
   });
-  console.log(15);
 
   const createdDesignColorshasquotation =
     await createDesignColorshasquotation(arrDesignColorshasquotation);
@@ -205,7 +203,6 @@ console.log(createdquotation,"hola");
       status: true,
       data: createdquotation,
     });
-    console.log(16);
 
   data.cantidadValdosas = cantidadValdosas;
   res.json({
