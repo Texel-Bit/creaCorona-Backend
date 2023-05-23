@@ -169,7 +169,7 @@ exports.createquotation = async (req, res) => {
 
   const createdquotation = await createquotation(data);
   console.log(12);
-  const arrProductDetails = req.body.quotationProductDetails;
+  const arrProductDetails = JSON.parse(req.body.quotationProductDetails);
 console.log(arrProductDetails,"13");
 
 console.log(arrProductDetails,"arrProductDetails");
@@ -185,7 +185,7 @@ console.log(arrProductDetails,"arrProductDetails");
     arrProductDetails
   );
 
-  const arrDesignColorshasquotation = req.body.DesignColors_has_quotation;
+  const arrDesignColorshasquotation = JSON.parse(req.body.DesignColors_has_quotation);
   arrDesignColorshasquotation.forEach((element, index) => {
 
     console.log(element,"196");
