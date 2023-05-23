@@ -179,6 +179,8 @@ exports.createquotation = async (req, res) => {
   console.log(12);
 console.log(createdquotation,"hola");
   const arrProductDetails = req.body.quotationProductDetails;
+console.log(arrProductDetails,"13");
+
 console.log(arrProductDetails,"arrProductDetails");
   arrProductDetails.forEach((element, index) => {
     console.log(element,"185");
