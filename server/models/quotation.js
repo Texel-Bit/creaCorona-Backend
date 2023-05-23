@@ -77,15 +77,7 @@ const getAllQuotation = async () => {
       include: {
         DesignColors_has_quotation: true,
         quotationProductDetails: true,
-        FormatSizeTexture:
-        {
-          select:{
-            idFormatSizeTexture:true,
-            FormatSizeTextureName:true,
-            FormatSizeTextureMaskPath:true,
-            DesignTypeFormatSize:true
-          }
-        },
+        FormatSizeTexture: true,
         sysUser: {
           select: {
             userName: true,
