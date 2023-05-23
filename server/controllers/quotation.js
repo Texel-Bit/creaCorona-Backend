@@ -159,6 +159,7 @@ exports.createquotation = async (req, res) => {
       sysUser: { connect: { idsysuser: +idsysuser } },
     };
 
+    console.log("Dataaaaaaaaaa ",data);
    
 if (demo==2) {
   const createdquotation = await createquotation(data);
