@@ -181,6 +181,8 @@ console.log(createdquotation,"hola");
   const arrProductDetails = req.body.quotationProductDetails;
 console.log(arrProductDetails,"arrProductDetails");
   arrProductDetails.forEach((element, index) => {
+    console.log(element,"185");
+
     arrProductDetails[index].quotation_idquotation =
       +createdquotation.idquotation;
   });
@@ -192,6 +194,8 @@ console.log(arrProductDetails,"arrProductDetails");
 
   const arrDesignColorshasquotation = req.body.DesignColors_has_quotation;
   arrDesignColorshasquotation.forEach((element, index) => {
+
+    console.log(element,"196");
     arrDesignColorshasquotation[index].quotation_idquotation =
       +createdquotation.idquotation;
   });
