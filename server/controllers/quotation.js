@@ -184,16 +184,19 @@ console.log(createdquotation,"hola");
     arrProductDetails[index].quotation_idquotation =
       +createdquotation.idquotation;
   });
+  console.log(13);
 
   const createdQuotationProductDetails = await createQuotationProductDetails(
     arrProductDetails
   );
+  console.log(14);
 
   const arrDesignColorshasquotation = req.body.DesignColors_has_quotation;
   arrDesignColorshasquotation.forEach((element, index) => {
     arrDesignColorshasquotation[index].quotation_idquotation =
       +createdquotation.idquotation;
   });
+  console.log(15);
 
   const createdDesignColorshasquotation =
     await createDesignColorshasquotation(arrDesignColorshasquotation);
@@ -202,6 +205,7 @@ console.log(createdquotation,"hola");
       status: true,
       data: createdquotation,
     });
+    console.log(16);
 
   data.cantidadValdosas = cantidadValdosas;
   res.json({
