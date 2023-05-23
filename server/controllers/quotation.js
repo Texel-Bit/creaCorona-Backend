@@ -40,7 +40,7 @@ exports.createquotation = async (req, res) => {
       idbrecha,
       idFormatSizeTexture,
       quatitionArea,
-      demo
+      
       // idbundleCompanyPrice
     } = req.body;
 
@@ -51,8 +51,7 @@ exports.createquotation = async (req, res) => {
       !customerPhoneNumber ||
       !quatitionArea ||
       !idbrecha ||
-      !idFormatSizeTexture||
-      !demo
+      !idFormatSizeTexture
     ) {
       return res.status(400).json({
         status: false,
@@ -160,9 +159,7 @@ exports.createquotation = async (req, res) => {
       sysUser: { connect: { idsysuser: +idsysuser } },
     };
 
-    console.log("Dataaaaaaaaaa ",data);
    
-if (demo==2) {
   const createdquotation = await createquotation(data);
 console.log(createdquotation,"hola");
   const arrProductDetails = req.body.quotationProductDetails;
@@ -189,13 +186,13 @@ console.log(createdquotation,"hola");
       status: true,
       data: createdquotation,
     });
-}else{
+
   data.cantidadValdosas = cantidadValdosas;
   res.json({
     status: true,
     data,
   });
-}
+
    
    
   } catch (error) {
