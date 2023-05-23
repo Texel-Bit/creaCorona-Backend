@@ -68,8 +68,8 @@ exports.createquotation = async (req, res) => {
     );
     console.log(2);
 
-    const desingPatterImage = await subirArchivoImagen(
-      req.files.desingPatterImage,
+    const desingPatternImage = await subirArchivoImagen(
+      req.files.desingPatternImage,
       "uploads/quotation"
     );
 
@@ -77,7 +77,7 @@ exports.createquotation = async (req, res) => {
 
 
     // Manejo de errores de subirArchivoImagen
-    if (!desingPatterImage||!simulationImage) {
+    if (!desingPatternImage||!simulationImage) {
       return res.status(400).json({
         status: false,
         err: {
@@ -149,7 +149,7 @@ exports.createquotation = async (req, res) => {
       customerLastname,
       customerEmail,
       simulationImage:simulationImage,
-      desingPatterImage:desingPatterImage,
+      desingPatternImage:desingPatternImage,
       quatitionArea:+quatitionArea,
       customerPhoneNumber: customerPhoneNumber.toString(),
       quotationBundlePrice: +bundle[0].bundleBasePrice,
