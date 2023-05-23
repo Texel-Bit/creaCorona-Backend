@@ -19,7 +19,6 @@ const { subirArchivoImagen } = require("../helpers/subirarchivos");
 
 exports.createquotation = async (req, res) => {
 
-  console.log(req.body);
   try {
     const token = req.get("JWT");
 
@@ -186,15 +185,21 @@ console.log(arrProductDetails,"arrProductDetails");
   );
 
   const arrDesignColorshasquotation = JSON.parse(req.body.DesignColors_has_quotation);
+  var arrDesignColorshasquotationFinal=[];
   arrDesignColorshasquotation.forEach((element, index) => {
 
     console.log(element,"196");
-    arrDesignColorshasquotation[index].quotation_idquotation =
-      +createdquotation.idquotation;
+if (element.Design_idDesign!=-1) {
+  arrDesignColorshasquotationFinal[index].quotation_idquotation =
+  +createdquotation.idquotation;
+}else{
+}
+
+   
   });
 
   const createdDesignColorshasquotation =
-    await createDesignColorshasquotation(arrDesignColorshasquotation);
+    await createDesignColorshasquotation(arrDesignColorshasquotationFinal);
     createdquotation.cantidadValdosas = cantidadValdosas;
     res.json({
       status: true,
