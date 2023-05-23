@@ -196,14 +196,10 @@ exports.createquotation = async (req, res) => {
       }
     });
 
-    console.log(arrDesignColorshasquotationFinal, "202");
     const createdDesignColorshasquotation =
       await createDesignColorshasquotation(arrDesignColorshasquotationFinal);
     createdquotation.cantidadValdosas = cantidadValdosas;
-    // res.json({
-    //   status: true,
-    //   data: createdquotation,
-    // });
+ 
 
     data.cantidadValdosas = cantidadValdosas;
     res.json({
