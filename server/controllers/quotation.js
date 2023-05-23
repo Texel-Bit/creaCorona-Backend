@@ -69,7 +69,7 @@ exports.createquotation = async (req, res) => {
     console.log(2);
 
     const desingPatterImage = await subirArchivoImagen(
-      req.files.simulationImage,
+      req.files.desingPatterImage,
       "uploads/quotation"
     );
 
