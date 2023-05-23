@@ -60,16 +60,21 @@ exports.createquotation = async (req, res) => {
         },
       });
     }
+
+    console.log(1);
     const simulationImage = await subirArchivoImagen(
       req.files.simulationImage,
       "uploads/quotation"
     );
+    console.log(2);
+
     const desingPatterImage = await subirArchivoImagen(
       req.files.simulationImage,
       "uploads/quotation"
     );
 
-    
+    console.log(3);
+
 
     // Manejo de errores de subirArchivoImagen
     if (!desingPatterImage||!simulationImage) {
@@ -80,12 +85,15 @@ exports.createquotation = async (req, res) => {
         },
       });
     }
+    console.log(4);
+
     const fortmatTexture = {
       idFormatSizeTexture: +idFormatSizeTexture,
     };
     const { DesignTypeFormatSize } = await getFormatSizeTextureById(
       fortmatTexture
     );
+    console.log(5);
 
     const office = {
       idoffice: office_idoffice,
@@ -98,18 +106,22 @@ exports.createquotation = async (req, res) => {
 
       //redondear al nyumero mayor
     const cantidadValdosas =Math.ceil(quatitionArea / areaValdosa) 
+    console.log(6);
 
     const bundle = await getBundleDesignTypeFormatSizeTexture(fortmatTexture);
+    console.log(7);
 
     const quotationPrice =areaValdosa * cantidadValdosas * bundle[0].bundleBasePrice;
 
     const { companyZone_idcompanyZone, Company_idCompany } =
       await getAllOfficeByIdoffice(office);
+      console.log(8);
 
     const company = {
       idCompany: Company_idCompany,
     };
     const { companyType_idcompanyType } = await getCompanyById(company);
+    console.log(9);
 
     const bundleCompanyPrice = {
       idcompanyZone: companyZone_idcompanyZone,
@@ -121,6 +133,7 @@ exports.createquotation = async (req, res) => {
       await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(
         bundleCompanyPrice
       );
+      console.log(10);
 
     if (price == undefined) {
       return res.status(400).json({
@@ -159,8 +172,10 @@ exports.createquotation = async (req, res) => {
       sysUser: { connect: { idsysuser: +idsysuser } },
     };
 
-   
+    console.log(11);
+
   const createdquotation = await createquotation(data);
+  console.log(12);
 console.log(createdquotation,"hola");
   const arrProductDetails = req.body.quotationProductDetails;
 
