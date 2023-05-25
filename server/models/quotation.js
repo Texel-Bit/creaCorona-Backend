@@ -76,8 +76,30 @@ const getAllQuotation = async () => {
     const result = await prisma.quotation.findMany({
       include: {
         DesignColors_has_quotation: true,
-        quotationProductDetails: true,
-        FormatSizeTexture: true,
+        quotationProductDetails: {
+          select:{
+            idquotationDetails:true,
+            Design_idDesign:true,
+            quotation_idquotation:true,
+            quotationProductUnits:true,
+            Design:{
+              select:{
+                idDesign:true,
+                DesignName:true
+              }
+              
+            }
+          }
+        },
+        FormatSizeTexture:
+        {
+          select:{
+            idFormatSizeTexture:true,
+            FormatSizeTextureName:true,
+            FormatSizeTextureMaskPath:true,
+            DesignTypeFormatSize:true
+          }
+        },
         sysUser: {
           select: {
             userName: true,
