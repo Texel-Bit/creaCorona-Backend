@@ -99,7 +99,7 @@ const getAllEnvironmentType = async () => {
 };
 
 
-const getDesignColorTypeByEnvironmentType = async (environmentTypeId,designType_idDesignType)  => {
+const getDesignColorTypesByEnvironmentIdAndDesignType = async (environmentTypeId,designType_idDesignType)  => {
   try {
     const designColorTypes = await prisma.designColorType_has_DesignType.findMany({
     where: {
@@ -156,5 +156,5 @@ module.exports = {
   getAllEnvironmentType,
   getEnvironmentTypeById,
   createDesignTypeEnvironmentType,
-  getDesignColorTypeByEnvironmentType
+  getDesignColorTypesByEnvironmentIdAndDesignType
 };

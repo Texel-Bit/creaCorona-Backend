@@ -15,8 +15,8 @@ const { validarArchivoImagen } = require('../middlewares/validar-archivo');
 app.post('/createEnvironmentType', [verificaToken, verificaAdminRol], createEnvironmentType);
 app.post('/updateEnvironmentType', [verificaToken, verificaAdminRol], updateEnvironmentType);
 app.get('/getAllEnvironmentType', [verificaToken, verificaAdminRol], getAllEnvironmentType);
-app.post('/getDesignColorTypeByEnvironmentType', [], getDesignColorTypeByEnvironmentType);
+app.post('/getDesignColorTypesByEnvironmentIdAndDesignType',[verificaToken, verificaAdminRol], getDesignColorTypesByEnvironmentIdAndDesignType);
 
- 
+
 // Exporta el Router de Express
 module.exports = app;

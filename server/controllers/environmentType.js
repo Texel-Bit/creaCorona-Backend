@@ -4,7 +4,7 @@ const {
   getAllEnvironmentType,
   getEnvironmentTypeById,
   createDesignTypeEnvironmentType,
-  getDesignColorTypeByEnvironmentType,
+  getDesignColorTypesByEnvironmentIdAndDesignType,
 } = require("../models/environmentType");
 
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
@@ -132,9 +132,9 @@ exports.getAllEnvironmentType = async (req, res) => {
   }
 };
 
-exports.getDesignColorTypeByEnvironmentType = async (req, res) => {
+exports.getDesignColorTypesByEnvironmentIdAndDesignType = async (req, res) => {
   try {
-    const allEnvironmentType = await getDesignColorTypeByEnvironmentType(req.body.environmentTypeId,req.body.designType_idDesignType);
+    const allEnvironmentType = await getDesignColorTypesByEnvironmentIdAndDesignType(req.body.environmentTypeId,req.body.designType_idDesignType);
 
     // Enviar la respuesta con los usuarios
     res.json({
