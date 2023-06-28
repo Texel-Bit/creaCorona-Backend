@@ -9,9 +9,9 @@ const {
 exports.createOffice = async(req, res) => {
 
     try {
-    const { officeDescription,idCompany,idcompanyZone} = req.body
+    const { officeDescription,idCompany,idstate} = req.body
 
-    if (!officeDescription||!idCompany||!idcompanyZone) {
+    if (!officeDescription||!idCompany||!idstate) {
       return res.status(400).json({
         status: false,
         err: {
@@ -23,7 +23,7 @@ exports.createOffice = async(req, res) => {
   const  data= {
     officeDescription,
     Company: { connect: { idCompany: +idCompany } },
-    companyZone: { connect: { idcompanyZone: +idcompanyZone } },
+    state: { connect: { idstate: +idstate } },
 
       }
 
@@ -53,9 +53,9 @@ exports.createOffice = async(req, res) => {
 
 
     // Verificar si el cuerpo de la petición existe
-    const { idoffice,officeDescription,idCompany,idcompanyZone} = req.body
+    const { idoffice,officeDescription,idCompany,idstate} = req.body
 
-    if (!idoffice||!officeDescription||!idCompany||!idcompanyZone) {
+    if (!idoffice||!officeDescription||!idCompany||!idstate) {
       return res.status(400).json({
         status: false,
         err: {
@@ -69,7 +69,7 @@ exports.createOffice = async(req, res) => {
     idoffice:+idoffice,
     officeDescription,
     Company: { connect: { idCompany: +idCompany } },
-    companyZone: { connect: { idcompanyZone: +idcompanyZone } },
+    state: { connect: { idstate: +idstate } },
 
       }
   const office = await updateOffice(data);
