@@ -259,6 +259,7 @@ model companyZone {
   bundleCompanyPrice  bundleCompanyPrice[]
   bundle_PricesByZone bundle_PricesByZone[]
   office              office[]
+  state               state[]
 }
 
 model office {
@@ -360,4 +361,13 @@ model userStatus {
   iduserStatus          Int       @id @default(autoincrement())
   userStatusDescription String    @db.VarChar(45)
   sysUser               sysUser[]
+}
+
+model state {
+  idstate                   Int         @id @default(autoincrement())
+  stateName                 String      @db.VarChar(45)
+  companyZone_idcompanyZone Int
+  companyZone               companyZone @relation(fields: [companyZone_idcompanyZone], references: [idcompanyZone], onDelete: NoAction, onUpdate: NoAction, map: "fk_state_companyZone1")
+
+  @@index([companyZone_idcompanyZone], map: "fk_state_companyZone1_idx")
 }

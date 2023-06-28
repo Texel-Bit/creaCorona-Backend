@@ -22,8 +22,11 @@ const userRoleRoutes=require("./userRole")
 
 const designColorTypeRoutes=require("./designColorType")
 
+const stateRoutes=require("./state")
 
 const app = express();
+app.use("/state", stateRoutes);
+
 app.use("/designColorType", designColorTypeRoutes);
 
 app.use("/userRole", userRoleRoutes);
