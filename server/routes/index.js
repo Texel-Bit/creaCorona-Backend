@@ -23,9 +23,13 @@ const userRoleRoutes=require("./userRole")
 const designColorTypeRoutes=require("./designColorType")
 
 const stateRoutes=require("./state")
+const designColorBundleRoutes=require("./designColorBundle")
+
+
 
 const app = express();
 app.use("/state", stateRoutes);
+app.use("/designColorBundle", designColorBundleRoutes);
 
 app.use("/designColorType", designColorTypeRoutes);
 

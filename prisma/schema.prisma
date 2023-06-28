@@ -258,21 +258,20 @@ model companyZone {
   companyZoneName     String?               @db.VarChar(80)
   bundleCompanyPrice  bundleCompanyPrice[]
   bundle_PricesByZone bundle_PricesByZone[]
-  office              office[]
   state               state[]
 }
 
 model office {
-  idoffice                  Int         @id @default(autoincrement())
-  officeDescription         String?     @db.VarChar(45)
-  Company_idCompany         Int
-  companyZone_idcompanyZone Int
-  Company                   Company     @relation(fields: [Company_idCompany], references: [idCompany], onDelete: NoAction, onUpdate: NoAction, map: "fk_office_Company1")
-  companyZone               companyZone @relation(fields: [companyZone_idcompanyZone], references: [idcompanyZone], onDelete: NoAction, onUpdate: NoAction, map: "fk_office_companyZone1")
-  sysUser                   sysUser[]
+  idoffice          Int       @id @default(autoincrement())
+  officeDescription String?   @db.VarChar(45)
+  Company_idCompany Int
+  state_idstate     Int
+  Company           Company   @relation(fields: [Company_idCompany], references: [idCompany], onDelete: NoAction, onUpdate: NoAction, map: "fk_office_Company1")
+  state             state     @relation(fields: [state_idstate], references: [idstate], onDelete: NoAction, onUpdate: NoAction, map: "fk_office_state1")
+  sysUser           sysUser[]
 
   @@index([Company_idCompany], map: "fk_office_Company1_idx")
-  @@index([companyZone_idcompanyZone], map: "fk_office_companyZone1_idx")
+  @@index([state_idstate], map: "fk_office_state1_idx")
 }
 
 model quotation {
@@ -367,7 +366,13 @@ model state {
   idstate                   Int         @id @default(autoincrement())
   stateName                 String      @db.VarChar(45)
   companyZone_idcompanyZone Int
+  office                    office[]
   companyZone               companyZone @relation(fields: [companyZone_idcompanyZone], references: [idcompanyZone], onDelete: NoAction, onUpdate: NoAction, map: "fk_state_companyZone1")
 
   @@index([companyZone_idcompanyZone], map: "fk_state_companyZone1_idx")
+}
+
+model DesignColorBundle {
+  idDesignColorBundle   Int    @id @default(autoincrement())
+  DesignColorBundleName String @db.VarChar(45)
 }
