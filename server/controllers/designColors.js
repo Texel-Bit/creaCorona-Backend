@@ -73,7 +73,7 @@ exports.updateDesignColors = async (req, res, next) => {
       idDesignColors: +idDesignColors,
       DesignColorName,
       DesignType: { connect: { idDesignType: +idDesignType } },
-      DesignColorType_DesignColors_DesignColorTypeToDesignColorType:{ connect: { IdDesignColorType: +IdDesignColorType } }
+      DesignColorType:{ connect: { IdDesignColorType: +IdDesignColorType } }
 
     };
     const designColors = await getDesignColorsById(data);

@@ -37,6 +37,8 @@ console.log(data);
    console.log(result);
    return result
   } catch (e) {
+
+    console.log(e);
    // Capturar excepción y llamar a la función de devolución de llamada con el error
    return e
   } finally {
