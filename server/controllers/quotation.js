@@ -5,6 +5,9 @@ const {
   createDesignColorshasquotation,
   createQuotationProductDetails,
 } = require("../models/quotation.js");
+
+const { getStateByIdState } = require("../models/state");
+
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 const { getFormatSizeTextureById } = require("../models/formatSizeTexture.js");
@@ -37,6 +40,7 @@ exports.createquotation = async (req, res) => {
       idbrecha,
       idFormatSizeTexture,
       quatitionArea,
+      idstate
 
       // idbundleCompanyPrice
     } = req.body;
@@ -48,7 +52,8 @@ exports.createquotation = async (req, res) => {
       !customerPhoneNumber ||
       !quatitionArea ||
       !idbrecha ||
-      !idFormatSizeTexture
+      !idFormatSizeTexture||
+      !idstate
     ) {
       return res.status(400).json({
         status: false,
@@ -102,8 +107,12 @@ exports.createquotation = async (req, res) => {
     const quotationPrice =
       areaValdosa * cantidadValdosas * bundle[0].bundleBasePrice;
 
-    const { companyZone_idcompanyZone, Company_idCompany } =
-      await getAllOfficeByIdoffice(office);
+    const { Company_idCompany } = await getAllOfficeByIdoffice(office);
+
+    const state = {
+      idstate,
+    };
+    const { companyZone_idcompanyZone } = await getStateByIdState(state);
 
     const company = {
       idCompany: Company_idCompany,
@@ -163,7 +172,6 @@ exports.createquotation = async (req, res) => {
     const arrProductDetails = JSON.parse(req.body.quotationProductDetails);
 
     arrProductDetails.forEach((element, index) => {
-
       arrProductDetails[index].quotation_idquotation =
         +createdquotation.idquotation;
     });
@@ -224,10 +232,11 @@ exports.simulateQuotation = async (req, res) => {
       idbrecha,
       idFormatSizeTexture,
       quatitionArea,
+      idstate,
       // idbundleCompanyPrice
     } = req.body;
 
-    if (!quatitionArea || !idbrecha || !idFormatSizeTexture) {
+    if (!quatitionArea || !idbrecha || !idFormatSizeTexture || !idstate) {
       return res.status(400).json({
         status: false,
         err: {
@@ -260,8 +269,12 @@ exports.simulateQuotation = async (req, res) => {
     const quotationPrice =
       areaValdosa * cantidadValdosas * bundle[0].bundleBasePrice;
 
-    const { companyZone_idcompanyZone, Company_idCompany } =
-      await getAllOfficeByIdoffice(office);
+    const { Company_idCompany } = await getAllOfficeByIdoffice(office);
+
+    const state = {
+      idstate,
+    };
+    const { companyZone_idcompanyZone } = await getStateByIdState(state);
 
     const company = {
       idCompany: Company_idCompany,
