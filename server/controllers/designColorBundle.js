@@ -8,8 +8,8 @@ const {
   exports.createDesignColorBundle = async (req, res) => {
     try {
       // Validar datos de entrada
-      const { DesignColorBundleName } = req.body;
-      if (!DesignColorBundleName ) {
+      const { DesignColorBundleName,idDesignType,idDesignColorType,idEnvironmentType } = req.body;
+      if (!DesignColorBundleName||!idDesignType||!idDesignColorType||idEnvironmentType) {
         return res.status(400).json({
           status: false,
           err: {
@@ -22,6 +22,15 @@ const {
   
       const data = {
         DesignColorBundleName,
+        DesignType: {
+          connect: { idDesignType: +idDesignType },
+        },
+        DesignColorType: {
+          connect: { idDesignColorType: +idDesignColorType },
+        },
+        EnvironmentType: {
+          connect: { idEnvironmentType: +idEnvironmentType },
+        }
       };
   
       const result = await createDesignColorBundle(data);
@@ -42,7 +51,7 @@ const {
   exports.updateDesignColorBundle =async (req, res, next) => {
     try {
     // Verificar si el cuerpo de la petición existe
-    const { idDesignColorBundle,DesignColorBundleName    } = req.body;
+    const { idDesignColorBundle,DesignColorBundleName,idDesignType,idDesignColorType,idEnvironmentType    } = req.body;
 
     if (!idDesignColorBundle||!DesignColorBundleName) {
       return res.status(400).json({
@@ -57,7 +66,15 @@ const {
   const  data= {
     idDesignColorBundle:+idDesignColorBundle,
     DesignColorBundleName,
-
+    DesignType: {
+      connect: { idDesignType: +idDesignType },
+    },
+    DesignColorType: {
+      connect: { idDesignColorType: +idDesignColorType },
+    },
+    EnvironmentType: {
+      connect: { idEnvironmentType: +idEnvironmentType },
+    }
       }
   const DesignColorBundle = await updateDesignColorBundle(data);
 
