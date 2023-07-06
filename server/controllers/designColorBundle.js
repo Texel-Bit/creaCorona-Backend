@@ -170,7 +170,7 @@ exports.getAllDesignColorBundleByFilters = async (req, res, next) => {
 
     const DesignColorBundle = await getAllDesignColorBundleByFilters(data);
 
-    res.json({ status: true, DesignColorBundle });
+    res.json({ status: true, data:DesignColorBundle });
   } catch (error) {
     res.status(500).json({ status: false, error });
   }
