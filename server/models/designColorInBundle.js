@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 const createDesignColorInBundle = async (data) => {
   try {
-    const result = await prisma.designColorBundle.create({
+    const result = await prisma.designColorInBundle.create({
       data,
     });
 
@@ -20,12 +20,12 @@ const createDesignColorInBundle = async (data) => {
 
 
 const deleteDesignColorInBundle = async (data) => {
-  const { idDesignColorBundle } = data;
+  const { idDesignColorInBundle } = data;
 
   try {
     // Actualizar usuario en la base de datos\
-    const result = await prisma.designColorBundle.delete({
-      where: { idDesignColorBundle },
+    const result = await prisma.DesignColorInBundle.delete({
+      where: { idDesignColorInBundle },
     });
 
     // Llamar a la función de devolución de llamada con el resultado exitoso
