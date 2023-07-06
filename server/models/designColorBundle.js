@@ -125,14 +125,18 @@ const getAllDesignColorBundleByFilters = async (data) => {
         DesignColorBundleName: true,
         DesignColorInBundle: {
           select: {
-            DesignColors: true,
+            DesignColors: true
           },
         },
       },
     });
 
+    const modifiedResult = result.map((item) => ({
+      ...item,
+      DesignColorInBundle: item.DesignColorInBundle.map((child) => child.DesignColors),
+    }));
     // Llamar a la función de devolución de llamada con el resultado exitoso
-    return result;
+    return modifiedResult;
   } catch (e) {
     console.log(e);
     // Capturar excepción y llamar a la función de devolución de llamada con el error
