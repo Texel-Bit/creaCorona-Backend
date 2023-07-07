@@ -78,11 +78,7 @@ const getAllDesignTypeTest = async (data) => {
         // DesignColorType_has_FormatSizeTexture:true,
         DesignTypeFormatSize:{
           include:{
-            FormatSizeTexture:{
-              include:{
-                DesignColorType_has_FormatSizeTexture:true
-              }
-            }
+            FormatSizeTexture:true
           }
         },
         
