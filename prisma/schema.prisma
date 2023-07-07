@@ -51,11 +51,12 @@ model Design {
 }
 
 model DesignColorType {
-  idDesignColorType              Int                              @id @default(autoincrement())
-  DesignColorTypeDescription     String?                          @db.VarChar(45)
-  DesignColorBundle              DesignColorBundle[]
-  DesignColorType_has_DesignType DesignColorType_has_DesignType[]
-  DesignColors                   DesignColors[]
+  idDesignColorType                     Int                                     @id @default(autoincrement())
+  DesignColorTypeDescription            String?                                 @db.VarChar(45)
+  DesignColorBundle                     DesignColorBundle[]
+  DesignColorType_has_DesignType        DesignColorType_has_DesignType[]
+  DesignColorType_has_FormatSizeTexture DesignColorType_has_FormatSizeTexture[]
+  DesignColors                          DesignColors[]
 }
 
 model DesignColorType_has_DesignType {
@@ -174,11 +175,12 @@ model EnvironmentType {
 }
 
 model FormatSizeTexture {
-  idFormatSizeTexture                         Int                  @id @default(autoincrement())
+  idFormatSizeTexture                         Int                                     @id @default(autoincrement())
   DesignTypeFormatSize_idDesignTypeFormatSize Int
-  FormatSizeTextureName                       String?              @db.VarChar(45)
-  FormatSizeTextureMaskPath                   String?              @db.VarChar(255)
-  DesignTypeFormatSize                        DesignTypeFormatSize @relation(fields: [DesignTypeFormatSize_idDesignTypeFormatSize], references: [idDesignTypeFormatSize], onDelete: NoAction, onUpdate: NoAction, map: "fk_FormatSizeTexture_DesignTypeFormatSize1")
+  FormatSizeTextureName                       String?                                 @db.VarChar(45)
+  FormatSizeTextureMaskPath                   String?                                 @db.VarChar(255)
+  DesignColorType_has_FormatSizeTexture       DesignColorType_has_FormatSizeTexture[]
+  DesignTypeFormatSize                        DesignTypeFormatSize                    @relation(fields: [DesignTypeFormatSize_idDesignTypeFormatSize], references: [idDesignTypeFormatSize], onDelete: NoAction, onUpdate: NoAction, map: "fk_FormatSizeTexture_DesignTypeFormatSize1")
   bundle                                      bundle[]
   quotation                                   quotation[]
 
@@ -401,4 +403,16 @@ model DesignColorInBundle {
 
   @@index([DesignColorBundle_idDesignColorBundle], map: "fk_DesignColorInBundle_DesignColorBundle1_idx")
   @@index([DesignColors_idDesignColors], map: "fk_DesignColorInBundle_DesignColors1_idx")
+}
+
+model DesignColorType_has_FormatSizeTexture {
+  DesignColorType_has_FormatSizeTexturecol Int               @default(autoincrement())
+  DesignColorType_idDesignColorType        Int
+  FormatSizeTexture_idFormatSizeTexture    Int
+  DesignColorType                          DesignColorType   @relation(fields: [DesignColorType_idDesignColorType], references: [idDesignColorType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorType_has_FormatSizeTexture_DesignColorType1")
+  FormatSizeTexture                        FormatSizeTexture @relation(fields: [FormatSizeTexture_idFormatSizeTexture], references: [idFormatSizeTexture], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorType_has_FormatSizeTexture_FormatSizeTexture1")
+
+  @@id([DesignColorType_has_FormatSizeTexturecol, DesignColorType_idDesignColorType, FormatSizeTexture_idFormatSizeTexture])
+  @@index([DesignColorType_idDesignColorType], map: "fk_DesignColorType_has_FormatSizeTexture_DesignColorType1_idx")
+  @@index([FormatSizeTexture_idFormatSizeTexture], map: "fk_DesignColorType_has_FormatSizeTexture_FormatSizeTexture1_idx")
 }

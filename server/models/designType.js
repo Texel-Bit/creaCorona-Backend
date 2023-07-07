@@ -72,11 +72,17 @@ const getAllDesignTypeTest = async (data) => {
     // Se llama a Prisma para buscar todos las compañias
     const result = await prisma.designType.findUnique({
       where: { idDesignType },
-      include:{
+      select:{
         DesignColors:true,
+
+        // DesignColorType_has_FormatSizeTexture:true,
         DesignTypeFormatSize:{
           include:{
-            FormatSizeTexture:true
+            FormatSizeTexture:{
+              include:{
+                DesignColorType_has_FormatSizeTexture:true
+              }
+            }
           }
         },
         
@@ -85,7 +91,8 @@ const getAllDesignTypeTest = async (data) => {
         MosaicType:{
           select:{
             MosaicTypeValue:true
-          }
+          },
+
 
         }
 
