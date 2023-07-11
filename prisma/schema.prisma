@@ -38,21 +38,25 @@ model CompanyRole {
 }
 
 model Design {
-  idDesign                Int                       @id @default(autoincrement())
-  DesignImagePath         String?                   @db.VarChar(255)
-  DesignName              String?                   @db.VarChar(45)
-  DesignSellPrice         Float?
-  DesignType_idDesignType Int
-  DesignType              DesignType                @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_Design_DesignType1")
-  DesignCompany           DesignCompany[]
-  quotationProductDetails quotationProductDetails[]
+  idDesign                          Int                       @id @default(autoincrement())
+  DesignImagePath                   String?                   @db.VarChar(255)
+  DesignName                        String?                   @db.VarChar(45)
+  DesignSellPrice                   Float?
+  DesignType_idDesignType           Int
+  DesignColorType_idDesignColorType Int                       @default(2)
+  DesignColorType                   DesignColorType           @relation(fields: [DesignColorType_idDesignColorType], references: [idDesignColorType], onDelete: NoAction, onUpdate: NoAction, map: "fk_Design_DesignColorType1")
+  DesignType                        DesignType                @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_Design_DesignType1")
+  DesignCompany                     DesignCompany[]
+  quotationProductDetails           quotationProductDetails[]
 
   @@index([DesignType_idDesignType], map: "fk_Design_DesignType1_idx")
+  @@index([DesignColorType_idDesignColorType], map: "fk_Design_DesignColorType1_idx")
 }
 
 model DesignColorType {
   idDesignColorType                     Int                                     @id @default(autoincrement())
   DesignColorTypeDescription            String?                                 @db.VarChar(45)
+  Design                                Design[]
   DesignColorBundle                     DesignColorBundle[]
   DesignColorType_has_DesignType        DesignColorType_has_DesignType[]
   DesignColorType_has_FormatSizeTexture DesignColorType_has_FormatSizeTexture[]
