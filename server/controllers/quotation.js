@@ -122,15 +122,15 @@ const PriceByBundlePrice={
   idBundle:bundle[0].idbundle,
   companyZone_idcompanyZone
 }
-
+console.log(28);
 const bundlePriceZone=await getBundlePriceByZone(PriceByBundlePrice);
-
+console.log(29);
 const quotationPrice =
       areaValdosa * cantidadValdosas * bundlePriceZone[0].price;
 
     const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
 
-
+console.log(30);
     const company = {
       idCompany: Company_idCompany,
     };
@@ -306,6 +306,7 @@ const bundlePriceZone=await getBundlePriceByZone(PriceByBundlePrice);
 const quotationPrice =
       areaValdosa * cantidadValdosas * bundlePriceZone[0].price;
 
+
     const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
 
    
@@ -321,29 +322,31 @@ const quotationPrice =
       idcompanyType: companyType_idcompanyType,
     };
 
-    const { price, idbundleCompanyPrice } =
-      await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(
-        bundleCompanyPrice
-      );
+    console.log(bundleCompanyPrice);
 
-    if (price == undefined) {
-      return res.status(400).json({
-        ok: false,
-        err: {
-          message:
-            "No pudo ser creado la cotizacion no existe bundleCompanyPrice",
-        },
-      });
-    }
+    // const { price, idbundleCompanyPrice } =
+    //   await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(
+    //     bundleCompanyPrice
+    //   );
+
+    // if (price == undefined) {
+    //   return res.status(400).json({
+    //     ok: false,
+    //     err: {
+    //       message:
+    //         "No pudo ser creado la cotizacion no existe bundleCompanyPrice",
+    //     },
+    //   });
+    // }
 
     const data = {
       quatitionArea: +quatitionArea,
-      quotationBundlePrice: +bundle[0].bundleBasePrice,
+      bundlePrice: +bundle[0].bundleBasePrice,
       quotationPrice: +quotationPrice,
       quotationWidth: +quotationWidth,
       quotationHeight: +quotationHeight,
       quotationDate: new Date(),
-      quotationCompanyPrice: price,
+      // quotationCompanyPrice: price,
       FormatSizeTexture: {
         connect: { idFormatSizeTexture: +idFormatSizeTexture },
       },
@@ -353,9 +356,9 @@ const quotationPrice =
       brecha: {
         connect: { idbrecha: +idbrecha },
       },
-      bundleCompanyPrice: {
-        connect: { idbundleCompanyPrice: +idbundleCompanyPrice },
-      },
+      // bundleCompanyPrice: {
+      //   connect: { idbundleCompanyPrice: +idbundleCompanyPrice },
+      // },
       sysUser: { connect: { idsysuser: +idsysuser } },
     };
 
