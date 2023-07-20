@@ -341,7 +341,7 @@ const quotationPrice =
 
     const data = {
       quatitionArea: +quatitionArea,
-      bundlePrice: +bundle[0].bundleBasePrice,
+      bundlePrice: +bundlePriceZone[0].price,
       quotationPrice: +quotationPrice,
       quotationWidth: +quotationWidth,
       quotationHeight: +quotationHeight,
