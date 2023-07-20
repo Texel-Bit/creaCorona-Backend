@@ -122,15 +122,12 @@ const PriceByBundlePrice={
   idBundle:bundle[0].idbundle,
   companyZone_idcompanyZone
 }
-console.log(28);
 const bundlePriceZone=await getBundlePriceByZone(PriceByBundlePrice);
-console.log(29);
 const quotationPrice =
       areaValdosa * cantidadValdosas * bundlePriceZone[0].price;
 
     const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
 
-console.log(30);
     const company = {
       idCompany: Company_idCompany,
     };
@@ -142,20 +139,20 @@ console.log(30);
       idcompanyType: companyType_idcompanyType,
     };
 
-    const { price, idbundleCompanyPrice } =
-      await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(
-        bundleCompanyPrice
-      );
+    // const { price, idbundleCompanyPrice } =
+    //   await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(
+    //     bundleCompanyPrice
+    //   );
 
-    if (price == undefined) {
-      return res.status(400).json({
-        ok: false,
-        err: {
-          message:
-            "No pudo ser creado la cotizacion no existe bundleCompanyPrice",
-        },
-      });
-    }
+    // if (price == undefined) {
+    //   return res.status(400).json({
+    //     ok: false,
+    //     err: {
+    //       message:
+    //         "No pudo ser creado la cotizacion no existe bundleCompanyPrice",
+    //     },
+    //   });
+    // }
     const data = {
       customerName,
       customerLastname,
@@ -164,12 +161,12 @@ console.log(30);
       desingPatternImage: desingPatternImage,
       quatitionArea: +quatitionArea,
       customerPhoneNumber: customerPhoneNumber.toString(),
-      quotationBundlePrice: +bundle[0].bundleBasePrice,
+      bundlePrice: +bundlePriceZone[0].price,
       quotationPrice: +quotationPrice,
       quotationWidth: +quotationWidth,
       quotationHeight: +quotationHeight,
       quotationDate: new Date(),
-      quotationCompanyPrice: price,
+      // quotationCompanyPrice: price,
       FormatSizeTexture: {
         connect: { idFormatSizeTexture: +idFormatSizeTexture },
       },
@@ -179,9 +176,9 @@ console.log(30);
       brecha: {
         connect: { idbrecha: +idbrecha },
       },
-      bundleCompanyPrice: {
-        connect: { idbundleCompanyPrice: +idbundleCompanyPrice },
-      },
+      // bundleCompanyPrice: {
+      //   connect: { idbundleCompanyPrice: +idbundleCompanyPrice },
+      // },
       sysUser: { connect: { idsysuser: +idsysuser } },
     };
 
@@ -322,7 +319,6 @@ const quotationPrice =
       idcompanyType: companyType_idcompanyType,
     };
 
-    console.log(bundleCompanyPrice);
 
     // const { price, idbundleCompanyPrice } =
     //   await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(
