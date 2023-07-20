@@ -102,6 +102,8 @@ if (!idsysuser) {
         DesignTypeFormatSize.DesignTypeFormatSizeWidht) /
       10000;
 
+      
+
     //redondear al nyumero mayor
     const cantidadValdosas = Math.ceil(quatitionArea / areaValdosa);
 
@@ -123,8 +125,7 @@ const PriceByBundlePrice={
   companyZone_idcompanyZone
 }
 const bundlePriceZone=await getBundlePriceByZone(PriceByBundlePrice);
-const quotationPrice =
-      areaValdosa * cantidadValdosas * bundlePriceZone[0].price;
+const quotationPrice = Math.round(cantidadValdosas * bundlePriceZone[0].price);
 
     const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
 
@@ -273,8 +274,10 @@ exports.simulateQuotation = async (req, res) => {
 
     const areaValdosa =
       (DesignTypeFormatSize.DesignTypeFormatSizeHeight *
-        DesignTypeFormatSize.DesignTypeFormatSizeWidht) /
-      10000;
+        DesignTypeFormatSize.DesignTypeFormatSizeWidht) /10000
+      ;
+
+      console.log(areaValdosa);
 
     //redondear al nyumero mayor
     const cantidadValdosas = Math.ceil(quatitionArea / areaValdosa);
@@ -300,8 +303,7 @@ const PriceByBundlePrice={
 
 const bundlePriceZone=await getBundlePriceByZone(PriceByBundlePrice);
 
-const quotationPrice =
-      areaValdosa * cantidadValdosas * bundlePriceZone[0].price;
+const quotationPrice = Math.round(cantidadValdosas * bundlePriceZone[0].price);
 
 
     const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
