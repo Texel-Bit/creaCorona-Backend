@@ -19,6 +19,7 @@ const {
 } = require("../models/bundleCompanyPrice.js");
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
 const { log } = require("console");
+const { getBundlePriceByZone } = require("../models/bundlepricesbyzone.js");
 
 exports.createquotation = async (req, res) => {
   try {
@@ -105,12 +106,6 @@ if (!idsysuser) {
     const cantidadValdosas = Math.ceil(quatitionArea / areaValdosa);
 
     const bundle = await getBundleDesignTypeFormatSizeTexture(fortmatTexture);
-
-    const quotationPrice =
-      areaValdosa * cantidadValdosas * bundle[0].bundleBasePrice;
-
-    const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
-
     var state;
 
     if (office.Company_idCompany==1) {
@@ -123,6 +118,18 @@ if (!idsysuser) {
       };
     }
     const { companyZone_idcompanyZone } = await getStateByIdState(state);
+const PriceByBundlePrice={
+  idBundle:bundle[0].idbundle,
+  companyZone_idcompanyZone
+}
+
+const bundlePriceZone=await getBundlePriceByZone(PriceByBundlePrice);
+
+const quotationPrice =
+      areaValdosa * cantidadValdosas * bundlePriceZone[0].price;
+
+    const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
+
 
     const company = {
       idCompany: Company_idCompany,
@@ -277,10 +284,6 @@ exports.simulateQuotation = async (req, res) => {
 
     const bundle = await getBundleDesignTypeFormatSizeTexture(fortmatTexture);
 
-    const quotationPrice =
-      areaValdosa * cantidadValdosas * bundle[0].bundleBasePrice;
-
-    const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
 var state;
 
     if (office.Company_idCompany==1) {
@@ -292,8 +295,20 @@ var state;
         idstate:office.state_idstate,
       };
     }
-   
     const { companyZone_idcompanyZone } = await getStateByIdState(state);
+const PriceByBundlePrice={
+  idBundle:bundle[0].idbundle,
+  companyZone_idcompanyZone
+}
+
+const bundlePriceZone=await getBundlePriceByZone(PriceByBundlePrice);
+
+const quotationPrice =
+      areaValdosa * cantidadValdosas * bundlePriceZone[0].price;
+
+    const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
+
+   
 
     const company = {
       idCompany: Company_idCompany,
