@@ -25,10 +25,11 @@ exports.createquotation = async (req, res) => {
     const token = req.get("JWT");
 
     let {
-      user: { idsysuser, office_idoffice },
+      user: { idsysuser, office_idoffice,office },
     } = await promisify(jwt.verify)(token, process.env.SEED);
 
-    if (!idsysuser) {
+
+if (!idsysuser) {
       idsysuser = 1;
     }
     const {
@@ -110,9 +111,17 @@ exports.createquotation = async (req, res) => {
 
     const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
 
-    const state = {
-      idstate,
-    };
+    var state;
+
+    if (office.Company_idCompany==1) {
+       state = {
+        idstate,
+      };
+    } else {
+       state = {
+        idstate:office.state_idstate,
+      };
+    }
     const { companyZone_idcompanyZone } = await getStateByIdState(state);
 
     const company = {
@@ -223,12 +232,6 @@ exports.simulateQuotation = async (req, res) => {
       user: { idsysuser, office_idoffice,office },
     } = await promisify(jwt.verify)(token, process.env.SEED);
 
-
-
-    console.log(12);
-
-    console.log(office);
-    console.log(123);
 
 
     if (!idsysuser) {
