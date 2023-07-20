@@ -18,6 +18,7 @@ const {
   getBundleCompanyPriceByBundleCompanyTypeComopanyZone,
 } = require("../models/bundleCompanyPrice.js");
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
+const { log } = require("console");
 
 exports.createquotation = async (req, res) => {
   try {
@@ -90,7 +91,7 @@ exports.createquotation = async (req, res) => {
       fortmatTexture
     );
 
-    const office = {
+    const officeInfo = {
       idoffice: office_idoffice,
     };
 
@@ -107,7 +108,7 @@ exports.createquotation = async (req, res) => {
     const quotationPrice =
       areaValdosa * cantidadValdosas * bundle[0].bundleBasePrice;
 
-    const { Company_idCompany } = await getAllOfficeByIdoffice(office);
+    const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
 
     const state = {
       idstate,
@@ -218,10 +219,17 @@ exports.createquotation = async (req, res) => {
 exports.simulateQuotation = async (req, res) => {
   try {
     const token = req.get("JWT");
-
     let {
-      user: { idsysuser, office_idoffice },
+      user: { idsysuser, office_idoffice,office },
     } = await promisify(jwt.verify)(token, process.env.SEED);
+
+
+
+    console.log(12);
+
+    console.log(office);
+    console.log(123);
+
 
     if (!idsysuser) {
       idsysuser = 1;
@@ -252,7 +260,7 @@ exports.simulateQuotation = async (req, res) => {
       fortmatTexture
     );
 
-    const office = {
+    const officeInfo = {
       idoffice: office_idoffice,
     };
 
@@ -269,11 +277,19 @@ exports.simulateQuotation = async (req, res) => {
     const quotationPrice =
       areaValdosa * cantidadValdosas * bundle[0].bundleBasePrice;
 
-    const { Company_idCompany } = await getAllOfficeByIdoffice(office);
+    const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
+var state;
 
-    const state = {
-      idstate,
-    };
+    if (office.Company_idCompany==1) {
+       state = {
+        idstate,
+      };
+    } else {
+       state = {
+        idstate:office.state_idstate,
+      };
+    }
+   
     const { companyZone_idcompanyZone } = await getStateByIdState(state);
 
     const company = {

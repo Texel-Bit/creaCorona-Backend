@@ -15,7 +15,6 @@ delete result.tempPassword
 delete result.tempPasswordExpDate
 return result
   } catch (e) {
-console.log(e);
 
     return e
   }finally {
@@ -33,7 +32,11 @@ const findOneLoginByEmail = async ({ email }) => {
         email: {
           equals: email,
         },
+        
       },
+      include:{
+        office:true
+      }
     });
 
     // Devolvemos el resultado de la búsqueda
