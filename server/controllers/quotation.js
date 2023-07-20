@@ -12,6 +12,7 @@ const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 const { getFormatSizeTextureById } = require("../models/formatSizeTexture.js");
 const { getBundleDesignTypeFormatSizeTexture } = require("../models/bundle.js");
+const { getCurrentSettings } = require("../models/settings.js");
 const { getAllOfficeByIdoffice } = require("../models/office.js");
 const { getCompanyById } = require("../models/company.js");
 const {
@@ -33,7 +34,7 @@ exports.createquotation = async (req, res) => {
 if (!idsysuser) {
       idsysuser = 1;
     }
-    const {
+    let {
       customerName,
       customerLastname,
       customerEmail,
@@ -103,7 +104,10 @@ if (!idsysuser) {
       10000;
 
       
-
+      const currentSetting=await getCurrentSettings();
+      
+      quatitionArea=quatitionArea+quatitionArea*currentSetting[0].SystemSetupGarbagePercenttage/100;
+      
     //redondear al nyumero mayor
     const cantidadValdosas = Math.ceil(quatitionArea / areaValdosa);
 
@@ -120,6 +124,7 @@ if (!idsysuser) {
       };
     }
     const { companyZone_idcompanyZone } = await getStateByIdState(state);
+
 const PriceByBundlePrice={
   idBundle:bundle[0].idbundle,
   companyZone_idcompanyZone
@@ -242,7 +247,7 @@ exports.simulateQuotation = async (req, res) => {
     if (!idsysuser) {
       idsysuser = 1;
     }
-    const {
+    let {
       quotationWidth,
       quotationHeight,
       idbrecha,
@@ -277,7 +282,11 @@ exports.simulateQuotation = async (req, res) => {
         DesignTypeFormatSize.DesignTypeFormatSizeWidht) /10000
       ;
 
-      console.log(areaValdosa);
+      
+
+      const currentSetting=await getCurrentSettings();
+      
+      quatitionArea=quatitionArea+quatitionArea*currentSetting[0].SystemSetupGarbagePercenttage/100;
 
     //redondear al nyumero mayor
     const cantidadValdosas = Math.ceil(quatitionArea / areaValdosa);
@@ -302,6 +311,8 @@ const PriceByBundlePrice={
 }
 
 const bundlePriceZone=await getBundlePriceByZone(PriceByBundlePrice);
+
+
 
 const quotationPrice = Math.round(cantidadValdosas * bundlePriceZone[0].price);
 
@@ -366,6 +377,7 @@ const quotationPrice = Math.round(cantidadValdosas * bundlePriceZone[0].price);
       data,
     });
   } catch (error) {
+
     return res.status(400).json({
       status: false,
       err: {
