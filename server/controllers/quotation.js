@@ -257,6 +257,8 @@ exports.simulateQuotation = async (req, res) => {
       // idbundleCompanyPrice
     } = req.body;
 
+    console.log( req.body)
+    
     if (!quatitionArea || !idbrecha || !idFormatSizeTexture || !idstate) {
       return res.status(400).json({
         status: false,
@@ -266,6 +268,7 @@ exports.simulateQuotation = async (req, res) => {
       });
     }
 
+   
     const fortmatTexture = {
       idFormatSizeTexture: +idFormatSizeTexture,
     };
