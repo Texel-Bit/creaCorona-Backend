@@ -250,7 +250,6 @@ exports.simulateQuotation = async (req, res) => {
     let {
       quotationWidth,
       quotationHeight,
-      idbrecha,
       idFormatSizeTexture,
       quatitionArea,
       idstate,
@@ -258,8 +257,8 @@ exports.simulateQuotation = async (req, res) => {
     } = req.body;
 
     console.log( req.body)
-    
-    if (!quatitionArea || !idbrecha || !idFormatSizeTexture || !idstate) {
+
+    if (!quatitionArea || !idFormatSizeTexture || !idstate) {
       return res.status(400).json({
         status: false,
         err: {
@@ -357,17 +356,9 @@ const quotationPrice = Math.round(cantidadValdosas * bundlePriceZone[0].price);
       quotationPrice: +quotationPrice,
       quotationWidth: +quotationWidth,
       quotationHeight: +quotationHeight,
-      quotationDate: new Date(),
+
       // quotationCompanyPrice: price,
-      FormatSizeTexture: {
-        connect: { idFormatSizeTexture: +idFormatSizeTexture },
-      },
-      quotationStatus: {
-        connect: { idquotationStatus: 1 },
-      },
-      brecha: {
-        connect: { idbrecha: +idbrecha },
-      },
+
       // bundleCompanyPrice: {
       //   connect: { idbundleCompanyPrice: +idbundleCompanyPrice },
       // },
