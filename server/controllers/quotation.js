@@ -43,11 +43,28 @@ if (!idsysuser) {
       quotationHeight,
       idbrecha,
       idFormatSizeTexture,
+      idFormatSize,
       quatitionArea,
       idstate
 
       // idbundleCompanyPrice
     } = req.body;
+
+    if(!idFormatSizeTexture )
+    {
+      if(req.body.idFormatSize)
+      {
+
+        let defaultFormatSizeTexture  = await getDefaultFormatSizeTextureById(
+          req.body.idFormatSize
+        );
+
+        idFormatSizeTexture = defaultFormatSizeTexture.idFormatSizeTexture;
+
+      }
+     
+    }
+    
 
     if (
       !customerName ||
