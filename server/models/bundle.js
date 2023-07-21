@@ -76,6 +76,7 @@ const getBundleDesignTypeFormatSizeTexture = async (data) => {
       } },
     });
  
+    console.log(result)
     // Llamar a la función de devolución de llamada con el resultado exitoso
     return result
    } catch (e) {

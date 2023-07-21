@@ -10,7 +10,7 @@ const { getStateByIdState } = require("../models/state");
 
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
-const { getFormatSizeTextureById } = require("../models/formatSizeTexture.js");
+const { getFormatSizeTextureById,getDefaultFormatSizeTextureById } = require("../models/formatSizeTexture.js");
 const { getBundleDesignTypeFormatSizeTexture } = require("../models/bundle.js");
 const { getCurrentSettings } = require("../models/settings.js");
 const { getAllOfficeByIdoffice } = require("../models/office.js");
@@ -253,10 +253,26 @@ exports.simulateQuotation = async (req, res) => {
       idFormatSizeTexture,
       quatitionArea,
       idstate,
+      idFormatSize
       // idbundleCompanyPrice
     } = req.body;
 
-    console.log( req.body)
+    console.log( req.body.idFormatSize)
+
+    if(!idFormatSizeTexture )
+    {
+      if(req.body.idFormatSize)
+      {
+
+        let defaultFormatSizeTexture  = await getDefaultFormatSizeTextureById(
+          req.body.idFormatSize
+        );
+
+        idFormatSizeTexture = defaultFormatSizeTexture.idFormatSizeTexture;
+
+      }
+     
+    }
 
     if (!quatitionArea || !idFormatSizeTexture || !idstate) {
       return res.status(400).json({
