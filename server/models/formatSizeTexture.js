@@ -65,6 +65,7 @@ const getAllFormatSizeTexture = async () => {
   }
 };
 
+
 const getFormatSizeTextureById = async (data) => {
 
   const { idFormatSizeTexture } = data;
