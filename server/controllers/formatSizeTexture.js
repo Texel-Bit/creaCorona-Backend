@@ -7,7 +7,7 @@ const {
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
 const path = require('path');
 const fs = require('fs');
-const puppeteer = require('puppeteer');
+
 
 exports.createFormatSizeTexture = async (req, res) => {
   try {
@@ -124,42 +124,4 @@ exports.getAllFormatSizeTexture = async (req, res) => {
 };
 
 
-exports.castHtmlToPng = async (req, res) => {
-
-  console.log(req.body)
-  
-  try {
-    
-    const { svgContent } = req.body.svgsContent;
-    const { BodyWidth } = req.body.width;
-    const { BodyHeight } = req.body.height;
-
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-
-  // Establecer el tamaño de la ventana del navegador para que coincida con el contenido SVG
-    await page.setViewport({ width: BodyWidth, height: BodyHeight });
-
-     // Cargar el contenido SVG en el navegador
-     await page.setContent(`<html><body>${svgContent}</body></html>`, { waitUntil: 'domcontentloaded' });
-
-     // Capturar una captura de pantalla del contenido SVG
-    const screenshotBuffer = await page.screenshot({ type: 'png' });
-
-    await browser.close();
-
-        // Convertir el buffer de la captura de pantalla a base64 URL
-    const screenshotUrl = `data:image/png;base64,${screenshotBuffer.toString('base64')}`;
-    res.send(screenshotUrl);
-    
-    console.log(screenshotUrl);
-    
-
-  } catch (error) {
-    console.error(error," ERROOOR ");
-    res.status(500).send({
-      message: "No se pudo obtener las allFormatSizeTexture",
-    });
-  }
-};
 //sin uso

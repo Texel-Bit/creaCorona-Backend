@@ -16,7 +16,7 @@ app.post('/createFormatSizeTexture', [verificaToken, verificaAdminRol,validarArc
 app.post('/updateFormatSizeTexture', [verificaToken, verificaAdminRol], updateFormatSizeTexture);
 app.get('/getAllFormatSizeTexture', [verificaToken, verificaAdminRol], getAllFormatSizeTexture);
 
-app.post('/castHtmlToPng', castHtmlToPng);
+//app.post('/castHtmlToPng', castHtmlToPng);
 
 
  
