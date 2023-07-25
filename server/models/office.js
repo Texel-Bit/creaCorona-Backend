@@ -65,7 +65,6 @@ const getAllOffice = async () => {
 const getAllOfficeByIdoffice = async (data) => {
 
   const { idoffice } = data;
- console.log(idoffice,"aca");
   try {
     // Actualizar usuario en la base de datos
     const result = await prisma.office.findUnique({

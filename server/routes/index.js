@@ -24,12 +24,14 @@ const designColorTypeRoutes=require("./designColorType")
 
 const stateRoutes=require("./state")
 const designColorBundleRoutes=require("./designColorBundle")
+const designColorInBundleRoutes=require("./designColorInBundle")
 
 
 
 const app = express();
 app.use("/state", stateRoutes);
 app.use("/designColorBundle", designColorBundleRoutes);
+app.use("/designInColorBundle", designColorInBundleRoutes);
 
 app.use("/designColorType", designColorTypeRoutes);
 

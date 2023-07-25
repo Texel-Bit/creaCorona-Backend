@@ -38,23 +38,29 @@ model CompanyRole {
 }
 
 model Design {
-  idDesign                Int                       @id @default(autoincrement())
-  DesignImagePath         String?                   @db.VarChar(255)
-  DesignName              String?                   @db.VarChar(45)
-  DesignSellPrice         Float?
-  DesignType_idDesignType Int
-  DesignType              DesignType                @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_Design_DesignType1")
-  DesignCompany           DesignCompany[]
-  quotationProductDetails quotationProductDetails[]
+  idDesign                          Int                       @id @default(autoincrement())
+  DesignImagePath                   String?                   @db.VarChar(255)
+  DesignName                        String?                   @db.VarChar(45)
+  DesignSellPrice                   Float?
+  DesignType_idDesignType           Int
+  DesignColorType_idDesignColorType Int                       @default(2)
+  DesignColorType                   DesignColorType           @relation(fields: [DesignColorType_idDesignColorType], references: [idDesignColorType], onDelete: NoAction, onUpdate: NoAction, map: "fk_Design_DesignColorType1")
+  DesignType                        DesignType                @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_Design_DesignType1")
+  DesignCompany                     DesignCompany[]
+  quotationProductDetails           quotationProductDetails[]
 
   @@index([DesignType_idDesignType], map: "fk_Design_DesignType1_idx")
+  @@index([DesignColorType_idDesignColorType], map: "fk_Design_DesignColorType1_idx")
 }
 
 model DesignColorType {
-  idDesignColorType              Int                              @id @default(autoincrement())
-  DesignColorTypeDescription     String?                          @db.VarChar(45)
-  DesignColorType_has_DesignType DesignColorType_has_DesignType[]
-  DesignColors                   DesignColors[]
+  idDesignColorType                     Int                                     @id @default(autoincrement())
+  DesignColorTypeDescription            String?                                 @db.VarChar(45)
+  Design                                Design[]
+  DesignColorBundle                     DesignColorBundle[]
+  DesignColorType_has_DesignType        DesignColorType_has_DesignType[]
+  DesignColorType_has_FormatSizeTexture DesignColorType_has_FormatSizeTexture[]
+  DesignColors                          DesignColors[]
 }
 
 model DesignColorType_has_DesignType {
@@ -77,6 +83,7 @@ model DesignColors {
   DesignColorPath                   String?                      @db.VarChar(255)
   DesignType_idDesignType           Int
   DesignColorType_idDesignColorType Int
+  DesignColorInBundle               DesignColorInBundle[]
   DesignColorType                   DesignColorType              @relation(fields: [DesignColorType_idDesignColorType], references: [idDesignColorType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColors_DesignColorType1")
   DesignType                        DesignType                   @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColors_DesignType1")
   DesignColors_has_quotation        DesignColors_has_quotation[]
@@ -115,6 +122,7 @@ model DesignType {
   DesignTypeIconPath             String?                          @db.VarChar(255)
   MosaicType_idMosaicType        Int
   Design                         Design[]
+  DesignColorBundle              DesignColorBundle[]
   DesignColorType_has_DesignType DesignColorType_has_DesignType[]
   DesignColors                   DesignColors[]
   MosaicType                     MosaicType                       @relation(fields: [MosaicType_idMosaicType], references: [idMosaicType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignType_MosaicType1")
@@ -164,17 +172,19 @@ model EnvironmentType {
   EnvironmentTypeName            String?                          @db.VarChar(45)
   EnvironmentTypeImage           String?                          @db.VarChar(255)
   WorkWithStructure              Int?                             @default(1) @db.TinyInt
+  DesignColorBundle              DesignColorBundle[]
   DesignColorType_has_DesignType DesignColorType_has_DesignType[]
   DesignType_EnvironmentType     DesignType_EnvironmentType[]
   Environment                    Environment[]
 }
 
 model FormatSizeTexture {
-  idFormatSizeTexture                         Int                  @id @default(autoincrement())
+  idFormatSizeTexture                         Int                                     @id @default(autoincrement())
   DesignTypeFormatSize_idDesignTypeFormatSize Int
-  FormatSizeTextureName                       String?              @db.VarChar(45)
-  FormatSizeTextureMaskPath                   String?              @db.VarChar(255)
-  DesignTypeFormatSize                        DesignTypeFormatSize @relation(fields: [DesignTypeFormatSize_idDesignTypeFormatSize], references: [idDesignTypeFormatSize], onDelete: NoAction, onUpdate: NoAction, map: "fk_FormatSizeTexture_DesignTypeFormatSize1")
+  FormatSizeTextureName                       String?                                 @db.VarChar(45)
+  FormatSizeTextureMaskPath                   String?                                 @db.VarChar(255)
+  DesignColorType_has_FormatSizeTexture       DesignColorType_has_FormatSizeTexture[]
+  DesignTypeFormatSize                        DesignTypeFormatSize                    @relation(fields: [DesignTypeFormatSize_idDesignTypeFormatSize], references: [idDesignTypeFormatSize], onDelete: NoAction, onUpdate: NoAction, map: "fk_FormatSizeTexture_DesignTypeFormatSize1")
   bundle                                      bundle[]
   quotation                                   quotation[]
 
@@ -373,6 +383,40 @@ model state {
 }
 
 model DesignColorBundle {
-  idDesignColorBundle   Int    @id @default(autoincrement())
-  DesignColorBundleName String @db.VarChar(45)
+  idDesignColorBundle               Int                   @id @default(autoincrement())
+  DesignColorBundleName             String                @db.VarChar(45)
+  DesignType_idDesignType           Int
+  DesignColorType_idDesignColorType Int
+  EnvironmentType_idEnvironmentType Int
+  DesignColorType                   DesignColorType       @relation(fields: [DesignColorType_idDesignColorType], references: [idDesignColorType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorBundle_DesignColorType1")
+  DesignType                        DesignType            @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorBundle_DesignType1")
+  EnvironmentType                   EnvironmentType       @relation(fields: [EnvironmentType_idEnvironmentType], references: [idEnvironmentType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorBundle_EnvironmentType1")
+  DesignColorInBundle               DesignColorInBundle[]
+
+  @@index([DesignColorType_idDesignColorType], map: "fk_DesignColorBundle_DesignColorType1_idx")
+  @@index([DesignType_idDesignType], map: "fk_DesignColorBundle_DesignType1_idx")
+  @@index([EnvironmentType_idEnvironmentType], map: "fk_DesignColorBundle_EnvironmentType1_idx")
+}
+
+model DesignColorInBundle {
+  idDesignColorInBundle                 Int               @id @default(autoincrement())
+  DesignColorBundle_idDesignColorBundle Int
+  DesignColors_idDesignColors           Int
+  DesignColorBundle                     DesignColorBundle @relation(fields: [DesignColorBundle_idDesignColorBundle], references: [idDesignColorBundle], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorInBundle_DesignColorBundle1")
+  DesignColors                          DesignColors      @relation(fields: [DesignColors_idDesignColors], references: [idDesignColors], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorInBundle_DesignColors1")
+
+  @@index([DesignColorBundle_idDesignColorBundle], map: "fk_DesignColorInBundle_DesignColorBundle1_idx")
+  @@index([DesignColors_idDesignColors], map: "fk_DesignColorInBundle_DesignColors1_idx")
+}
+
+model DesignColorType_has_FormatSizeTexture {
+  DesignColorType_has_FormatSizeTexturecol Int               @default(autoincrement())
+  DesignColorType_idDesignColorType        Int
+  FormatSizeTexture_idFormatSizeTexture    Int
+  DesignColorType                          DesignColorType   @relation(fields: [DesignColorType_idDesignColorType], references: [idDesignColorType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorType_has_FormatSizeTexture_DesignColorType1")
+  FormatSizeTexture                        FormatSizeTexture @relation(fields: [FormatSizeTexture_idFormatSizeTexture], references: [idFormatSizeTexture], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorType_has_FormatSizeTexture_FormatSizeTexture1")
+
+  @@id([DesignColorType_has_FormatSizeTexturecol, DesignColorType_idDesignColorType, FormatSizeTexture_idFormatSizeTexture])
+  @@index([DesignColorType_idDesignColorType], map: "fk_DesignColorType_has_FormatSizeTexture_DesignColorType1_idx")
+  @@index([FormatSizeTexture_idFormatSizeTexture], map: "fk_DesignColorType_has_FormatSizeTexture_FormatSizeTexture1_idx")
 }

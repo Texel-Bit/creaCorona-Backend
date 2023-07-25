@@ -60,12 +60,12 @@ exports.updateDesignColors = async (req, res, next) => {
   // Desestructurar los campos del cuerpo de la petición
 
   try {
-    const { idDesignColors, DesignColorName, idDesignType,IdDesignColorType } = req.body;
+    const { idDesignColors, DesignColorName, idDesignType,idDesignColorType } = req.body;
 
-    if (!idDesignColors || !DesignColorName || !idDesignType||IdDesignColorType) {
+    if (!idDesignColors || !DesignColorName || !idDesignType|| !idDesignColorType) {
       return res.status(400).json({
         status: false,
-        err: { message: "Datos de entrada incompletos" },
+        err: { message: "Datos de entrada incompletos 2" },
       });
     }
 
@@ -73,7 +73,7 @@ exports.updateDesignColors = async (req, res, next) => {
       idDesignColors: +idDesignColors,
       DesignColorName,
       DesignType: { connect: { idDesignType: +idDesignType } },
-      DesignColorType_DesignColors_DesignColorTypeToDesignColorType:{ connect: { IdDesignColorType: +IdDesignColorType } }
+      DesignColorType:{ connect: { idDesignColorType: +idDesignColorType } }
 
     };
     const designColors = await getDesignColorsById(data);

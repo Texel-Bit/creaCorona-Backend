@@ -5,7 +5,7 @@ const express = require('express');
 const app = express.Router();
 
 // Importa los controladores que manejan las peticiones a las rutas
-const { createDesignColorBundle,updateDesignColorBundle,getAllDesignColorBundle,deleteDesignColorBundle} = require('../controllers/designColorBundle');
+const { createDesignColorBundle,updateDesignColorBundle,getAllDesignColorBundle,deleteDesignColorBundle,getAllDesignColorBundleByFilters} = require('../controllers/designColorBundle');
 
 // Importa los middlewares que se utilizan en las rutas
 const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacion');
@@ -16,6 +16,7 @@ app.post('/createDesignColorBundle', [verificaToken, verificaAdminRol], createDe
 app.post('/updateDesignColorBundle', [verificaToken, verificaAdminRol], updateDesignColorBundle);
 app.delete('/deleteDesignColorBundle', [verificaToken, verificaAdminRol], deleteDesignColorBundle);
 app.get('/getAllDesignColorBundle', [verificaToken, verificaAdminRol], getAllDesignColorBundle);
+app.post('/getAllDesignColorBundleByFilters', [verificaToken, verificaAdminRol],getAllDesignColorBundleByFilters);
 
 module.exports = app;
 

@@ -65,6 +65,7 @@ const getAllFormatSizeTexture = async () => {
   }
 };
 
+
 const getFormatSizeTextureById = async (data) => {
 
   const { idFormatSizeTexture } = data;
@@ -90,5 +91,33 @@ const getFormatSizeTextureById = async (data) => {
   }
  };
 
-module.exports = { createFormatSizeTexture,updateFormatSizeTexture,getAllFormatSizeTexture,getFormatSizeTextureById };
+ const getDefaultFormatSizeTextureById = async (data) => {
+
+
+  try {
+    // Actualizar usuario en la base de datos
+    const result = await prisma.formatSizeTexture.findFirst({
+      where: { DesignTypeFormatSize_idDesignTypeFormatSize:data,
+        FormatSizeTextureName:'Plano'
+       },
+       select: {
+        idFormatSizeTexture: true
+      }
+    });
+ 
+    console.log(result)
+    // Llamar a la función de devolución de llamada con el resultado exitoso
+    return result;
+  } catch (e) {
+    console.log(e);
+    // Capturar excepción y llamar a la función de devolución de llamada con el error
+    throw e;
+
+  } finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
+  }
+ };
+
+module.exports = { createFormatSizeTexture,updateFormatSizeTexture,getAllFormatSizeTexture,getFormatSizeTextureById,getDefaultFormatSizeTextureById };
 

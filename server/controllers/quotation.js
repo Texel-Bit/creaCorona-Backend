@@ -5,16 +5,22 @@ const {
   createDesignColorshasquotation,
   createQuotationProductDetails,
 } = require("../models/quotation.js");
+
+const { getStateByIdState } = require("../models/state");
+
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
-const { getFormatSizeTextureById } = require("../models/formatSizeTexture.js");
+const { getFormatSizeTextureById,getDefaultFormatSizeTextureById } = require("../models/formatSizeTexture.js");
 const { getBundleDesignTypeFormatSizeTexture } = require("../models/bundle.js");
+const { getCurrentSettings } = require("../models/settings.js");
 const { getAllOfficeByIdoffice } = require("../models/office.js");
 const { getCompanyById } = require("../models/company.js");
 const {
   getBundleCompanyPriceByBundleCompanyTypeComopanyZone,
 } = require("../models/bundleCompanyPrice.js");
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
+const { log } = require("console");
+const { getBundlePriceByZone } = require("../models/bundlepricesbyzone.js");
 const emailSend = require("../helpers/email");
 const fs = require('fs');
 const path = require('path');
@@ -28,13 +34,14 @@ exports.createquotation = async (req, res) => {
     const token = req.get("JWT");
 
     let {
-      user: { idsysuser, office_idoffice },
+      user: { idsysuser, office_idoffice,office },
     } = await promisify(jwt.verify)(token, process.env.SEED);
 
-    if (!idsysuser) {
+
+if (!idsysuser) {
       idsysuser = 1;
     }
-    const {
+    let {
       customerName,
       customerLastname,
       customerEmail,
@@ -43,10 +50,28 @@ exports.createquotation = async (req, res) => {
       quotationHeight,
       idbrecha,
       idFormatSizeTexture,
+      idFormatSize,
       quatitionArea,
+      idstate
 
       // idbundleCompanyPrice
     } = req.body;
+
+    if(!idFormatSizeTexture )
+    {
+      if(req.body.idFormatSize)
+      {
+
+        let defaultFormatSizeTexture  = await getDefaultFormatSizeTextureById(
+          req.body.idFormatSize
+        );
+
+        idFormatSizeTexture = defaultFormatSizeTexture.idFormatSizeTexture;
+
+      }
+     
+    }
+    
 
     if (
       !customerName ||
@@ -55,7 +80,8 @@ exports.createquotation = async (req, res) => {
       !customerPhoneNumber ||
       !quatitionArea ||
       !idbrecha ||
-      !idFormatSizeTexture
+      !idFormatSizeTexture||
+      !idstate
     ) {
       return res.status(400).json({
         status: false,
@@ -92,7 +118,7 @@ exports.createquotation = async (req, res) => {
       fortmatTexture
     );
 
-    const office = {
+    const officeInfo = {
       idoffice: office_idoffice,
     };
 
@@ -101,16 +127,36 @@ exports.createquotation = async (req, res) => {
         DesignTypeFormatSize.DesignTypeFormatSizeWidht) /
       10000;
 
+      
+      const currentSetting=await getCurrentSettings();
+      
+      quatitionArea=quatitionArea+quatitionArea*currentSetting[0].SystemSetupGarbagePercenttage/100;
+      
     //redondear al nyumero mayor
     const cantidadValdosas = Math.ceil(quatitionArea / areaValdosa);
 
     const bundle = await getBundleDesignTypeFormatSizeTexture(fortmatTexture);
+    var state;
 
-    const quotationPrice =
-      areaValdosa * cantidadValdosas * bundle[0].bundleBasePrice;
+    if (office.Company_idCompany==1) {
+       state = {
+        idstate,
+      };
+    } else {
+       state = {
+        idstate:office.state_idstate,
+      };
+    }
+    const { companyZone_idcompanyZone } = await getStateByIdState(state);
 
-    const { companyZone_idcompanyZone, Company_idCompany } =
-      await getAllOfficeByIdoffice(office);
+const PriceByBundlePrice={
+  idBundle:bundle[0].idbundle,
+  companyZone_idcompanyZone
+}
+const bundlePriceZone=await getBundlePriceByZone(PriceByBundlePrice);
+const quotationPrice = Math.round(cantidadValdosas * bundlePriceZone[0].price);
+
+    const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
 
     const company = {
       idCompany: Company_idCompany,
@@ -123,20 +169,20 @@ exports.createquotation = async (req, res) => {
       idcompanyType: companyType_idcompanyType,
     };
 
-    const { price, idbundleCompanyPrice } =
-      await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(
-        bundleCompanyPrice
-      );
+    // const { price, idbundleCompanyPrice } =
+    //   await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(
+    //     bundleCompanyPrice
+    //   );
 
-    if (price == undefined) {
-      return res.status(400).json({
-        ok: false,
-        err: {
-          message:
-            "No pudo ser creado la cotizacion no existe bundleCompanyPrice",
-        },
-      });
-    }
+    // if (price == undefined) {
+    //   return res.status(400).json({
+    //     ok: false,
+    //     err: {
+    //       message:
+    //         "No pudo ser creado la cotizacion no existe bundleCompanyPrice",
+    //     },
+    //   });
+    // }
     const data = {
       customerName,
       customerLastname,
@@ -145,12 +191,12 @@ exports.createquotation = async (req, res) => {
       desingPatternImage: desingPatternImage,
       quatitionArea: +quatitionArea,
       customerPhoneNumber: customerPhoneNumber.toString(),
-      quotationBundlePrice: +bundle[0].bundleBasePrice,
+      bundlePrice: +bundlePriceZone[0].price,
       quotationPrice: +quotationPrice,
       quotationWidth: +quotationWidth,
       quotationHeight: +quotationHeight,
       quotationDate: new Date(),
-      quotationCompanyPrice: price,
+      // quotationCompanyPrice: price,
       FormatSizeTexture: {
         connect: { idFormatSizeTexture: +idFormatSizeTexture },
       },
@@ -160,9 +206,9 @@ exports.createquotation = async (req, res) => {
       brecha: {
         connect: { idbrecha: +idbrecha },
       },
-      bundleCompanyPrice: {
-        connect: { idbundleCompanyPrice: +idbundleCompanyPrice },
-      },
+      // bundleCompanyPrice: {
+      //   connect: { idbundleCompanyPrice: +idbundleCompanyPrice },
+      // },
       sysUser: { connect: { idsysuser: +idsysuser } },
     };
 
@@ -170,7 +216,6 @@ exports.createquotation = async (req, res) => {
     const arrProductDetails = JSON.parse(req.body.quotationProductDetails);
 
     arrProductDetails.forEach((element, index) => {
-
       arrProductDetails[index].quotation_idquotation =
         +createdquotation.idquotation;
     });
@@ -217,24 +262,43 @@ exports.createquotation = async (req, res) => {
 exports.simulateQuotation = async (req, res) => {
   try {
     const token = req.get("JWT");
-
     let {
-      user: { idsysuser, office_idoffice },
+      user: { idsysuser, office_idoffice,office },
     } = await promisify(jwt.verify)(token, process.env.SEED);
+
+
 
     if (!idsysuser) {
       idsysuser = 1;
     }
-    const {
+    let {
       quotationWidth,
       quotationHeight,
-      idbrecha,
       idFormatSizeTexture,
       quatitionArea,
+      idstate,
+      idFormatSize
       // idbundleCompanyPrice
     } = req.body;
 
-    if (!quatitionArea || !idbrecha || !idFormatSizeTexture) {
+    console.log( req.body.idFormatSize)
+
+    if(!idFormatSizeTexture )
+    {
+      if(req.body.idFormatSize)
+      {
+
+        let defaultFormatSizeTexture  = await getDefaultFormatSizeTextureById(
+          req.body.idFormatSize
+        );
+
+        idFormatSizeTexture = defaultFormatSizeTexture.idFormatSizeTexture;
+
+      }
+     
+    }
+
+    if (!quatitionArea || !idFormatSizeTexture || !idstate) {
       return res.status(400).json({
         status: false,
         err: {
@@ -243,6 +307,7 @@ exports.simulateQuotation = async (req, res) => {
       });
     }
 
+   
     const fortmatTexture = {
       idFormatSizeTexture: +idFormatSizeTexture,
     };
@@ -250,25 +315,53 @@ exports.simulateQuotation = async (req, res) => {
       fortmatTexture
     );
 
-    const office = {
+    const officeInfo = {
       idoffice: office_idoffice,
     };
 
     const areaValdosa =
       (DesignTypeFormatSize.DesignTypeFormatSizeHeight *
-        DesignTypeFormatSize.DesignTypeFormatSizeWidht) /
-      10000;
+        DesignTypeFormatSize.DesignTypeFormatSizeWidht) /10000
+      ;
+
+      
+
+      const currentSetting=await getCurrentSettings();
+      
+      quatitionArea=quatitionArea+quatitionArea*currentSetting[0].SystemSetupGarbagePercenttage/100;
 
     //redondear al nyumero mayor
     const cantidadValdosas = Math.ceil(quatitionArea / areaValdosa);
 
     const bundle = await getBundleDesignTypeFormatSizeTexture(fortmatTexture);
 
-    const quotationPrice =
-      areaValdosa * cantidadValdosas * bundle[0].bundleBasePrice;
+var state;
 
-    const { companyZone_idcompanyZone, Company_idCompany } =
-      await getAllOfficeByIdoffice(office);
+    if (office.Company_idCompany==1) {
+       state = {
+        idstate,
+      };
+    } else {
+       state = {
+        idstate:office.state_idstate,
+      };
+    }
+    const { companyZone_idcompanyZone } = await getStateByIdState(state);
+const PriceByBundlePrice={
+  idBundle:bundle[0].idbundle,
+  companyZone_idcompanyZone
+}
+
+const bundlePriceZone=await getBundlePriceByZone(PriceByBundlePrice);
+
+
+
+const quotationPrice = Math.round(cantidadValdosas * bundlePriceZone[0].price);
+
+
+    const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
+
+   
 
     const company = {
       idCompany: Company_idCompany,
@@ -281,41 +374,34 @@ exports.simulateQuotation = async (req, res) => {
       idcompanyType: companyType_idcompanyType,
     };
 
-    const { price, idbundleCompanyPrice } =
-      await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(
-        bundleCompanyPrice
-      );
 
-    if (price == undefined) {
-      return res.status(400).json({
-        ok: false,
-        err: {
-          message:
-            "No pudo ser creado la cotizacion no existe bundleCompanyPrice",
-        },
-      });
-    }
+    // const { price, idbundleCompanyPrice } =
+    //   await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(
+    //     bundleCompanyPrice
+    //   );
+
+    // if (price == undefined) {
+    //   return res.status(400).json({
+    //     ok: false,
+    //     err: {
+    //       message:
+    //         "No pudo ser creado la cotizacion no existe bundleCompanyPrice",
+    //     },
+    //   });
+    // }
 
     const data = {
       quatitionArea: +quatitionArea,
-      quotationBundlePrice: +bundle[0].bundleBasePrice,
+      bundlePrice: +bundlePriceZone[0].price,
       quotationPrice: +quotationPrice,
       quotationWidth: +quotationWidth,
       quotationHeight: +quotationHeight,
-      quotationDate: new Date(),
-      quotationCompanyPrice: price,
-      FormatSizeTexture: {
-        connect: { idFormatSizeTexture: +idFormatSizeTexture },
-      },
-      quotationStatus: {
-        connect: { idquotationStatus: 1 },
-      },
-      brecha: {
-        connect: { idbrecha: +idbrecha },
-      },
-      bundleCompanyPrice: {
-        connect: { idbundleCompanyPrice: +idbundleCompanyPrice },
-      },
+
+      // quotationCompanyPrice: price,
+
+      // bundleCompanyPrice: {
+      //   connect: { idbundleCompanyPrice: +idbundleCompanyPrice },
+      // },
       sysUser: { connect: { idsysuser: +idsysuser } },
     };
 
@@ -364,6 +450,7 @@ let fontSize=8;
       data,
     });
   } catch (error) {
+
     return res.status(400).json({
       status: false,
       err: {
