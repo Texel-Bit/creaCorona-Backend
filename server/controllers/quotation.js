@@ -15,6 +15,13 @@ const {
   getBundleCompanyPriceByBundleCompanyTypeComopanyZone,
 } = require("../models/bundleCompanyPrice.js");
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
+const emailSend = require("../helpers/email");
+const fs = require('fs');
+const path = require('path');
+const { degrees, PDFDocument, rgb, StandardFonts } = require('pdf-lib');
+const { log } = require("console");
+
+const url = fs.readFileSync(path.join('D:/Usuario/Escritorio/creaCorona-Backend/server/pdf/corona.pdf'));
 
 exports.createquotation = async (req, res) => {
   try {
@@ -313,6 +320,45 @@ exports.simulateQuotation = async (req, res) => {
     };
 
     data.cantidadValdosas = cantidadValdosas;
+
+    const pdfDoc = await PDFDocument.load(url)
+
+
+    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
+
+    // var fecha = new Date(req.CreatedDate.toString());
+    // var options = { year: 'numeric', month: 'long', day: 'numeric' };
+
+
+    const pages = pdfDoc.getPages()
+    const firstPage = pages[1]
+    console.log(12);
+
+    const { width, height } = firstPage.getSize()
+
+let fontSize=8;
+    firstPage.drawText(new Date() + ' ' , {
+            x: 350,
+            y: 700,
+            size: fontSize,
+            font: helveticaFont,
+            color: rgb(0, 0, 0),
+            rotate: degrees(0),
+        })
+
+        // firstPage.drawText("Barrancabermeja " + fecha.toLocaleDateString("es-ES", options) + " ", {
+        //     x: (width / 2) - 60,
+        //     y: height / 2 - 140,
+        //     size: 10,
+        //     font: helveticaFont,
+        //     color: rgb(0, 0, 0),
+        //     rotate: degrees(0),
+        // })
+    const pdfBytes = await pdfDoc.save();
+
+    data.pdfBytes = pdfBytes;
+    await emailSend.sendEmailActivationCode(data);
+
     res.json({
       status: true,
       data,

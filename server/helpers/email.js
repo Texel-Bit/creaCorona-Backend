@@ -4,9 +4,7 @@ exports.sendEmailActivationCode = function(req, res) {
   
     // Configuramos el transporte de correo con las credenciales de correo electrónico del remitente
     var transporter = nodemailer.createTransport({
-      host: process.env.stmpemail,
-      port: process.env.portemail,
-      secure: true, // Use SSL
+      service:'gmail',
       auth: {
         user:process.env.email,
         pass:process.env.passemail
@@ -16,18 +14,75 @@ exports.sendEmailActivationCode = function(req, res) {
     // Creamos los detalles del correo electrónico que incluyen la dirección de correo electrónico del destinatario, el asunto, el cuerpo del correo electrónico y un mensaje HTML
     var mailOptions = {
       from: process.env.email, // Dirección de correo electrónico del remitente
-      to: req.email, // Dirección de correo electrónico del destinatario
+      // to: req.email, // Dirección de correo electrónico del destinatario
+      to: "carlosmanuelcolmenares@gmail.com",
       subject: 'Codigo de activacion', // Asunto del correo electrónico
       text: 'Se contraseña temporal fue asiganda es la siguiente =  ', // Cuerpo del correo electrónico en formato de texto sin formato
-      html: `<p>Su contraseña temporas es: <b> ${req.activationCode} </b>  este codigo solo sera valido por las proximas dos horas </p>`, // Cuerpo del correo electrónico en formato HTML
+      html: `<head>
+      <style>
+         
+          body {
+              font-family: 'Roboto', sans-serif;
+              color: #000000;
+              background-color: #ffffff;
+          }
+          h1 {
+              font-weight: bold;
+              color: #00355A;
+              margin-bottom: 20px; /* Agrega espacio debajo del título */
+          }
+          p {
+              font-weight: 300;
+              text-align: left; /* Justifica el texto a la izquierda */
+              text-justify: inter-word; /* Ajusta el espaciado entre palabras */
+          }
+          .header {
+              text-align: center;
+              margin-bottom: 40px;
+          }
+          .content {
+              background-color: #fff;
+              padding: 20px;
+              margin: 20px;
+          }
+      </style>
+  </head>
+  <body>
+      <div class="header">
+          <img src="https://experienciacreacorona.texelbit.com/CoronaMail.png" alt="Logo">
+      </div>
+      <div class="content">
+          <h1>¡Hola {Usuario}!</h1>
+          <p>
+              Gracias por atreverte a ser el creador de tu propio diseño con “Mi Proyecto Corona”, a continuación encontrarás tu piso o pared personalizada que creaste por medio de nuestra experiencia virtual. Si deseas materializarlo, dirígete a uno de nuestros Almacenes o Centros Corona y con ayuda de nuestros asesores comerciales cancela el pedido. No olvides acordar tu entrega a domicilio o con recolección en el punto de venta.
+          </p>
+          <p>
+              Nota: Los productos personalizados no tienen devolución y se sugiere pedir por lo menos un 10% adicional del producto para cubrir los desperdicios en la instalación.
+          </p>
+      </div>
+  </body>`, // Cuerpo del correo electrónico en formato HTML
+      attachments: [
+           
+        {   // binary buffer as an attachment
+            filename: 'corona.pdf',
+            // content:  fs.createReadStream(req.pdfBytes)
+            content:  Buffer.from(req.pdfBytes,'utf-8')
+          
+        }]
     };
+ 
   
     // Enviamos el correo electrónico utilizando el transporte configurado
     transporter.sendMail(mailOptions, function(error, info) {
+
+      console.log(info);
       if (error) {
+        console.log(error);
         // Si se produce un error al enviar el correo electrónico, devolvemos el error al cliente
         return (error);
       } else {
+
+
         // Si se envía el correo electrónico correctamente, enviamos una respuesta HTTP 200 al cliente
         res.status(200).jsonp(req.body);
       }

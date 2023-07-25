@@ -23,14 +23,14 @@ process.env.CADUCIDAD_TOKEN = '365d';
 
 process.env.SEED = "}HK]LudQBn1-LvPNit36L";
 
-process.env.URLVTEX = "https://whirlpoolcol.vtexcommercestable.com.br/api/";
+// process.env.URLVTEX = "https://whirlpoolcol.vtexcommercestable.com.br/api/";
 
-process.env.AppKeyVTEX = "vtexappkey-whirlpoolcol-IVVLDW";
-process.env.AppTokenVTEX     = "OBMVRUIILBAXQGIYDWTCCGOQXKETHQMYOBUGNXSVLNWCZILUKBKNHPHEIHLWLKMLASRXGBGNXPOZOOCFVNIBLDKSJZDNLCZNQBFLNLYOAEHOBTKPWKOUSAXYBHUENDMU";
-process.env.email = "noreply@truecitynft.com";
-process.env.passemail = "8UlUYfO2VIf!$zbbpp";
-process.env.stmpemail = "smtp.mail.us-east-1.awsapps.com";
-process.env.portemail = 465;
+// process.env.AppKeyVTEX = "vtexappkey-whirlpoolcol-IVVLDW";
+// process.env.AppTokenVTEX     = "OBMVRUIILBAXQGIYDWTCCGOQXKETHQMYOBUGNXSVLNWCZILUKBKNHPHEIHLWLKMLASRXGBGNXPOZOOCFVNIBLDKSJZDNLCZNQBFLNLYOAEHOBTKPWKOUSAXYBHUENDMU";
+process.env.email = "carlosmanuelcolmenares@gmail.com";
+process.env.passemail = "hewauyisiehhazcs";
+process.env.stmpemail = "outlook.office365.com";
+process.env.portemail = 587;
 //================================== 
 //Base de datos
 //==================================
