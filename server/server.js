@@ -35,18 +35,20 @@ app.use((err, req, res, next) => {
 });
 
 // Start HTTP server
+/*
 app.listen(process.env.PORT, () => {
     console.log(`My HTTP server listening on port ${process.env.PORT}...`);
 });
+*/
 
 // start HTTPS server
-// const options = {
-//   key: fs.readFileSync("/etc/letsencrypt/live/corona.texelbit.com/privkey.pem"),
-//   cert: fs.readFileSync("/etc/letsencrypt/live/corona.texelbit.com/cert.pem"),
-//   ca: fs.readFileSync("/etc/letsencrypt/live/corona.texelbit.com/chain.pem"),
-// };
+ const options = {
+   key: fs.readFileSync("/etc/letsencrypt/live/corona.texelbit.com/privkey.pem"),
+   cert: fs.readFileSync("/etc/letsencrypt/live/corona.texelbit.com/cert.pem"),
+   ca: fs.readFileSync("/etc/letsencrypt/live/corona.texelbit.com/chain.pem"),
+ };
 
-// https.createServer(options, app).listen(process.env.PORT, () => {
-//   console.log(`My HTTPS server listening on port ${process.env.PORT}...`);
-// });
+ https.createServer(options, app).listen(process.env.PORT, () => {
+   console.log(`My HTTPS server listening on port ${process.env.PORT}...`);
+ });
  
