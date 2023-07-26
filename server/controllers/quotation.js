@@ -483,14 +483,7 @@ exports.createquotation = async (req, res) => {
   }
 };
 
-const fetchImage = async (url) => {
-  const response = await axios({
-      method: 'GET',
-      url: url,
-      responseType: 'arraybuffer',
-  });
-  return new Uint8Array(response.data);
-};
+
 
 exports.simulateQuotation = async (req, res) => {
   try {
@@ -578,8 +571,10 @@ exports.simulateQuotation = async (req, res) => {
 
     const bundlePriceZone = await getBundlePriceByZone(PriceByBundlePrice);
 
+    console.log(bundlePriceZone)
+    
     const quotationPrice = Math.round(
-      cantidadValdosas * bundlePriceZone[0].price
+      (cantidadValdosas * bundlePriceZone.price)*1.19
     );
 
     const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
@@ -589,11 +584,7 @@ exports.simulateQuotation = async (req, res) => {
     };
     const { companyType_idcompanyType } = await getCompanyById(company);
 
-    const bundleCompanyPrice = {
-      idcompanyZone: companyZone_idcompanyZone,
-      idbundle: bundle[0].idbundle,
-      idcompanyType: companyType_idcompanyType,
-    };
+
 
     // const { price, idbundleCompanyPrice } =
     //   await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(
@@ -612,7 +603,7 @@ exports.simulateQuotation = async (req, res) => {
 
     const data = {
       quatitionArea: +quatitionArea,
-      bundlePrice: +bundlePriceZone[0].price,
+      bundlePrice: +bundlePriceZone.price,
       quotationPrice: +quotationPrice,
       quotationWidth: +quotationWidth,
       quotationHeight: +quotationHeight,
