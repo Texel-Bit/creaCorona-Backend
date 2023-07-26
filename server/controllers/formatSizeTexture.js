@@ -142,11 +142,9 @@ exports.castHtmlToPng = async (req, res) => {
   });
   const page = await context.newPage();
   
-  const html = `<html>
-                <body>
+  const html = `
                 ${htmlContent}
-                </body>
-                </html>`;
+                `;
   
                 console.log(html);
   await page.setContent(html);
