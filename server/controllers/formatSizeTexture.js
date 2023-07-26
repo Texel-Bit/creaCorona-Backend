@@ -8,6 +8,7 @@ const { subirArchivoImagen } = require("../helpers/subirarchivos");
 const path = require('path');
 const fs = require('fs');
 
+const { chromium } = require('playwright');
 
 exports.createFormatSizeTexture = async (req, res) => {
   try {
@@ -141,9 +142,19 @@ exports.castHtmlToPng = async (req, res) => {
   });
   const page = await context.newPage();
   
-  const html = `
-                ${htmlContent}
-                `;
+  const html = `<html>
+              <head>
+                <style>
+                  html, body {
+                    margin: 0;
+                    padding: 0;
+                  }
+                </style>
+              </head>
+              <body>
+              ${htmlContent}
+              </body>
+              </html>`;
   
                 console.log(html);
   await page.setContent(html);
@@ -161,7 +172,6 @@ exports.castHtmlToPng = async (req, res) => {
   res.send(screenshotUrl);
   
 
-  
 /*
   console.log("Servie");
 
