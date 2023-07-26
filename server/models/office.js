@@ -65,10 +65,16 @@ const getAllOffice = async () => {
 const getAllOfficeByIdoffice = async (data) => {
 
   const { idoffice } = data;
+
   try {
     // Actualizar usuario en la base de datos
-    const result = await prisma.office.findUnique({
-      where: { idoffice },
+    const result = await prisma.office.findMany({
+      where: {idoffice },
+      include:{
+        Company:true,
+        state:true
+      }
+     
     });
  
     // Llamar a la función de devolución de llamada con el resultado exitoso

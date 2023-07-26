@@ -64,19 +64,48 @@ const getAllBundle = async () => {
 };
 
 
+const getBundleDesignDataByBundleId = async (data) => {
+
+  
+
+  const { idbundle } = data;
+ 
+  
+
+  try {
+    // Actualizar usuario en la base de datos
+    const result = await prisma.$queryRaw`SELECT DISTINCT DesignType.DesignTypeName, DesignTypeFormatSize.DesignTypeFormatSizeName,FormatSizeTexture.FormatSizeTextureName, bundle.* FROM bundle,FormatSizeTexture,DesignTypeFormatSize,DesignType WHERE
+    DesignTypeFormatSize.idDesignTypeFormatSize= FormatSizeTexture.DesignTypeFormatSize_idDesignTypeFormatSize
+    AND bundle.FormatSizeTexture_idFormatSizeTexture=FormatSizeTexture.idFormatSizeTexture AND DesignType.idDesignType=DesignTypeFormatSize.DesignType_idDesignType
+     AND bundle.idbundle=${idbundle}`
+    ;
+
+    console.log(result);
+    // Llamar a la función de devolución de llamada con el resultado exitoso
+    return result
+   } catch (e) {
+
+    // Capturar excepción y llamar a la función de devolución de llamada con el error
+    return e
+ 
+  } finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
+  }
+ };
+
 const getBundleDesignTypeFormatSizeTexture = async (data) => {
 
   const { idFormatSizeTexture, ...updateData } = data;
  
   try {
     // Actualizar usuario en la base de datos
-    const result = await prisma.bundle.findMany({
+    const result = await prisma.bundle.findFirst({
       where: {FormatSizeTexture_idFormatSizeTexture:{
         equals:idFormatSizeTexture
       } },
     });
  
-    console.log(result)
     // Llamar a la función de devolución de llamada con el resultado exitoso
     return result
    } catch (e) {
@@ -90,5 +119,6 @@ const getBundleDesignTypeFormatSizeTexture = async (data) => {
  };
 
 
-module.exports = { createBundle,updateBundle,getAllBundle,getBundleDesignTypeFormatSizeTexture };
+
+module.exports = { createBundle,updateBundle,getAllBundle,getBundleDesignTypeFormatSizeTexture,getBundleDesignDataByBundleId };
 

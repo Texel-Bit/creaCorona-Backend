@@ -14,7 +14,7 @@ const {
   getFormatSizeTextureById,
   getDefaultFormatSizeTextureById,
 } = require("../models/formatSizeTexture.js");
-const { getBundleDesignTypeFormatSizeTexture } = require("../models/bundle.js");
+const { getBundleDesignTypeFormatSizeTexture,getBundleDesignDataByBundleId } = require("../models/bundle.js");
 const { getCurrentSettings } = require("../models/settings.js");
 const { getAllOfficeByIdoffice } = require("../models/office.js");
 const { getCompanyById } = require("../models/company.js");
@@ -22,6 +22,8 @@ const {
   getBundleCompanyPriceByBundleCompanyTypeComopanyZone,
 } = require("../models/bundleCompanyPrice.js");
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
+const{getDesignColorsByIdList}=require("../models/designColors.js");
+const{getDesignByIdList}=require("../models/design.js");
 
 const { getBundlePriceByZone } = require("../models/bundlepricesbyzone.js");
 const emailSend = require("../helpers/email");
@@ -42,7 +44,7 @@ exports.createquotation = async (req, res) => {
     const token = req.get("JWT");
 
     let {
-      user: { idsysuser, office_idoffice, office },
+      user: { idsysuser,userName,lastName, office_idoffice, office },
     } = await promisify(jwt.verify)(token, process.env.SEED);
 
     if (!idsysuser) {
@@ -64,7 +66,6 @@ exports.createquotation = async (req, res) => {
       // idbundleCompanyPrice
     } = req.body;
 
-    console.log("Area ",quatitionArea);
 
 
     if (!idFormatSizeTexture) {
@@ -128,6 +129,8 @@ exports.createquotation = async (req, res) => {
       fortmatTexture
     );
 
+    
+
     const officeInfo = {
       idoffice: office_idoffice,
     };
@@ -152,6 +155,11 @@ exports.createquotation = async (req, res) => {
     const bundle = await getBundleDesignTypeFormatSizeTexture(fortmatTexture);
     var state;
 
+
+const BundleFullData=await getBundleDesignDataByBundleId(bundle);
+
+const quotationItemDescription=BundleFullData[0].DesignTypeName+"( "+BundleFullData[0].DesignTypeFormatSizeName+" ) "+ BundleFullData[0].FormatSizeTextureName;
+
     if (office.Company_idCompany == 1) {
       state = {
         idstate,
@@ -165,7 +173,7 @@ exports.createquotation = async (req, res) => {
 
     
     const PriceByBundlePrice = {
-      idBundle: bundle[0].idbundle,
+      idBundle: bundle.idbundle,
       companyZone_idcompanyZone,
     };
     const bundlePriceZone = await getBundlePriceByZone(PriceByBundlePrice);
@@ -176,17 +184,15 @@ exports.createquotation = async (req, res) => {
       cantidadValdosas * bundlePriceZone.price
     );
 
-    const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
+     officeData  = await getAllOfficeByIdoffice(officeInfo);
 
-    const company = {
-      idCompany: Company_idCompany,
-    };
-    const { companyType_idcompanyType } = await getCompanyById(company);
 
+     company = officeData[0].Company;
+      officeState=officeData[0].state
     const bundleCompanyPrice = {
       idcompanyZone: companyZone_idcompanyZone,
-      idbundle: bundle[0].idbundle,
-      idcompanyType: companyType_idcompanyType,
+      idbundle: bundle.idbundle,
+      idcompanyType: company.companyType_idcompanyType,
     };
 
      const bundleCompanyPriceData = await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(bundleCompanyPrice);
@@ -236,7 +242,6 @@ exports.createquotation = async (req, res) => {
       sysUser: { connect: { idsysuser: +idsysuser } },
     };
 
-    console.log("Quot Data ",data);
 
     const createdquotation = await createquotation(data);
 
@@ -297,14 +302,28 @@ exports.createquotation = async (req, res) => {
     tempImage=fs.readFileSync(path.join(__dirname,"../../", simulationImage));
     const pdfsimulationImage = await pdfDoc.embedPng(tempImage);
 
-    tempImage=fs.readFileSync(path.join(path.join(__dirname, '../pdf/unnamed.png')));
+    tempImage=fs.readFileSync(path.join(path.join(__dirname,"../../", company.CompanyImagePath)));
     const pdfPNGLogo = await pdfDoc.embedPng(tempImage);
 
     const { width, height } = firstPage.getSize();
 
     console.log("Start To Build PDF ");
 
+    const designColorsDetails = await getDesignColorsByIdList(
+      req.body.DesignColors_has_quotation
+    );
+
+    const designList = await getDesignByIdList(
+      req.body.quotationProductDetails
+    );
+
+
     let fontSize = 8;
+
+  const InitialDescriptionYPos=600;
+  const InitialDescriptionYPadding=fontSize+1;
+    
+    
     firstPage.drawText(createdquotation.idquotation.toString(), {
       x: 500,
       y: 720,
@@ -319,7 +338,7 @@ exports.createquotation = async (req, res) => {
       width: 100,
       height: 40,
     }),
-    firstPage.drawText("Nit: 901658683-1 ", {
+    firstPage.drawText(company.CompanyNIT, {
       x:20,
       y: 660,
       size: fontSize,
@@ -376,7 +395,7 @@ exports.createquotation = async (req, res) => {
         rotate: degrees(0),
 
         //Datos asesor
-      }),firstPage.drawText( " El Centro", {
+      }),firstPage.drawText(company.CompanyName+" - "+  office.officeDescription, {
         x: 160,
         y: 699,
         size: fontSize,
@@ -384,7 +403,8 @@ exports.createquotation = async (req, res) => {
         color: rgb(0, 0, 0),
         rotate: degrees(0),
       }),
-        firstPage.drawText("Office", {
+      
+        firstPage.drawText(company.CompanyAddress+"  "+officeState.stateName, {
           x: 160,
           y: 688,
           size: fontSize,
@@ -392,7 +412,7 @@ exports.createquotation = async (req, res) => {
           color: rgb(0, 0, 0),
           rotate: degrees(0),
         }),
-        firstPage.drawText("6339090 ", {
+        firstPage.drawText(company.CompanyPhone, {
           x: 160,
           y: 677,
           size: fontSize,
@@ -400,13 +420,69 @@ exports.createquotation = async (req, res) => {
           color: rgb(0, 0, 0),
           rotate: degrees(0),
         }),
-        firstPage.drawText("Pedro Perez ", {
+        firstPage.drawText(userName+" "+lastName, {
           x: 160,
           y: 666,
           size: fontSize,
           font: helveticaFont,
           color: rgb(0, 0, 0),
           rotate: degrees(0),
+        }),
+        designList.forEach((item, index) => {
+          firstPage.drawText(item.DesignName, {
+          x: 30,
+          y: InitialDescriptionYPos-(index*InitialDescriptionYPadding),
+          size: fontSize-1,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+          rotate: degrees(0),
+  
+        })
+      });
+        firstPage.drawText(quotationItemDescription, {
+          x: 100,
+          y: InitialDescriptionYPos,
+          size: fontSize,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+          rotate: degrees(0),
+        }),
+
+        designColorsDetails.forEach((item, index) => {
+            firstPage.drawText(item.DesignColorName, {
+            x: 311,
+            y: InitialDescriptionYPos-(index*InitialDescriptionYPadding),
+            size: fontSize-1,
+            font: helveticaFont,
+            color: rgb(0, 0, 0),
+            rotate: degrees(0),
+    
+          })
+        });
+        firstPage.drawText(cantidadValdosas.toString(), {
+          x: 360,
+          y: InitialDescriptionYPos,
+          size: fontSize,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+          rotate: degrees(0),
+        }),
+        firstPage.drawText(formatCurrency(bundlePriceZone.price.toString()), {
+          x: 430,
+          y: InitialDescriptionYPos,
+          size: fontSize,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+          rotate: degrees(0),
+        }),
+        firstPage.drawText(formatCurrency(data.quotationPrice.toString()), {
+          x: 520,
+          y: InitialDescriptionYPos,
+          size: fontSize,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+          rotate: degrees(0),
+  
         }),
         firstPage.drawText(formatCurrency(data.quotationPrice.toString()), {
           x: 395,
@@ -443,6 +519,29 @@ exports.createquotation = async (req, res) => {
           rotate: degrees(0),
   
         }),
+        designList.forEach((item, index) => {
+          firstPage.drawText(index+".) "+item.DesignName, {
+          x: 200,
+          y: 180-(index*(InitialDescriptionYPadding+2)),
+          size: fontSize,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+          rotate: degrees(0),
+  
+        })
+      });
+
+      designColorsDetails.forEach((item, index) => {
+        firstPage.drawText(index+".) "+item.DesignColorName, {
+        x: 200,
+        y: 100-(index*(InitialDescriptionYPadding+2)),
+        size: fontSize,
+        font: helveticaFont,
+        color: rgb(0, 0, 0),
+        rotate: degrees(0),
+
+      })
+    });
         firstPage.drawImage(pdfdesingPatternImage, {
           x:20,
           y: 30,
@@ -575,7 +674,7 @@ exports.simulateQuotation = async (req, res) => {
     }
     const { companyZone_idcompanyZone } = await getStateByIdState(state);
     const PriceByBundlePrice = {
-      idBundle: bundle[0].idbundle,
+      idBundle: bundle.idbundle,
       companyZone_idcompanyZone,
     };
 
@@ -587,11 +686,12 @@ exports.simulateQuotation = async (req, res) => {
       (cantidadValdosas * bundlePriceZone.price)
     );
 
-    const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
+    const officeData = await getAllOfficeByIdoffice(officeInfo);
 
     const company = {
-      idCompany: Company_idCompany,
+      idCompany: officeData[0].Company_idCompany,
     };
+
     const { companyType_idcompanyType } = await getCompanyById(company);
 
 

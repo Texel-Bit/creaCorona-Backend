@@ -97,5 +97,32 @@ const getDesignColorsById = async (data) => {
     await prisma.$disconnect();
   }
  };
-module.exports = { createDesignColors,updateDesignColors,getAllDesignColors,getDesignColorsById };
+
+ const getDesignColorsByIdList = async (data) => {
+
+  const arrayColors = JSON.parse(data)
+
+  let ids = arrayColors.map(color => color.DesignColors_idDesignColors);;
+
+  try {
+
+    const result = await prisma.designColors.findMany({
+      where: {
+        idDesignColors: {
+          in: ids
+        }
+      }
+    });
+    
+    return result;
+  } catch (e) {
+    // Capturar excepción y llamar a la función de devolución de llamada con el error
+    throw e;
+
+  } finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
+  }
+ };
+module.exports = { createDesignColors,updateDesignColors,getAllDesignColors,getDesignColorsById,getDesignColorsByIdList };
 
