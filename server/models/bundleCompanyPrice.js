@@ -66,9 +66,11 @@ const getAllBundleCompanyPrice = async () => {
 
 const getBundleCompanyPriceByBundleCompanyTypeComopanyZone = async (data) => {
 
+  console.log("Data  ",data)
+
   const { idbundle,idcompanyZone,idcompanyType } = data;
   try {
-    const result = await prisma.bundleCompanyPrice.findMany({
+    const result = await prisma.bundleCompanyPrice.findFirst({
       where: {
         bundle_idbundle:idbundle,
         companyZone_idcompanyZone:idcompanyZone,
@@ -85,7 +87,7 @@ const getBundleCompanyPriceByBundleCompanyTypeComopanyZone = async (data) => {
     }
 
     // Se devuelve el resultado exitoso
-    return result[0];
+    return result;
   } catch (e) {
 
     console.log(e);

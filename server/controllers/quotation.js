@@ -157,13 +157,17 @@ exports.createquotation = async (req, res) => {
     }
     const { companyZone_idcompanyZone } = await getStateByIdState(state);
 
+    
     const PriceByBundlePrice = {
       idBundle: bundle[0].idbundle,
       companyZone_idcompanyZone,
     };
     const bundlePriceZone = await getBundlePriceByZone(PriceByBundlePrice);
+
+    console.log("Bundle price by zone ",bundlePriceZone.price);
+
     const quotationPrice = Math.round(
-      cantidadValdosas * bundlePriceZone[0].price
+      cantidadValdosas * bundlePriceZone.price
     );
 
     const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
@@ -179,10 +183,11 @@ exports.createquotation = async (req, res) => {
       idcompanyType: companyType_idcompanyType,
     };
 
-     const { price, idbundleCompanyPrice } =
-       await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(
-         bundleCompanyPrice
-       );
+     const bundleCompanyPriceData = await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(bundleCompanyPrice);
+
+     const price=bundleCompanyPriceData.price;
+     const idbundleCompanyPrice=bundleCompanyPriceData.idbundleCompanyPrice;
+  
 
     // if (price == undefined) {
     //   return res.status(400).json({
@@ -201,12 +206,12 @@ exports.createquotation = async (req, res) => {
       desingPatternImage: desingPatternImage,
       quatitionArea: +quatitionArea,
       customerPhoneNumber: customerPhoneNumber.toString(),
-      quotationBundlePrice: +bundlePriceZone[0].price,
+      quotationBundlePrice: +bundlePriceZone.price,
       quotationPrice: +quotationPrice,
       quotationWidth: +quotationWidth,
       quotationHeight: +quotationHeight,
       quotationDate: new Date(),
-      quotationCompanyPrice: price,
+      quotationCompanyPrice: +price,
       FormatSizeTexture: {
         connect: { idFormatSizeTexture: +idFormatSizeTexture },
       },
@@ -435,7 +440,7 @@ exports.createquotation = async (req, res) => {
           height:160,
         })
 
-        console.log(firstPage.getSize())
+
         firstPage.drawImage(pdfsimulationImage, {
           x:312,
           y: 30,
@@ -443,7 +448,6 @@ exports.createquotation = async (req, res) => {
           height: 160,
         })
 
-        console.log("PDF Builded");
 
     // firstPage.drawText("Barrancabermeja " + fecha.toLocaleDateString("es-ES", options) + " ", {
     //     x: (width / 2) - 60,
