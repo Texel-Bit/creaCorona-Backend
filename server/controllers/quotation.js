@@ -35,6 +35,9 @@ const pngImageBytes = fs.readFileSync(path.join(__dirname, '../pdf/unnamed.png')
 
 
 exports.createquotation = async (req, res) => {
+
+ 
+
   try {
     const token = req.get("JWT");
 
@@ -71,6 +74,8 @@ exports.createquotation = async (req, res) => {
       }
     }
 
+
+
     if (
       !customerName ||
       !customerLastname ||
@@ -81,7 +86,10 @@ exports.createquotation = async (req, res) => {
       !idFormatSizeTexture ||
       !idstate
     ) {
+
+      console.log("Datos de entrada incompletos ");
       return res.status(400).json({
+       
         status: false,
         err: {
           message: "Datos de entrada incompletos",
@@ -101,6 +109,7 @@ exports.createquotation = async (req, res) => {
 
     // Manejo de errores de subirArchivoImagen
     if (!desingPatternImage || !simulationImage) {
+      console.log("Error al subir la imagen ");
       return res.status(400).json({
         status: false,
         err: {
@@ -170,10 +179,10 @@ exports.createquotation = async (req, res) => {
       idcompanyType: companyType_idcompanyType,
     };
 
-    // const { price, idbundleCompanyPrice } =
-    //   await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(
-    //     bundleCompanyPrice
-    //   );
+     const { price, idbundleCompanyPrice } =
+       await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(
+         bundleCompanyPrice
+       );
 
     // if (price == undefined) {
     //   return res.status(400).json({
@@ -192,12 +201,12 @@ exports.createquotation = async (req, res) => {
       desingPatternImage: desingPatternImage,
       quatitionArea: +quatitionArea,
       customerPhoneNumber: customerPhoneNumber.toString(),
-      bundlePrice: +bundlePriceZone[0].price,
+      quotationBundlePrice: +bundlePriceZone[0].price,
       quotationPrice: +quotationPrice,
       quotationWidth: +quotationWidth,
       quotationHeight: +quotationHeight,
       quotationDate: new Date(),
-      // quotationCompanyPrice: price,
+      quotationCompanyPrice: price,
       FormatSizeTexture: {
         connect: { idFormatSizeTexture: +idFormatSizeTexture },
       },
@@ -207,15 +216,19 @@ exports.createquotation = async (req, res) => {
       brecha: {
         connect: { idbrecha: +idbrecha },
       },
-      // bundleCompanyPrice: {
-      //   connect: { idbundleCompanyPrice: +idbundleCompanyPrice },
-      // },
+      bundleCompanyPrice: {
+         connect: { idbundleCompanyPrice: +idbundleCompanyPrice },
+       },
       sysUser: { connect: { idsysuser: +idsysuser } },
     };
 
     const createdquotation = await createquotation(data);
+
+
     const arrProductDetails = JSON.parse(req.body.quotationProductDetails);
 
+
+    
     arrProductDetails.forEach((element, index) => {
       arrProductDetails[index].quotation_idquotation =
         +createdquotation.idquotation;
@@ -245,6 +258,8 @@ exports.createquotation = async (req, res) => {
 
     data.cantidadValdosas = cantidadValdosas;
 
+
+
     const pdfDoc = await PDFDocument.load(url);
 
     const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -254,11 +269,25 @@ exports.createquotation = async (req, res) => {
 
     const pages = pdfDoc.getPages();
     const firstPage = pages[1];
-    const pdfdesingPatternImage = await pdfDoc.embedPng(desingPatternImage)
-    const pdfsimulationImage = await pdfDoc.embedPng(simulationImage)
 
+
+    let tempImage=fs.readFileSync(path.join(__dirname,"../../", desingPatternImage));
+
+    
+
+    const pdfdesingPatternImage  = await pdfDoc.embedPng(tempImage);
+
+
+    
+    tempImage=fs.readFileSync(path.join(__dirname,"../../", simulationImage));
+    const pdfsimulationImage = await pdfDoc.embedPng(tempImage);
+
+    tempImage=fs.readFileSync(path.join(path.join(__dirname, '../pdf/unnamed.png')));
+    const pdfPNGLogo = await pdfDoc.embedPng(tempImage);
 
     const { width, height } = firstPage.getSize();
+
+    console.log("Start To Build PDF ");
 
     let fontSize = 8;
     firstPage.drawText("0001111 ", {
@@ -269,12 +298,20 @@ exports.createquotation = async (req, res) => {
       color: rgb(0, 0, 0),
       rotate: degrees(0),
     }),
-    firstPage.drawImage(pngImage, {
-      x:50,
+    firstPage.drawImage(pdfPNGLogo, {
+      x:20,
+      y: 670,
+      width: 100,
+      height: 40,
+    }),
+    firstPage.drawText("Nit: 901658683-1 ", {
+      x:20,
       y: 660,
-      width: 60,
-      height: 50,
-    })
+      size: fontSize,
+      font: helveticaFont,
+      color: rgb(0, 0, 0),
+      rotate: degrees(0),
+    }),
     firstPage.drawText(new Date().toDateString() + " ", {
       x: 350,
       y: 700,
@@ -356,7 +393,7 @@ exports.createquotation = async (req, res) => {
           color: rgb(0, 0, 0),
           rotate: degrees(0),
         }),
-        firstPage.drawText(data.quotationPrice, {
+        firstPage.drawText(data.quotationPrice.toString(), {
           x: 395,
           y: 410,
           size: 12,
@@ -365,7 +402,7 @@ exports.createquotation = async (req, res) => {
           rotate: degrees(0),
   
         }),
-        firstPage.drawText(data.quotationPrice*0.19, {
+        firstPage.drawText((data.quotationPrice*0.19).toString(), {
           x: 395,
           y: 395,
           size: 12,
@@ -382,7 +419,7 @@ exports.createquotation = async (req, res) => {
           rotate: degrees(0),
   
         }),
-        firstPage.drawText((data.quotationPrice+(data.quotationPrice*0.19)), {
+        firstPage.drawText((data.quotationPrice+(data.quotationPrice*0.19).toString()), {
           x: 395,
           y: 365,
           size: 12,
@@ -392,21 +429,21 @@ exports.createquotation = async (req, res) => {
   
         }),
         firstPage.drawImage(pdfdesingPatternImage, {
-          x:30,
-          y: 130,
-          width: 100,
-          height: 80,
+          x:20,
+          y: 30,
+          width: 160,
+          height:160,
         })
 
+        console.log(firstPage.getSize())
         firstPage.drawImage(pdfsimulationImage, {
-          x:470,
-          y: 130,
-          width: 100,
-          height: 80,
+          x:312,
+          y: 30,
+          width: 280,
+          height: 160,
         })
-      
-      
- 
+
+        console.log("PDF Builded");
 
     // firstPage.drawText("Barrancabermeja " + fecha.toLocaleDateString("es-ES", options) + " ", {
     //     x: (width / 2) - 60,
@@ -431,6 +468,7 @@ exports.createquotation = async (req, res) => {
       data: createdquotation,
     });
   } catch (error) {
+    console.log(error);
     return res.status(400).json({
       status: false,
       error: {
@@ -440,6 +478,16 @@ exports.createquotation = async (req, res) => {
     });
   }
 };
+
+const fetchImage = async (url) => {
+  const response = await axios({
+      method: 'GET',
+      url: url,
+      responseType: 'arraybuffer',
+  });
+  return new Uint8Array(response.data);
+};
+
 exports.simulateQuotation = async (req, res) => {
   try {
     const token = req.get("JWT");
