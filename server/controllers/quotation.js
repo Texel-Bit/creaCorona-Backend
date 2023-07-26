@@ -254,7 +254,10 @@ exports.createquotation = async (req, res) => {
 
     const pages = pdfDoc.getPages();
     const firstPage = pages[1];
-    const pngImage = await pdfDoc.embedPng(pngImageBytes)
+    const pdfdesingPatternImage = await pdfDoc.embedPng(desingPatternImage)
+    const pdfsimulationImage = await pdfDoc.embedPng(simulationImage)
+
+
     const { width, height } = firstPage.getSize();
 
     let fontSize = 8;
@@ -280,7 +283,7 @@ exports.createquotation = async (req, res) => {
       color: rgb(0, 0, 0),
       rotate: degrees(0),
     }),
-      firstPage.drawText("Carlos Colmenares ", {
+      firstPage.drawText(customerName+' '+customerLastname, {
         x: 350,
         y: 690,
         size: fontSize,
@@ -288,7 +291,7 @@ exports.createquotation = async (req, res) => {
         color: rgb(0, 0, 0),
         rotate: degrees(0),
       }),
-      firstPage.drawText("109873570 ", {
+      firstPage.drawText("--------- ", {
         x: 370,
         y: 680,
         size: fontSize,
@@ -296,7 +299,7 @@ exports.createquotation = async (req, res) => {
         color: rgb(0, 0, 0),
         rotate: degrees(0),
       }),
-      firstPage.drawText("calle 22 15 38 ", {
+      firstPage.drawText("--------- ", {
         x: 360,
         y: 670,
         size: fontSize,
@@ -304,7 +307,7 @@ exports.createquotation = async (req, res) => {
         color: rgb(0, 0, 0),
         rotate: degrees(0),
       }),
-      firstPage.drawText("3167445579 ", {
+      firstPage.drawText(customerPhoneNumber, {
         x: 360,
         y: 660,
         size: fontSize,
@@ -312,7 +315,7 @@ exports.createquotation = async (req, res) => {
         color: rgb(0, 0, 0),
         rotate: degrees(0),
       }),
-      firstPage.drawText("carlosmanuelcolmenares@gmail.com ", {
+      firstPage.drawText(customerEmail, {
         x: 360,
         y: 650,
         size: fontSize,
@@ -353,7 +356,7 @@ exports.createquotation = async (req, res) => {
           color: rgb(0, 0, 0),
           rotate: degrees(0),
         }),
-        firstPage.drawText("6667777", {
+        firstPage.drawText(data.quotationPrice, {
           x: 395,
           y: 410,
           size: 12,
@@ -362,7 +365,7 @@ exports.createquotation = async (req, res) => {
           rotate: degrees(0),
   
         }),
-        firstPage.drawText("900000", {
+        firstPage.drawText(data.quotationPrice*0.19, {
           x: 395,
           y: 395,
           size: 12,
@@ -370,7 +373,7 @@ exports.createquotation = async (req, res) => {
           color: rgb(0, 0, 0),
           rotate: degrees(0),
   
-        }),   firstPage.drawText("100000", {
+        }),   firstPage.drawText("----------", {
           x: 395,
           y: 378,
           size: 12,
@@ -379,7 +382,7 @@ exports.createquotation = async (req, res) => {
           rotate: degrees(0),
   
         }),
-        firstPage.drawText("1000000", {
+        firstPage.drawText((data.quotationPrice+(data.quotationPrice*0.19)), {
           x: 395,
           y: 365,
           size: 12,
@@ -388,14 +391,14 @@ exports.createquotation = async (req, res) => {
           rotate: degrees(0),
   
         }),
-        firstPage.drawImage(pngImage, {
+        firstPage.drawImage(pdfdesingPatternImage, {
           x:30,
           y: 130,
           width: 100,
           height: 80,
         })
 
-        firstPage.drawImage(pngImage, {
+        firstPage.drawImage(pdfsimulationImage, {
           x:470,
           y: 130,
           width: 100,

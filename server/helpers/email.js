@@ -16,7 +16,7 @@ exports.sendEmailActivationCode = function(req, res) {
     var mailOptions = {
       from: process.env.email, // Dirección de correo electrónico del remitente
       // to: req.email, // Dirección de correo electrónico del destinatario
-      to: "carlosmanuelcolmenares@gmail.com",
+      to: req.customerEmail,
       subject: 'Cotizacion Crea Corona', // Asunto del correo electrónico
     //   text: 'Se contraseña temporal fue asiganda es la siguiente =  ', // Cuerpo del correo electrónico en formato de texto sin formato
       html: `<head>
