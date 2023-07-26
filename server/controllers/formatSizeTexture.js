@@ -8,7 +8,6 @@ const { subirArchivoImagen } = require("../helpers/subirarchivos");
 const path = require('path');
 const fs = require('fs');
 
-const { chromium } = require('playwright');
 
 exports.createFormatSizeTexture = async (req, res) => {
   try {

@@ -10,14 +10,15 @@ exports.sendEmailActivationCode = function(req, res) {
         pass:process.env.passemail
       }
     });
+
   
     // Creamos los detalles del correo electrónico que incluyen la dirección de correo electrónico del destinatario, el asunto, el cuerpo del correo electrónico y un mensaje HTML
     var mailOptions = {
       from: process.env.email, // Dirección de correo electrónico del remitente
       // to: req.email, // Dirección de correo electrónico del destinatario
       to: "carlosmanuelcolmenares@gmail.com",
-      subject: 'Codigo de activacion', // Asunto del correo electrónico
-      text: 'Se contraseña temporal fue asiganda es la siguiente =  ', // Cuerpo del correo electrónico en formato de texto sin formato
+      subject: 'Cotizacion Crea Corona', // Asunto del correo electrónico
+    //   text: 'Se contraseña temporal fue asiganda es la siguiente =  ', // Cuerpo del correo electrónico en formato de texto sin formato
       html: `<head>
       <style>
          
@@ -52,7 +53,7 @@ exports.sendEmailActivationCode = function(req, res) {
           <img src="https://experienciacreacorona.texelbit.com/CoronaMail.png" alt="Logo">
       </div>
       <div class="content">
-          <h1>¡Hola {Usuario}!</h1>
+          <h1>¡Hola ${req.customerName} !</h1>
           <p>
               Gracias por atreverte a ser el creador de tu propio diseño con “Mi Proyecto Corona”, a continuación encontrarás tu piso o pared personalizada que creaste por medio de nuestra experiencia virtual. Si deseas materializarlo, dirígete a uno de nuestros Almacenes o Centros Corona y con ayuda de nuestros asesores comerciales cancela el pedido. No olvides acordar tu entrega a domicilio o con recolección en el punto de venta.
           </p>

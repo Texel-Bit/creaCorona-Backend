@@ -10,7 +10,10 @@ const { getStateByIdState } = require("../models/state");
 
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
-const { getFormatSizeTextureById,getDefaultFormatSizeTextureById } = require("../models/formatSizeTexture.js");
+const {
+  getFormatSizeTextureById,
+  getDefaultFormatSizeTextureById,
+} = require("../models/formatSizeTexture.js");
 const { getBundleDesignTypeFormatSizeTexture } = require("../models/bundle.js");
 const { getCurrentSettings } = require("../models/settings.js");
 const { getAllOfficeByIdoffice } = require("../models/office.js");
@@ -22,23 +25,24 @@ const { subirArchivoImagen } = require("../helpers/subirarchivos");
 const { log } = require("console");
 const { getBundlePriceByZone } = require("../models/bundlepricesbyzone.js");
 const emailSend = require("../helpers/email");
-const fs = require('fs');
-const path = require('path');
-const { degrees, PDFDocument, rgb, StandardFonts } = require('pdf-lib');
-const { log } = require("console");
+const fs = require("fs");
+const path = require("path");
+const { degrees, PDFDocument, rgb, StandardFonts } = require("pdf-lib");
 
-const url = fs.readFileSync(path.join('D:/Usuario/Escritorio/creaCorona-Backend/server/pdf/corona.pdf'));
+const url = fs.readFileSync(path.join(__dirname, '../pdf/corona.pdf'));
+
+const pngImageBytes = fs.readFileSync(path.join(__dirname, '../pdf/unnamed.png'));
+
 
 exports.createquotation = async (req, res) => {
   try {
     const token = req.get("JWT");
 
     let {
-      user: { idsysuser, office_idoffice,office },
+      user: { idsysuser, office_idoffice, office },
     } = await promisify(jwt.verify)(token, process.env.SEED);
 
-
-if (!idsysuser) {
+    if (!idsysuser) {
       idsysuser = 1;
     }
     let {
@@ -52,26 +56,20 @@ if (!idsysuser) {
       idFormatSizeTexture,
       idFormatSize,
       quatitionArea,
-      idstate
+      idstate,
 
       // idbundleCompanyPrice
     } = req.body;
 
-    if(!idFormatSizeTexture )
-    {
-      if(req.body.idFormatSize)
-      {
-
-        let defaultFormatSizeTexture  = await getDefaultFormatSizeTextureById(
+    if (!idFormatSizeTexture) {
+      if (req.body.idFormatSize) {
+        let defaultFormatSizeTexture = await getDefaultFormatSizeTextureById(
           req.body.idFormatSize
         );
 
         idFormatSizeTexture = defaultFormatSizeTexture.idFormatSizeTexture;
-
       }
-     
     }
-    
 
     if (
       !customerName ||
@@ -80,7 +78,7 @@ if (!idsysuser) {
       !customerPhoneNumber ||
       !quatitionArea ||
       !idbrecha ||
-      !idFormatSizeTexture||
+      !idFormatSizeTexture ||
       !idstate
     ) {
       return res.status(400).json({
@@ -127,34 +125,37 @@ if (!idsysuser) {
         DesignTypeFormatSize.DesignTypeFormatSizeWidht) /
       10000;
 
-      
-      const currentSetting=await getCurrentSettings();
-      
-      quatitionArea=quatitionArea+quatitionArea*currentSetting[0].SystemSetupGarbagePercenttage/100;
-      
+    const currentSetting = await getCurrentSettings();
+
+    quatitionArea =
+      quatitionArea +
+      (quatitionArea * currentSetting[0].SystemSetupGarbagePercenttage) / 100;
+
     //redondear al nyumero mayor
     const cantidadValdosas = Math.ceil(quatitionArea / areaValdosa);
 
     const bundle = await getBundleDesignTypeFormatSizeTexture(fortmatTexture);
     var state;
 
-    if (office.Company_idCompany==1) {
-       state = {
+    if (office.Company_idCompany == 1) {
+      state = {
         idstate,
       };
     } else {
-       state = {
-        idstate:office.state_idstate,
+      state = {
+        idstate: office.state_idstate,
       };
     }
     const { companyZone_idcompanyZone } = await getStateByIdState(state);
 
-const PriceByBundlePrice={
-  idBundle:bundle[0].idbundle,
-  companyZone_idcompanyZone
-}
-const bundlePriceZone=await getBundlePriceByZone(PriceByBundlePrice);
-const quotationPrice = Math.round(cantidadValdosas * bundlePriceZone[0].price);
+    const PriceByBundlePrice = {
+      idBundle: bundle[0].idbundle,
+      companyZone_idcompanyZone,
+    };
+    const bundlePriceZone = await getBundlePriceByZone(PriceByBundlePrice);
+    const quotationPrice = Math.round(
+      cantidadValdosas * bundlePriceZone[0].price
+    );
 
     const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
 
@@ -263,10 +264,8 @@ exports.simulateQuotation = async (req, res) => {
   try {
     const token = req.get("JWT");
     let {
-      user: { idsysuser, office_idoffice,office },
+      user: { idsysuser, office_idoffice, office },
     } = await promisify(jwt.verify)(token, process.env.SEED);
-
-
 
     if (!idsysuser) {
       idsysuser = 1;
@@ -277,25 +276,20 @@ exports.simulateQuotation = async (req, res) => {
       idFormatSizeTexture,
       quatitionArea,
       idstate,
-      idFormatSize
+      idFormatSize,
       // idbundleCompanyPrice
     } = req.body;
 
-    console.log( req.body.idFormatSize)
+    console.log(req.body.idFormatSize);
 
-    if(!idFormatSizeTexture )
-    {
-      if(req.body.idFormatSize)
-      {
-
-        let defaultFormatSizeTexture  = await getDefaultFormatSizeTextureById(
+    if (!idFormatSizeTexture) {
+      if (req.body.idFormatSize) {
+        let defaultFormatSizeTexture = await getDefaultFormatSizeTextureById(
           req.body.idFormatSize
         );
 
         idFormatSizeTexture = defaultFormatSizeTexture.idFormatSizeTexture;
-
       }
-     
     }
 
     if (!quatitionArea || !idFormatSizeTexture || !idstate) {
@@ -307,7 +301,6 @@ exports.simulateQuotation = async (req, res) => {
       });
     }
 
-   
     const fortmatTexture = {
       idFormatSizeTexture: +idFormatSizeTexture,
     };
@@ -321,47 +314,43 @@ exports.simulateQuotation = async (req, res) => {
 
     const areaValdosa =
       (DesignTypeFormatSize.DesignTypeFormatSizeHeight *
-        DesignTypeFormatSize.DesignTypeFormatSizeWidht) /10000
-      ;
+        DesignTypeFormatSize.DesignTypeFormatSizeWidht) /
+      10000;
+    const currentSetting = await getCurrentSettings();
 
-      
-
-      const currentSetting=await getCurrentSettings();
-      
-      quatitionArea=quatitionArea+quatitionArea*currentSetting[0].SystemSetupGarbagePercenttage/100;
+    quatitionArea =
+      quatitionArea +
+      (quatitionArea * currentSetting[0].SystemSetupGarbagePercenttage) / 100;
 
     //redondear al nyumero mayor
     const cantidadValdosas = Math.ceil(quatitionArea / areaValdosa);
 
     const bundle = await getBundleDesignTypeFormatSizeTexture(fortmatTexture);
 
-var state;
+    var state;
 
-    if (office.Company_idCompany==1) {
-       state = {
+    if (office.Company_idCompany == 1) {
+      state = {
         idstate,
       };
     } else {
-       state = {
-        idstate:office.state_idstate,
+      state = {
+        idstate: office.state_idstate,
       };
     }
     const { companyZone_idcompanyZone } = await getStateByIdState(state);
-const PriceByBundlePrice={
-  idBundle:bundle[0].idbundle,
-  companyZone_idcompanyZone
-}
+    const PriceByBundlePrice = {
+      idBundle: bundle[0].idbundle,
+      companyZone_idcompanyZone,
+    };
 
-const bundlePriceZone=await getBundlePriceByZone(PriceByBundlePrice);
+    const bundlePriceZone = await getBundlePriceByZone(PriceByBundlePrice);
 
-
-
-const quotationPrice = Math.round(cantidadValdosas * bundlePriceZone[0].price);
-
+    const quotationPrice = Math.round(
+      cantidadValdosas * bundlePriceZone[0].price
+    );
 
     const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
-
-   
 
     const company = {
       idCompany: Company_idCompany,
@@ -373,7 +362,6 @@ const quotationPrice = Math.round(cantidadValdosas * bundlePriceZone[0].price);
       idbundle: bundle[0].idbundle,
       idcompanyType: companyType_idcompanyType,
     };
-
 
     // const { price, idbundleCompanyPrice } =
     //   await getBundleCompanyPriceByBundleCompanyTypeComopanyZone(
@@ -407,50 +395,188 @@ const quotationPrice = Math.round(cantidadValdosas * bundlePriceZone[0].price);
 
     data.cantidadValdosas = cantidadValdosas;
 
-    const pdfDoc = await PDFDocument.load(url)
+    const pdfDoc = await PDFDocument.load(url);
 
-
-    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
+    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
     // var fecha = new Date(req.CreatedDate.toString());
     // var options = { year: 'numeric', month: 'long', day: 'numeric' };
 
+    const pages = pdfDoc.getPages();
+    const firstPage = pages[1];
+    const pngImage = await pdfDoc.embedPng(pngImageBytes)
+    const { width, height } = firstPage.getSize();
 
-    const pages = pdfDoc.getPages()
-    const firstPage = pages[1]
-    console.log(12);
+    let fontSize = 8;
+    firstPage.drawText("0001111 ", {
+      x: 500,
+      y: 720,
+      size: 13,
+      font: helveticaFont,
+      color: rgb(0, 0, 0),
+      rotate: degrees(0),
+    }),
+    firstPage.drawImage(pngImage, {
+      x:50,
+      y: 660,
+      width: 60,
+      height: 50,
+    })
+    firstPage.drawText(new Date().toDateString() + " ", {
+      x: 350,
+      y: 700,
+      size: fontSize,
+      font: helveticaFont,
+      color: rgb(0, 0, 0),
+      rotate: degrees(0),
+    }),
+      firstPage.drawText("Carlos Colmenares ", {
+        x: 350,
+        y: 690,
+        size: fontSize,
+        font: helveticaFont,
+        color: rgb(0, 0, 0),
+        rotate: degrees(0),
+      }),
+      firstPage.drawText("109873570 ", {
+        x: 370,
+        y: 680,
+        size: fontSize,
+        font: helveticaFont,
+        color: rgb(0, 0, 0),
+        rotate: degrees(0),
+      }),
+      firstPage.drawText("calle 22 15 38 ", {
+        x: 360,
+        y: 670,
+        size: fontSize,
+        font: helveticaFont,
+        color: rgb(0, 0, 0),
+        rotate: degrees(0),
+      }),
+      firstPage.drawText("3167445579 ", {
+        x: 360,
+        y: 660,
+        size: fontSize,
+        font: helveticaFont,
+        color: rgb(0, 0, 0),
+        rotate: degrees(0),
+      }),
+      firstPage.drawText("carlosmanuelcolmenares@gmail.com ", {
+        x: 360,
+        y: 650,
+        size: fontSize,
+        font: helveticaFont,
+        color: rgb(0, 0, 0),
+        rotate: degrees(0),
 
-    const { width, height } = firstPage.getSize()
-
-let fontSize=8;
-    firstPage.drawText(new Date() + ' ' , {
-            x: 350,
-            y: 700,
-            size: fontSize,
-            font: helveticaFont,
-            color: rgb(0, 0, 0),
-            rotate: degrees(0),
+        //Datos asesor
+      }),firstPage.drawText( " El Centro", {
+        x: 160,
+        y: 699,
+        size: fontSize,
+        font: helveticaFont,
+        color: rgb(0, 0, 0),
+        rotate: degrees(0),
+      }),
+        firstPage.drawText("Transversal 138 #58-62 ", {
+          x: 160,
+          y: 688,
+          size: fontSize,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+          rotate: degrees(0),
+        }),
+        firstPage.drawText("6339090 ", {
+          x: 160,
+          y: 677,
+          size: fontSize,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+          rotate: degrees(0),
+        }),
+        firstPage.drawText("Pedro Perez ", {
+          x: 160,
+          y: 666,
+          size: fontSize,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+          rotate: degrees(0),
+        }),
+        firstPage.drawText("6667777", {
+          x: 395,
+          y: 410,
+          size: 12,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+          rotate: degrees(0),
+  
+        }),
+        firstPage.drawText("900000", {
+          x: 395,
+          y: 395,
+          size: 12,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+          rotate: degrees(0),
+  
+        }),   firstPage.drawText("100000", {
+          x: 395,
+          y: 378,
+          size: 12,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+          rotate: degrees(0),
+  
+        }),
+        firstPage.drawText("1000000", {
+          x: 395,
+          y: 365,
+          size: 12,
+          font: helveticaFont,
+          color: rgb(0, 0, 0),
+          rotate: degrees(0),
+  
+        }),
+        firstPage.drawImage(pngImage, {
+          x:30,
+          y: 130,
+          width: 100,
+          height: 80,
         })
 
-        // firstPage.drawText("Barrancabermeja " + fecha.toLocaleDateString("es-ES", options) + " ", {
-        //     x: (width / 2) - 60,
-        //     y: height / 2 - 140,
-        //     size: 10,
-        //     font: helveticaFont,
-        //     color: rgb(0, 0, 0),
-        //     rotate: degrees(0),
-        // })
+        firstPage.drawImage(pngImage, {
+          x:470,
+          y: 130,
+          width: 100,
+          height: 80,
+        })
+      
+      
+ 
+
+    // firstPage.drawText("Barrancabermeja " + fecha.toLocaleDateString("es-ES", options) + " ", {
+    //     x: (width / 2) - 60,
+    //     y: height / 2 - 140,
+    //     size: 10,
+    //     font: helveticaFont,
+    //     color: rgb(0, 0, 0),
+    //     rotate: degrees(0),
+    // })
     const pdfBytes = await pdfDoc.save();
+    console.log(112);
 
     data.pdfBytes = pdfBytes;
+    console.log(12);
+
     await emailSend.sendEmailActivationCode(data);
+    console.log(13);
 
     res.json({
       status: true,
       data,
     });
   } catch (error) {
-
     return res.status(400).json({
       status: false,
       err: {
