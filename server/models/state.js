@@ -109,7 +109,7 @@ const deleteState= async (data) => {
       // Llamar a la función de devolución de llamada con el resultado exitoso
       return result
      } catch (e) {
-      console.log("Paiman ",e);
+
       // Capturar excepción y llamar a la función de devolución de llamada con el error
       return e
      } finally {

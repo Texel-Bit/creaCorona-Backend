@@ -64,6 +64,9 @@ exports.createquotation = async (req, res) => {
       // idbundleCompanyPrice
     } = req.body;
 
+    console.log("Area ",quatitionArea);
+
+
     if (!idFormatSizeTexture) {
       if (req.body.idFormatSize) {
         let defaultFormatSizeTexture = await getDefaultFormatSizeTextureById(
@@ -129,6 +132,8 @@ exports.createquotation = async (req, res) => {
       idoffice: office_idoffice,
     };
 
+   
+
     const areaValdosa =
       (DesignTypeFormatSize.DesignTypeFormatSizeHeight *
         DesignTypeFormatSize.DesignTypeFormatSizeWidht) /
@@ -136,9 +141,10 @@ exports.createquotation = async (req, res) => {
 
     const currentSetting = await getCurrentSettings();
 
-    quatitionArea =
-      quatitionArea +
-      (quatitionArea * currentSetting[0].SystemSetupGarbagePercenttage) / 100;
+
+    const garbage=parseFloat(quatitionArea * currentSetting[0].SystemSetupGarbagePercenttage/100,10)
+
+    quatitionArea = parseFloat(quatitionArea,10) +garbage;
 
     //redondear al nyumero mayor
     const cantidadValdosas = Math.ceil(quatitionArea / areaValdosa);
@@ -155,7 +161,7 @@ exports.createquotation = async (req, res) => {
         idstate: office.state_idstate,
       };
     }
-    const { companyZone_idcompanyZone } = await getStateByIdState(state);
+    const { companyZone_idcompanyZone,stateName } = await getStateByIdState(state);
 
     
     const PriceByBundlePrice = {
@@ -164,7 +170,7 @@ exports.createquotation = async (req, res) => {
     };
     const bundlePriceZone = await getBundlePriceByZone(PriceByBundlePrice);
 
-    console.log("Bundle price by zone ",bundlePriceZone.price);
+    
 
     const quotationPrice = Math.round(
       cantidadValdosas * bundlePriceZone.price
@@ -198,6 +204,9 @@ exports.createquotation = async (req, res) => {
     //     },
     //   });
     // }
+
+
+
     const data = {
       customerName,
       customerLastname,
@@ -227,8 +236,9 @@ exports.createquotation = async (req, res) => {
       sysUser: { connect: { idsysuser: +idsysuser } },
     };
 
-    const createdquotation = await createquotation(data);
+    console.log("Quot Data ",data);
 
+    const createdquotation = await createquotation(data);
 
     const arrProductDetails = JSON.parse(req.body.quotationProductDetails);
 
@@ -295,7 +305,7 @@ exports.createquotation = async (req, res) => {
     console.log("Start To Build PDF ");
 
     let fontSize = 8;
-    firstPage.drawText("0001111 ", {
+    firstPage.drawText(createdquotation.idquotation.toString(), {
       x: 500,
       y: 720,
       size: 13,
@@ -374,7 +384,7 @@ exports.createquotation = async (req, res) => {
         color: rgb(0, 0, 0),
         rotate: degrees(0),
       }),
-        firstPage.drawText("Transversal 138 #58-62 ", {
+        firstPage.drawText("Office", {
           x: 160,
           y: 688,
           size: fontSize,
@@ -398,7 +408,7 @@ exports.createquotation = async (req, res) => {
           color: rgb(0, 0, 0),
           rotate: degrees(0),
         }),
-        firstPage.drawText(data.quotationPrice.toString(), {
+        firstPage.drawText(formatCurrency(data.quotationPrice.toString()), {
           x: 395,
           y: 410,
           size: 12,
@@ -407,7 +417,7 @@ exports.createquotation = async (req, res) => {
           rotate: degrees(0),
   
         }),
-        firstPage.drawText((data.quotationPrice*0.19).toString(), {
+        firstPage.drawText(formatCurrency(data.quotationPrice*0.19).toString(), {
           x: 395,
           y: 395,
           size: 12,
@@ -424,7 +434,7 @@ exports.createquotation = async (req, res) => {
           rotate: degrees(0),
   
         }),
-        firstPage.drawText((data.quotationPrice+(data.quotationPrice*0.19).toString()), {
+        firstPage.drawText(formatCurrency(parseFloat(data.quotationPrice)+parseFloat(data.quotationPrice*0.19)).toString(), {
           x: 395,
           y: 365,
           size: 12,
@@ -574,7 +584,7 @@ exports.simulateQuotation = async (req, res) => {
     console.log(bundlePriceZone)
     
     const quotationPrice = Math.round(
-      (cantidadValdosas * bundlePriceZone.price)*1.19
+      (cantidadValdosas * bundlePriceZone.price)
     );
 
     const { Company_idCompany } = await getAllOfficeByIdoffice(officeInfo);
@@ -604,7 +614,7 @@ exports.simulateQuotation = async (req, res) => {
     const data = {
       quatitionArea: +quatitionArea,
       bundlePrice: +bundlePriceZone.price,
-      quotationPrice: +quotationPrice,
+      quotationPrice: +(quotationPrice*1.19),
       quotationWidth: +quotationWidth,
       quotationHeight: +quotationHeight,
 
@@ -667,5 +677,13 @@ exports.getAllQuotation = async (req, res) => {
     });
   }
 };
+
+function formatCurrency(price) {
+  const formatter = new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+  });
+  return formatter.format(price);
+}
 
 //sin uso
