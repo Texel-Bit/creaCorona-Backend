@@ -97,7 +97,7 @@ const getFormatSizeTextureById = async (data) => {
   try {
     // Actualizar usuario en la base de datos
     const result = await prisma.formatSizeTexture.findFirst({
-      where: { DesignTypeFormatSize_idDesignTypeFormatSize:data,
+      where: { DesignTypeFormatSize_idDesignTypeFormatSize:+data,
         FormatSizeTextureName:'Plano'
        },
        select: {
