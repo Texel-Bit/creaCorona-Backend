@@ -19,13 +19,13 @@ const {
   getBundleCompanyPriceByBundleCompanyTypeComopanyZone,
 } = require("../models/bundleCompanyPrice.js");
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
-const { log } = require("console");
+
 const { getBundlePriceByZone } = require("../models/bundlepricesbyzone.js");
 const emailSend = require("../helpers/email");
 const fs = require('fs');
 const path = require('path');
 const { degrees, PDFDocument, rgb, StandardFonts } = require('pdf-lib');
-const { log } = require("console");
+
 
 const url = fs.readFileSync(path.join('D:/Usuario/Escritorio/creaCorona-Backend/server/pdf/corona.pdf'));
 
