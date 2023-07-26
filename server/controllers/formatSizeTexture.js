@@ -141,11 +141,9 @@ exports.castHtmlToPng = async (req, res) => {
   });
   const page = await context.newPage();
   
-  const html = `<html>
-                <body>
+  const html = `
                 ${htmlContent}
-                </body>
-                </html>`;
+                `;
   
                 console.log(html);
   await page.setContent(html);
@@ -163,6 +161,7 @@ exports.castHtmlToPng = async (req, res) => {
   res.send(screenshotUrl);
   
 
+  
 /*
   console.log("Servie");
 
