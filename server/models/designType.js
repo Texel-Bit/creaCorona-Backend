@@ -101,6 +101,11 @@ const getAllDesignTypeTest = async (data) => {
       }
     });
     
+    result.DesignTypeFormatSize.forEach(item => {
+      item.DesignTypeFormatSizeHeightFixed = item.DesignTypeFormatSizeHeight * item.DesignTypeFormatSizeMosaicScale;
+      item.DesignTypeFormatSizeWidhtFixed = item.DesignTypeFormatSizeWidht * item.DesignTypeFormatSizeMosaicScale;
+  });
+
     // Se cierra la conexión a Prisma
 
     // Se devuelve el resultado exitoso
