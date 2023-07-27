@@ -66,7 +66,7 @@ exports.createDesignTypeFormatSize = async(req, res) => {
         idDesignTypeFormatSize:+idDesignTypeFormatSize,
         DesignTypeFormatSizeName,
         DesignTypeFormatSizeHeight:DesignTypeFormatSizeHeight,
-        DesignTypeFormatSizeWidht:DesignTypeFormatSizeHeight, 
+        DesignTypeFormatSizeWidht:DesignTypeFormatSizeWidht, 
         DesignTypeFormatSizeMosaicScale:+DesignTypeFormatSizeMosaicScale,
       DesignType:{ connect: { idDesignType: +idDesignType } },    }
 

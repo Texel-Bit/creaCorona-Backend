@@ -25,6 +25,8 @@ const createDesignTypeFormatSize = async (data) => {
 
  const { idDesignTypeFormatSize, ...updateData } = data;
 
+ console.log(data);
+ 
  try {
    // Actualizar usuario en la base de datos\
    const result = await prisma.designTypeFormatSize.update({
