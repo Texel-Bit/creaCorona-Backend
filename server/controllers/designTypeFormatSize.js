@@ -12,9 +12,9 @@ const {
 exports.createDesignTypeFormatSize = async(req, res) => {
 
     try {
-    const { DesignTypeFormatSizeName,idDesignType,DesignTypeFormatSizeHeight,DesignTypeFormatSizeWidht  } = req.body
+    const { DesignTypeFormatSizeName,idDesignType,DesignTypeFormatSizeHeight,DesignTypeFormatSizeWidht,DesignTypeFormatSizeMosaicScale  } = req.body
 
-    if (!DesignTypeFormatSizeName || !idDesignType|| !DesignTypeFormatSizeHeight|| !idDesignType ) {
+    if (!DesignTypeFormatSizeName || !idDesignType|| !DesignTypeFormatSizeHeight|| !idDesignType|| !DesignTypeFormatSizeMosaicScale ) {
       return res.status(400).json({
         status: false,
         err: {
@@ -27,7 +27,8 @@ exports.createDesignTypeFormatSize = async(req, res) => {
   const  data= {
     DesignTypeFormatSizeName,
     DesignTypeFormatSizeHeight:DesignTypeFormatSizeHeight,
-    DesignTypeFormatSizeWidht:DesignTypeFormatSizeWidht,       
+    DesignTypeFormatSizeWidht:DesignTypeFormatSizeWidht, 
+    DesignTypeFormatSizeMosaicScale:DesignTypeFormatSizeMosaicScale,      
     DesignType:{ connect: { idDesignType: +idDesignType } },
       }
 
@@ -53,8 +54,8 @@ exports.createDesignTypeFormatSize = async(req, res) => {
     try {
 
     // Desestructurar los campos del cuerpo de la petición
-    const {idDesignTypeFormatSize,DesignTypeFormatSizeName, DesignTypeFormatSizeHeight, DesignTypeFormatSizeWidht, idDesignType,  } = req.body
-    if (!idDesignTypeFormatSize || !DesignTypeFormatSizeName || !DesignTypeFormatSizeHeight || !DesignTypeFormatSizeWidht ||!idDesignType) {
+    const {idDesignTypeFormatSize,DesignTypeFormatSizeName, DesignTypeFormatSizeHeight, DesignTypeFormatSizeWidht, idDesignType,DesignTypeFormatSizeMosaicScale  } = req.body
+    if (!idDesignTypeFormatSize || !DesignTypeFormatSizeName || !DesignTypeFormatSizeHeight || !DesignTypeFormatSizeWidht ||!idDesignType||!DesignTypeFormatSizeMosaicScale) {
       return res.status(400).json({
         status: false,
         error: "Datos de entrada incompletos",
@@ -66,6 +67,7 @@ exports.createDesignTypeFormatSize = async(req, res) => {
         DesignTypeFormatSizeName,
         DesignTypeFormatSizeHeight:DesignTypeFormatSizeHeight,
         DesignTypeFormatSizeWidht:DesignTypeFormatSizeHeight, 
+        DesignTypeFormatSizeMosaicScale:+DesignTypeFormatSizeMosaicScale,
       DesignType:{ connect: { idDesignType: +idDesignType } },    }
 
       const result = await updateDesignTypeFormatSize(data);
