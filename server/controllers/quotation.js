@@ -79,6 +79,10 @@ exports.createquotation = async (req, res) => {
     }
 
 
+    if(!idbrecha)
+    {
+      idbrecha=12;
+    }
 
     if (
       !customerName ||
@@ -91,7 +95,7 @@ exports.createquotation = async (req, res) => {
       !idstate
     ) {
 
-      console.log("Datos de entrada incompletos ");
+
       return res.status(400).json({
        
         status: false,
@@ -111,9 +115,10 @@ exports.createquotation = async (req, res) => {
       "uploads/quotation"
     );
 
+
     // Manejo de errores de subirArchivoImagen
     if (!desingPatternImage || !simulationImage) {
-      console.log("Error al subir la imagen ");
+
       return res.status(400).json({
         status: false,
         err: {
@@ -291,16 +296,18 @@ const quotationItemDescription=BundleFullData[0].DesignTypeName+"( "+BundleFullD
     const firstPage = pages[1];
 
 
+    console.log("Load first path ",path.join(__dirname,"../../", desingPatternImage));
+
     let tempImage=fs.readFileSync(path.join(__dirname,"../../", desingPatternImage));
-
-    
-
     const pdfdesingPatternImage  = await pdfDoc.embedPng(tempImage);
 
 
-    
+    console.log("Load Second path ",path.join(__dirname,"../../", simulationImage));
+
     tempImage=fs.readFileSync(path.join(__dirname,"../../", simulationImage));
     const pdfsimulationImage = await pdfDoc.embedPng(tempImage);
+
+    console.log("Load Third path ");
 
     tempImage=fs.readFileSync(path.join(path.join(__dirname,"../../", company.CompanyImagePath)));
     const pdfPNGLogo = await pdfDoc.embedPng(tempImage);
