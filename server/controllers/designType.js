@@ -155,7 +155,7 @@ exports.createDesignType = async(req, res) => {
 
       const allDesignTypeTest  = await getAllDesignTypeTest(data);
 
-  
+       console.log(allDesignTypeTest)
       // Enviar la respuesta con los usuarios
       res.json({
         status: true,
