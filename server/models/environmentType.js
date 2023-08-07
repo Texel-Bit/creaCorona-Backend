@@ -74,16 +74,16 @@ const getAllEnvironmentType = async () => {
     // Se llama a Prisma para buscar todos
     const result = await prisma.environmentType.findMany({
       include: {
-        DesignType_EnvironmentType: {select: {
-          DesignType_idDesignType: true,
-        },
-
+        DesignType_EnvironmentType: {
+          select: {
+            DesignType_idDesignType: true,
+          }
+        }
       },
-      
-      },
+      orderBy: {
+        idEnvironmentType: 'desc'  // Add this line for ordering by idEnvironmentType in descending order
+      }
     });
-
-    // Se cierra la conexión a Prisma
 
     // Se devuelve el resultado exitoso
     return result;
