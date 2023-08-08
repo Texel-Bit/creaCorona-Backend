@@ -100,7 +100,7 @@ const getDesignColorsById = async (data) => {
 
  const getDesignColorsByIdList = async (data) => {
 
-  const arrayColors = JSON.parse(data)
+  const arrayColors = data
 
   let ids = arrayColors.map(color => color.DesignColors_idDesignColors);;
 

@@ -21,7 +21,7 @@ const { getCompanyById } = require("../models/company.js");
 const {
   getBundleCompanyPriceByBundleCompanyTypeComopanyZone,
 } = require("../models/bundleCompanyPrice.js");
-const { subirArchivoImagen } = require("../helpers/subirarchivos");
+const { subirArchivoImagen,CastBase64ToImage } = require("../helpers/subirarchivos");
 const{getDesignColorsByIdList}=require("../models/designColors.js");
 const{getDesignByIdList}=require("../models/design.js");
 
@@ -105,16 +105,30 @@ exports.createquotation = async (req, res) => {
       });
     }
 
+
+
+    /*
     const simulationImage = await subirArchivoImagen(
       req.files.simulationImage,
       "uploads/quotation"
     );
+*/
+    const simulationImage = await CastBase64ToImage(
+      req.body.simulationImage,
+      "uploads/quotation"
+    );
 
+    const desingPatternImage = await CastBase64ToImage(
+      req.body.desingPatternImage,
+      "uploads/quotation"
+    );
+
+    /*
     const desingPatternImage = await subirArchivoImagen(
       req.files.desingPatternImage,
       "uploads/quotation"
     );
-
+*/
 
     // Manejo de errores de subirArchivoImagen
     if (!desingPatternImage || !simulationImage) {
@@ -250,7 +264,8 @@ const quotationItemDescription=BundleFullData[0].DesignTypeName+"( "+BundleFullD
 
     const createdquotation = await createquotation(data);
 
-    const arrProductDetails = JSON.parse(req.body.quotationProductDetails);
+    console.log(req.body.quotationProductDetails);
+    const arrProductDetails = req.body.quotationProductDetails;
 
 
     
@@ -263,9 +278,7 @@ const quotationItemDescription=BundleFullData[0].DesignTypeName+"( "+BundleFullD
       arrProductDetails
     );
 
-    const arrDesignColorshasquotation = JSON.parse(
-      req.body.DesignColors_has_quotation
-    );
+    const arrDesignColorshasquotation = req.body.DesignColors_has_quotation
     var arrDesignColorshasquotationFinal = [];
     arrDesignColorshasquotation.forEach((element, index) => {
       if (element.Design_idDesign != -1) {
@@ -621,7 +634,11 @@ exports.simulateQuotation = async (req, res) => {
       // idbundleCompanyPrice
     } = req.body;
 
-    console.log(req.body.idFormatSize);
+    if(quatitionArea==0)
+    {
+      quatitionArea=quotationWidth*quotationHeight
+    }
+      console.log(req.body);
 
     if (!idFormatSizeTexture) {
       if (req.body.idFormatSize) {
@@ -740,6 +757,7 @@ exports.simulateQuotation = async (req, res) => {
       data,
     });
   } catch (error) {
+    console.log(error);
     return res.status(400).json({
       status: false,
       err: {

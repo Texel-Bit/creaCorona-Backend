@@ -133,13 +133,15 @@ model DesignType {
 }
 
 model DesignTypeFormatSize {
-  idDesignTypeFormatSize     Int                 @id @default(autoincrement())
-  DesignTypeFormatSizeName   String?             @db.VarChar(45)
-  DesignType_idDesignType    Int
-  DesignTypeFormatSizeHeight String?             @db.VarChar(255)
-  DesignTypeFormatSizeWidht  String?             @db.VarChar(255)
-  DesignType                 DesignType          @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignTypeFormatSize_DesignType1")
-  FormatSizeTexture          FormatSizeTexture[]
+  idDesignTypeFormatSize               Int                 @id @default(autoincrement())
+  DesignTypeFormatSizeName             String?             @db.VarChar(45)
+  DesignType_idDesignType              Int
+  DesignTypeFormatSizeHeight           String?             @db.VarChar(255)
+  DesignTypeFormatSizeWidht            String?             @db.VarChar(255)
+  DesignTypeFormatSizeMosaicScale      Float?
+  DesignTypeFormatSizeDefaultImagePath String?             @db.VarChar(255)
+  DesignType                           DesignType          @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignTypeFormatSize_DesignType1")
+  FormatSizeTexture                    FormatSizeTexture[]
 
   @@index([DesignType_idDesignType], map: "fk_DesignTypeFormatSize_DesignType1_idx")
 }

@@ -66,6 +66,39 @@ const subirArchivoImagen = (file, carpeta = '') => {
 
 }
 
+const CastBase64ToImage = (base64Data, carpeta = '') => {
+    return new Promise((resolve, reject) => {
+        // Split the base64 string to remove the MIME type
+        const matches = base64Data.match(/^data:(.+);base64,(.+)$/);
+        if (!matches || matches.length !== 3) {
+            reject(new Error('Invalid input string format'));
+            return;
+        }
+
+        const mimeType = matches[1];
+        const rawData = matches[2];
+        const extension = mimeType.split('/')[1]; // Expecting a MIME type like 'image/png' or 'image/jpeg'
+
+        // Convert the base64 string to a buffer
+        const buffer = Buffer.from(rawData, 'base64');
+
+        // Generate a unique filename for the file
+        const nombreTemp = uuidv4() + '.' + extension;
+
+        // Build the full path for the file
+        const uploadPath = path.join(carpeta, nombreTemp);
+
+        // Write the file to the server
+        fs.writeFile(uploadPath, buffer, (err) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(uploadPath);
+        });
+    });
+}
+
 const subirArchivoThumbnail = (files, extensionesValidas = ['jpg', 'png', 'jpeg','svg'], carpeta = '') => {
     return new Promise((resolve, reject) => {
         const file = files.thumbnail;
@@ -266,5 +299,6 @@ module.exports = {
     subirArchivousdz,
     subirArchivoThumbnail,
     subirArchivoRevision,
-    subirArchivoImagen
+    subirArchivoImagen,
+    CastBase64ToImage
 }
