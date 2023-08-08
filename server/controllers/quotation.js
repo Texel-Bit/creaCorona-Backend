@@ -89,22 +89,23 @@ exports.createquotation = async (req, res) => {
       !customerLastname ||
       !customerEmail ||
       !customerPhoneNumber ||
-      !quatitionArea ||
       !idbrecha ||
       !idFormatSizeTexture ||
       !idstate
     ) {
-
-
       return res.status(400).json({
        
         status: false,
         err: {
-          message: "Datos de entrada incompletos",
+          message: "Datos de entrada incompletos 2",
         },
       });
     }
 
+    if(quatitionArea==0)
+    {
+      quatitionArea=quotationWidth*quotationHeight
+    }
 
 
     /*

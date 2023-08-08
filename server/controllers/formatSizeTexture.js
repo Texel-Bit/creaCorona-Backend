@@ -127,7 +127,9 @@ exports.getAllFormatSizeTexture = async (req, res) => {
 
 exports.castHtmlToPng = async (req, res) => {
 
-
+  
+  console.log("Entro aca amigo ")
+console.log(req.body);
   const htmlContent = Buffer.from(req.body.svgsContent, 'base64').toString('utf8');
   const BrowserWidth=req.body.width;
   const BrowserHeight=req.body.height;
@@ -172,48 +174,6 @@ exports.castHtmlToPng = async (req, res) => {
   res.send(screenshotUrl);
   
 
-/*
-  console.log("Servie");
-
-  
-  try {
-    
-
-    const htmlContent = Buffer.from(req.body.svgsContent, 'base64').toString('utf8');
-
-   
-
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-
-  // Establecer el tamaño de la ventana del navegador para que coincida con el contenido SVG
-    await page.setViewport({ width: req.body.width, height: req.body.height });
-
-     // Cargar el contenido SVG en el navegador
-     await page.setContent(`<html><body>${htmlContent}</body></html>`, { waitUntil: 'domcontentloaded' });
-
-     console.log(`<html><body>${htmlContent}</body></html>`);
-
-     
-     // Capturar una captura de pantalla del contenido SVG
-    const screenshotBuffer = await page.screenshot({ type: 'png' ,fullPage: true});
-
-    await browser.close();
-
-        // Convertir el buffer de la captura de pantalla a base64 URL
-    const screenshotUrl = `data:image/png;base64,${screenshotBuffer.toString('base64')}`;
-    res.send(screenshotUrl);
-    
-    
-
-  } catch (error) {
-    console.error(error," ERROOOR ");
-    res.status(500).send({
-      message: "No se pudo obtener las allFormatSizeTexture",
-    });
-  }
-
-  */
 
 };
 //sin uso
