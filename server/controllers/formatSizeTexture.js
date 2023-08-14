@@ -128,50 +128,57 @@ exports.getAllFormatSizeTexture = async (req, res) => {
 exports.castHtmlToPng = async (req, res) => {
 
   
-  console.log("Entro aca amigo ")
-console.log(req.body);
-  const htmlContent = Buffer.from(req.body.svgsContent, 'base64').toString('utf8');
-  const BrowserWidth=req.body.width;
-  const BrowserHeight=req.body.height;
-
-  const browser = await chromium.launch();
-  const context = await browser.newContext({
-    viewport: {
-      width: BrowserWidth,
-      height: BrowserHeight,
-    },
+  try{
+    const htmlContent = Buffer.from(req.body.svgsContent, 'base64').toString('utf8');
+    const BrowserWidth=req.body.width;
+    const BrowserHeight=req.body.height;
+  
+    const browser = await chromium.launch();
+    const context = await browser.newContext({
+      viewport: {
+        width: BrowserWidth,
+        height: BrowserHeight,
+      },
+      
+    });
+    const page = await context.newPage();
     
-  });
-  const page = await context.newPage();
+    const html = `<html>
+                <head>
+                  <style>
+                    html, body {
+                      margin: 0;
+                      padding: 0;
+                    }
+                  </style>
+                </head>
+                <body>
+                ${htmlContent}
+                </body>
+                </html>`;
+    
+                  console.log(html);
+    await page.setContent(html);
+    
+    // Since you want to screenshot the full page, you might not need to set the viewport size
+    // but it's here in case you want to control the dimensions of the page.
+    await page.setViewportSize({ width: BrowserWidth, height: BrowserHeight });
+    
+    // take a screenshot of the full page
+    const screenshotBuffer = await page.screenshot({ path: 'screenshot.jpeg', type: 'jpeg', fullPage: true });
+    
+    await browser.close();
+    
+    const screenshotUrl = `data:image/png;base64,${screenshotBuffer.toString('base64')}`;
+    res.send(screenshotUrl);
   
-  const html = `<html>
-              <head>
-                <style>
-                  html, body {
-                    margin: 0;
-                    padding: 0;
-                  }
-                </style>
-              </head>
-              <body>
-              ${htmlContent}
-              </body>
-              </html>`;
+  }
+  catch(error)
+  {
+    res.status(500).json({ status: false, error });
+    console.log(error)
+  }
   
-                console.log(html);
-  await page.setContent(html);
-  
-  // Since you want to screenshot the full page, you might not need to set the viewport size
-  // but it's here in case you want to control the dimensions of the page.
-  await page.setViewportSize({ width: BrowserWidth, height: BrowserHeight });
-  
-  // take a screenshot of the full page
-  const screenshotBuffer = await page.screenshot({ path: 'screenshot.jpeg', type: 'jpeg', fullPage: true });
-  
-  await browser.close();
-  
-  const screenshotUrl = `data:image/png;base64,${screenshotBuffer.toString('base64')}`;
-  res.send(screenshotUrl);
   
 
 
