@@ -128,7 +128,7 @@ exports.getAllFormatSizeTexture = async (req, res) => {
 exports.castHtmlToPng = async (req, res) => {
 
   console.log(req.body)
-  
+
   try{
     const htmlContent = Buffer.from(req.body.svgsContent, 'base64').toString('utf8');
     const BrowserWidth=req.body.width;
@@ -177,7 +177,7 @@ exports.castHtmlToPng = async (req, res) => {
   catch(error)
   {
     res.status(400).json({ status: false, error });
-    console.log(error)
+    console.log(error," ERRRRRRRRRRORRRRRRRR ")
   }
   
   
