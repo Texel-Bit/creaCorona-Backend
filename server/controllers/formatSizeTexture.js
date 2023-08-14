@@ -127,6 +127,7 @@ exports.getAllFormatSizeTexture = async (req, res) => {
 
 exports.castHtmlToPng = async (req, res) => {
 
+  console.log(req.body)
   
   try{
     const htmlContent = Buffer.from(req.body.svgsContent, 'base64').toString('utf8');
