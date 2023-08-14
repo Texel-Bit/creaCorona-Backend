@@ -175,7 +175,7 @@ exports.castHtmlToPng = async (req, res) => {
   }
   catch(error)
   {
-    res.status(500).json({ status: false, error });
+    res.status(400).json({ status: false, error });
     console.log(error)
   }
   
