@@ -170,7 +170,7 @@ exports.castHtmlToPng = async (req, res) => {
     
     await browser.close();
     
-    const screenshotUrl = `data:image/png;base64,${screenshotBuffer.toString('base64')}`;
+    const screenshotUrl = `data:image/jpeg;base64,${screenshotBuffer.toString('base64')}`;
     res.status(200).json({ status: true,data: screenshotUrl });
     
   }
