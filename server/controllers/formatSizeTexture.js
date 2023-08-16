@@ -166,11 +166,11 @@ exports.castHtmlToPng = async (req, res) => {
     await page.setViewportSize({ width: BrowserWidth, height: BrowserHeight });
     
     // take a screenshot of the full page
-    const screenshotBuffer = await page.screenshot({ path: 'screenshot.jpeg', type: 'jpeg', fullPage: true });
+    const screenshotBuffer = await page.screenshot({ path: 'screenshot.png', type: 'png', fullPage: true });
     
     await browser.close();
     
-    const screenshotUrl = `data:image/jpeg;base64,${screenshotBuffer.toString('base64')}`;
+    const screenshotUrl = `data:image/png;base64,${screenshotBuffer.toString('base64')}`;
     res.status(200).json({ status: true,data: screenshotUrl });
     
   }
