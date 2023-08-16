@@ -139,7 +139,7 @@ exports.createDesignType = async(req, res) => {
   exports.getAllDesignTypeTest  = async (req, res) => {
     try {
 
-      const {idDesignType} = req.body
+      const {idDesignType,idEnvironmentType} = req.body
 
       // Verificar si el cuerpo de la petición existe
       if (!idDesignType ) {
@@ -150,12 +150,12 @@ exports.createDesignType = async(req, res) => {
       }
       const  data= {
         idDesignType:+idDesignType,
+        idEnvironmentType:+idEnvironmentType
       }
     
 
       const allDesignTypeTest  = await getAllDesignTypeTest(data);
 
-       console.log(allDesignTypeTest)
       // Enviar la respuesta con los usuarios
       res.json({
         status: true,

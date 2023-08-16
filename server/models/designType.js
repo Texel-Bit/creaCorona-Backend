@@ -66,57 +66,67 @@ const getAllDesignType = async () => {
   }
 };
 const getAllDesignTypeTest = async (data) => {
-  const { idDesignType } = data;
+  const { idDesignType, idEnvironmentType } = data;
 
   try {
-    // Se llama a Prisma para buscar todos las compañias
+    // Step 1: Fetch matching DesignColorType IDs
+    const matchingDesignColorTypes = await prisma.designColorType_has_DesignType.findMany({
+      where: {
+        EnvironmentType_idEnvironmentType: idEnvironmentType,
+        DesignType_idDesignType: idDesignType
+      }
+    });
+
+
+    const matchingDesignColorTypeIds = [...new Set(matchingDesignColorTypes.map(item => item.DesignColorType_idDesignColorType))];
+
+    // Step 2: Main query with additional filter for Design
     let result = await prisma.designType.findUnique({
       where: { idDesignType },
-      select:{
-        DesignColors:true,
-        idDesignType:true,
-        DesignTypeName:true,
-        DesignTypeIconPath:true,
-        MosaicType_idMosaicType:true,
-        // DesignColorType_has_FormatSizeTexture:true,
-        DesignTypeFormatSize:{
-          include:{
-            FormatSizeTexture:{
-              include:{
-                DesignColorType_has_FormatSizeTexture:true
+      select: {
+        DesignColors: true,
+        idDesignType: true,
+        DesignTypeName: true,
+        DesignTypeIconPath: true,
+        MosaicType_idMosaicType: true,
+        DesignTypeFormatSize: {
+          include: {
+            FormatSizeTexture: {
+              include: {
+                DesignColorType_has_FormatSizeTexture: true
               }
-            }          }
+            }
+          }
         },
-        
-        Design:true,
-        MosaicType:{
-          select:{
-            MosaicTypeValue:true
-          },
+        Design: {
+          where: {
+            DesignColorType_idDesignColorType: {
+              in: matchingDesignColorTypeIds
+            }
+          }
+        },
+        MosaicType: {
+          select: {
+            MosaicTypeValue: true
+          }
         }
       }
     });
-    
+
     result.DesignTypeFormatSize.forEach(item => {
       item.DesignTypeFormatSizeHeightFixed = item.DesignTypeFormatSizeHeight * item.DesignTypeFormatSizeMosaicScale;
       item.DesignTypeFormatSizeWidhtFixed = item.DesignTypeFormatSizeWidht * item.DesignTypeFormatSizeMosaicScale;
-  });
+    });
 
-  
-    // Se cierra la conexión a Prisma
-
-    // Se devuelve el resultado exitoso
     return result;
   } catch (e) {
-    // En caso de error, se cierra la conexión a Prisma
     console.log(e);
-    // Se devuelve el error
     throw e;
-  }finally {
-    // Siempre desconectar la base de datos después de la operación
+  } finally {
     await prisma.$disconnect();
   }
 };
+
 
 
 
