@@ -124,6 +124,7 @@ exports.createquotation = async (req, res) => {
       "uploads/quotation"
     );
 
+
     /*
     const desingPatternImage = await subirArchivoImagen(
       req.files.desingPatternImage,
@@ -311,6 +312,8 @@ const quotationItemDescription=BundleFullData[0].DesignTypeName+"( "+BundleFullD
 
 
     console.log("Load first path ",path.join(__dirname,"../../", desingPatternImage));
+
+    
 
     let tempImage=fs.readFileSync(path.join(__dirname,"../../", desingPatternImage));
     const pdfdesingPatternImage  = await pdfDoc.embedPng(tempImage);

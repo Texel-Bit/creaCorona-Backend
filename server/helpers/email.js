@@ -55,7 +55,7 @@ exports.sendEmailActivationCode = function(req, res) {
       <div class="content">
           <h1>¡Hola ${req.customerName} !</h1>
           <p>
-              Gracias por atreverte a ser el creador de tu propio diseño con “Mi Proyecto Corona”, a continuación encontrarás tu piso o pared personalizada que creaste por medio de nuestra experiencia virtual. Si deseas materializarlo, dirígete a uno de nuestros Almacenes o Centros Corona y con ayuda de nuestros asesores comerciales cancela el pedido. No olvides acordar tu entrega a domicilio o con recolección en el punto de venta.
+          Gracias por atreverte a ser el creador de tu propio diseño con “Crea Corona”, a continuación, encontrarás toda la información de tu piso o pared personalizada creada por medio de nuestra experiencia virtual.
           </p>
           <p>
               Nota: Los productos personalizados no tienen devolución y se sugiere pedir por lo menos un 10% adicional del producto para cubrir los desperdicios en la instalación.
