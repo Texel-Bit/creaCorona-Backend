@@ -8,9 +8,10 @@ const { subirArchivoImagen } = require("../helpers/subirarchivos");
 const fs = require("fs");
 const path = require("path");
 exports.createDesignColors = async (req, res) => {
+  console.log(req.body)
   try {
-    const { DesignColorName, idDesignType,IdDesignColorType } = req.body;
-    if (!DesignColorName || !idDesignType||!IdDesignColorType) {
+    const { DesignColorName, idDesignType,idDesignColorType } = req.body;
+    if (!DesignColorName || !idDesignType||!idDesignColorType) {
       return res.status(400).json({
         status: false,
         err: {
@@ -18,7 +19,7 @@ exports.createDesignColors = async (req, res) => {
         },
       });
     }
-
+    console.log("Aca")
     const image = await subirArchivoImagen(
       req.files.DesignColorPath,
       "uploads/DesignColors"
@@ -36,7 +37,7 @@ exports.createDesignColors = async (req, res) => {
       DesignColorName,
       DesignColorPath: image,
       DesignType: { connect: { idDesignType: +idDesignType } },
-      DesignColorType_DesignColors_DesignColorTypeToDesignColorType:{ connect: { IdDesignColorType: +IdDesignColorType } }
+      DesignColorType:{ connect: { idDesignColorType: +idDesignColorType } }
     };
 
     

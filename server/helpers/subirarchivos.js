@@ -78,7 +78,7 @@ const CastBase64ToImage = (base64Data, carpeta = '') => {
         const mimeType = matches[1];
         const rawData = matches[2];
         const extension = mimeType.split('/')[1]; // Expecting a MIME type like 'image/png' or 'image/jpeg'
-
+        console.log(extension)
         // Convert the base64 string to a buffer
         const buffer = Buffer.from(rawData, 'base64');
 

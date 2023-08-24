@@ -1,3 +1,7 @@
+const Joi = require('@hapi/joi');
+const CircuitBreakerHandler = require('../helpers/CircuitBreakerHandler');
+
+
 const {
   createCompany,
   updateCompany,
@@ -8,46 +12,37 @@ const path = require('path');
 const fs = require('fs');
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
 
+const createCompanyBreaker = CircuitBreakerHandler.createBreaker(createCompany);
+const updateCompanyBreaker = CircuitBreakerHandler.createBreaker(updateCompany);
+const getAllCompanyBreaker = CircuitBreakerHandler.createBreaker(getAllCompany);
+const getCompanyByIdBreaker = CircuitBreakerHandler.createBreaker(getCompanyById);
+const subirArchivoImagenBreaker = CircuitBreakerHandler.createBreaker(subirArchivoImagen);
 
 
 exports.createCompany = async (req, res) => {
+  const schema = Joi.object({
+    CompanyName: Joi.string().required(),
+    CompanyAddress: Joi.string().required(),
+    CompanyNIT: Joi.string().required(),
+    CompanyEmail: Joi.string().email().required(),
+    CompanyContactName: Joi.string().required(),
+    CompanyPhone: Joi.string().required(),
+    idcompanyStatus: Joi.number().required(),
+    idCompanyRole: Joi.number().required(),
+    idcompanyType: Joi.number().required(),
+  });
+
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return res.status(400).json({
+      status: false,
+      err: { message: error.details[0].message },
+    });
+  }
+
   try {
-    const {
-      CompanyName,
-      CompanyAddress,
-      CompanyNIT,
-      CompanyEmail,
-      CompanyContactName,
-      CompanyPhone,
-      idcompanyStatus,
-      idCompanyRole,
-      idcompanyType
-    } = req.body;
-
-    if (
-      !CompanyName ||
-      !CompanyAddress ||
-      !CompanyCode ||
-      !CompanyNIT||
-      !CompanyEmail||
-      !CompanyContactName||
-      !CompanyPhone ||
-      !idcompanyStatus ||
-      !idCompanyRole ||
-      !idcompanyType
-    ) {
-      return res.status(400).json({
-        status: false,
-        err: {
-          message: "Datos de entrada incompletos",
-        },
-      });
-    }
-    const image = await subirArchivoImagen(
-      req.files.CompanyImagePath,
-
-      "uploads/Company"
-    );
+    
+    const image = await subirArchivoImagenBreaker.fire(req.files.CompanyImagePath, "uploads/Company");
     // Manejo de errores de subirArchivoImagen
     if (!image) {
       return res.status(400).json({
@@ -70,57 +65,50 @@ exports.createCompany = async (req, res) => {
       CompanyRole: { connect: { idCompanyRole: +idCompanyRole } },
     };
 
-    const createdCompany = await createCompany(data);
+    const createdCompany = await createCompanyBreaker.fire(data);
 
     res.json({
       status: true,
       data: createdCompany,
     });
+
   } catch (error) {
+    CircuitBreakerHandler.logToFile("No pudo ser creada la compañia", req);
     return res.status(400).json({
       ok: false,
       err: {
         message: "No pudo ser creada la compañia",
       },
     });
+
   }
 };
 
 exports.updateCompany = async (req, res, next) => {
-  try {
-    const {
-      idCompany,
-      CompanyName,
-      CompanyAddress,
-      CompanyCode,
-      CompanyEmail,
-      CompanyContactName,
-      CompanyPhone,
-      idcompanyStatus,
-      idCompanyRole,
-      idcompanyType,
-      CompanyNIT
-    } = req.body;
+  const schema = Joi.object({
+    idCompany: Joi.number().required(),
+    CompanyName: Joi.string().required(),
+    CompanyAddress: Joi.string().required(),
+    CompanyNIT: Joi.string().required(),
+    CompanyEmail: Joi.string().email().required(),
+    CompanyContactName: Joi.string().required(),
+    CompanyPhone: Joi.string().required(),
+    idcompanyStatus: Joi.number().required(),
+    idCompanyRole: Joi.number().required(),
+    idcompanyType: Joi.number().required(),
+  });
 
-    if (
-      !idCompany ||
-      !CompanyName ||
-      !CompanyEmail||
-      !CompanyContactName||
-      !CompanyAddress ||
-      !CompanyCode ||
-      !CompanyPhone ||
-      !idcompanyStatus ||
-      !idCompanyRole||
-      !idcompanyType||
-      !CompanyNIT
-    ) {
-      return res.status(400).json({
-        status: false,
-        err: { message: "Datos de entrada incompletos" },
-      });
-    }
+  const { error } = schema.validate(req.body);
+  if (error) {
     
+    return res.status(400).json({
+      status: false,
+      err: { message: error.details[0].message },
+    });
+  }
+
+  try {
+   
     const data = {
       idCompany: +idCompany,
       CompanyName,
@@ -136,13 +124,12 @@ exports.updateCompany = async (req, res, next) => {
       companyStatus: { connect: { idcompanyStatus: +idcompanyStatus } },
       CompanyRole: { connect: { idCompanyRole: +idCompanyRole } },
     };
-    const company = await getCompanyById(data);
+    const company = await getCompanyByIdBreaker.fire(data);
 
     if (req.files && req.files.CompanyImagePath) {
-      const image = await subirArchivoImagen(
-        req.files.CompanyImagePath,
-        "uploads/Company"
-      );
+
+      const image = await subirArchivoImagenBreaker.fire(req.files.CompanyImagePath, "uploads/Company");
+
 
       const filePath=path.join(__dirname, company.CompanyImagePath);
 
@@ -151,25 +138,27 @@ exports.updateCompany = async (req, res, next) => {
       }      data.CompanyImagePath = image;
     }
 
-    const result = await updateCompany(data);
+    const result = await updateCompanyBreaker.fire(data);
     res.json({ status: true, data: result });
+
   } catch (error) {
+    CircuitBreakerHandler.logToFile("No pudo ser actualizada la compañia", req);
 
     res.status(500).json({ status: false, error });
+
   }
 };
 
 exports.getAllCompany = async (req, res) => {
   try {
-    // Obtener todos los usuarios desde la base de datos
-    const allCompany = await getAllCompany();
-
-    // Enviar la respuesta con los usuarios
+    const allCompany = await getAllCompanyBreaker.fire();
     res.json({
       status: true,
       data: allCompany,
     });
   } catch (error) {
+    CircuitBreakerHandler.logToFile("No pudo ser actualizada la compañia", req);
+
     console.error(error);
     res.status(500).send({
       message: "No se pudo obtener las compañias",

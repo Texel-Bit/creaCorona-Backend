@@ -133,15 +133,16 @@ model DesignType {
 }
 
 model DesignTypeFormatSize {
-  idDesignTypeFormatSize               Int                 @id @default(autoincrement())
-  DesignTypeFormatSizeName             String?             @db.VarChar(45)
-  DesignType_idDesignType              Int
-  DesignTypeFormatSizeHeight           String?             @db.VarChar(255)
-  DesignTypeFormatSizeWidht            String?             @db.VarChar(255)
-  DesignTypeFormatSizeMosaicScale      Float?
-  DesignTypeFormatSizeDefaultImagePath String?             @db.VarChar(255)
-  DesignType                           DesignType          @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignTypeFormatSize_DesignType1")
-  FormatSizeTexture                    FormatSizeTexture[]
+  idDesignTypeFormatSize                   Int                                        @id @default(autoincrement())
+  DesignTypeFormatSizeName                 String?                                    @db.VarChar(45)
+  DesignType_idDesignType                  Int
+  DesignTypeFormatSizeHeight               String?                                    @db.VarChar(255)
+  DesignTypeFormatSizeWidht                String?                                    @db.VarChar(255)
+  DesignTypeFormatSizeMosaicScale          Float?
+  DesignTypeFormatSizeDefaultImagePath     String?                                    @db.VarChar(255)
+  DesignType                               DesignType                                 @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignTypeFormatSize_DesignType1")
+  DesignTypeFormatSize_has_EnvironmentType DesignTypeFormatSize_has_EnvironmentType[]
+  FormatSizeTexture                        FormatSizeTexture[]
 
   @@index([DesignType_idDesignType], map: "fk_DesignTypeFormatSize_DesignType1_idx")
 }
@@ -170,14 +171,16 @@ model Environment {
 }
 
 model EnvironmentType {
-  idEnvironmentType              Int                              @id @default(autoincrement())
-  EnvironmentTypeName            String?                          @db.VarChar(45)
-  EnvironmentTypeImage           String?                          @db.VarChar(255)
-  WorkWithStructure              Int?                             @default(1) @db.TinyInt
-  DesignColorBundle              DesignColorBundle[]
-  DesignColorType_has_DesignType DesignColorType_has_DesignType[]
-  DesignType_EnvironmentType     DesignType_EnvironmentType[]
-  Environment                    Environment[]
+  idEnvironmentType                        Int                                        @id @default(autoincrement())
+  EnvironmentTypeName                      String?                                    @db.VarChar(45)
+  EnvironmentTypeImage                     String?                                    @db.VarChar(255)
+  WorkWithStructure                        Int?                                       @default(1) @db.TinyInt
+  EnvironmentTypeIcon                      String?                                    @db.VarChar(16)
+  DesignColorBundle                        DesignColorBundle[]
+  DesignColorType_has_DesignType           DesignColorType_has_DesignType[]
+  DesignTypeFormatSize_has_EnvironmentType DesignTypeFormatSize_has_EnvironmentType[]
+  DesignType_EnvironmentType               DesignType_EnvironmentType[]
+  Environment                              Environment[]
 }
 
 model FormatSizeTexture {
@@ -209,7 +212,6 @@ model brecha {
   idbrecha        Int         @id @default(autoincrement())
   brechaName      String?     @db.VarChar(45)
   brechaColorPath String?     @db.VarChar(255)
-  brechacol       String?     @db.VarChar(45)
   quotation       quotation[]
 }
 
@@ -404,8 +406,8 @@ model DesignColorInBundle {
   idDesignColorInBundle                 Int               @id @default(autoincrement())
   DesignColorBundle_idDesignColorBundle Int
   DesignColors_idDesignColors           Int
-  DesignColorBundle                     DesignColorBundle @relation(fields: [DesignColorBundle_idDesignColorBundle], references: [idDesignColorBundle], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorInBundle_DesignColorBundle1")
-  DesignColors                          DesignColors      @relation(fields: [DesignColors_idDesignColors], references: [idDesignColors], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignColorInBundle_DesignColors1")
+  DesignColorBundle                     DesignColorBundle @relation(fields: [DesignColorBundle_idDesignColorBundle], references: [idDesignColorBundle], onDelete: NoAction, map: "fk_DesignColorInBundle_DesignColorBundle1")
+  DesignColors                          DesignColors      @relation(fields: [DesignColors_idDesignColors], references: [idDesignColors], onDelete: NoAction, map: "fk_DesignColorInBundle_DesignColors1")
 
   @@index([DesignColorBundle_idDesignColorBundle], map: "fk_DesignColorInBundle_DesignColorBundle1_idx")
   @@index([DesignColors_idDesignColors], map: "fk_DesignColorInBundle_DesignColors1_idx")
@@ -421,4 +423,15 @@ model DesignColorType_has_FormatSizeTexture {
   @@id([DesignColorType_has_FormatSizeTexturecol, DesignColorType_idDesignColorType, FormatSizeTexture_idFormatSizeTexture])
   @@index([DesignColorType_idDesignColorType], map: "fk_DesignColorType_has_FormatSizeTexture_DesignColorType1_idx")
   @@index([FormatSizeTexture_idFormatSizeTexture], map: "fk_DesignColorType_has_FormatSizeTexture_FormatSizeTexture1_idx")
+}
+
+model DesignTypeFormatSize_has_EnvironmentType {
+  DesignTypeFormatSize_idDesignTypeFormatSize Int
+  EnvironmentType_idEnvironmentType           Int
+  DesignTypeFormatSize                        DesignTypeFormatSize @relation(fields: [DesignTypeFormatSize_idDesignTypeFormatSize], references: [idDesignTypeFormatSize], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignTypeFormatSize_has_EnvironmentType_DesignTypeFormatS1")
+  EnvironmentType                             EnvironmentType      @relation(fields: [EnvironmentType_idEnvironmentType], references: [idEnvironmentType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignTypeFormatSize_has_EnvironmentType_EnvironmentType1")
+
+  @@id([DesignTypeFormatSize_idDesignTypeFormatSize, EnvironmentType_idEnvironmentType])
+  @@index([DesignTypeFormatSize_idDesignTypeFormatSize], map: "fk_DesignTypeFormatSize_has_EnvironmentType_DesignTypeForma_idx")
+  @@index([EnvironmentType_idEnvironmentType], map: "fk_DesignTypeFormatSize_has_EnvironmentType_EnvironmentType_idx")
 }

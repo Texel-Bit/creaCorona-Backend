@@ -89,11 +89,20 @@ const getAllDesignTypeTest = async (data) => {
         DesignTypeName: true,
         DesignTypeIconPath: true,
         MosaicType_idMosaicType: true,
+        
         DesignTypeFormatSize: {
+          where: {
+            DesignType_idDesignType: idDesignType,  // Assuming idDesignType is defined
+          },
           include: {
             FormatSizeTexture: {
               include: {
                 DesignColorType_has_FormatSizeTexture: true
+              }
+            },
+            DesignTypeFormatSize_has_EnvironmentType: {
+              where: {
+                EnvironmentType_idEnvironmentType: idEnvironmentType,
               }
             }
           }
