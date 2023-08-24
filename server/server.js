@@ -9,13 +9,17 @@ const fs = require("fs");
 const app = express();
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
+const helmet = require('helmet');  
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.use(helmet()); 
 
 // Middleware
 app.use(cors());
 app.use(express.json({ limit: "10mb", extended: true }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
+
 app.use(
   fileUpload({
     useTempFiles: true,
@@ -35,11 +39,12 @@ app.use((err, req, res, next) => {
 });
 
 // Start HTTP server
-/*
-app.listen(process.env.PORT, () => {
-    console.log(`My HTTP server listening on port ${process.env.PORT}...`);
-});
-*/
+
+// app.listen(process.env.PORT, () => {
+//     console.log(`My HTTP server listening on port ${process.env.PORT}...`);
+// });
+
+
 
 // start HTTPS server
  const options = {
