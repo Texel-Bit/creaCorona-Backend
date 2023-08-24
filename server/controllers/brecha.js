@@ -1,5 +1,6 @@
 const Joi = require('@hapi/joi');
 const CircuitBreakerHandler = require('../helpers/CircuitBreakerHandler');
+const {sendTestEmail} = require("../helpers/email");
 
 const {
   createBrecha,
@@ -108,7 +109,9 @@ exports.updateBrecha = async (req, res, next) => {
   }
 };
 
+
 exports.getAllBrecha = async (req, res) => {
+ 
   try {
     const allBrecha = await getAllBrechaBreaker.fire();
     res.json({

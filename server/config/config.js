@@ -25,12 +25,8 @@ process.env.SEED = "}HK]LudQBn1-LvPNit36L";
 
 // process.env.URLVTEX = "https://whirlpoolcol.vtexcommercestable.com.br/api/";
 
-// process.env.AppKeyVTEX = "vtexappkey-whirlpoolcol-IVVLDW";
-// process.env.AppTokenVTEX     = "OBMVRUIILBAXQGIYDWTCCGOQXKETHQMYOBUGNXSVLNWCZILUKBKNHPHEIHLWLKMLASRXGBGNXPOZOOCFVNIBLDKSJZDNLCZNQBFLNLYOAEHOBTKPWKOUSAXYBHUENDMU";
-process.env.email = "carlosmanuelcolmenares@gmail.com";
-process.env.passemail = "hewauyisiehhazcs";
-process.env.stmpemail = "outlook.office365.com";
-process.env.portemail = 587;
+
+
 //================================== 
 //Base de datos
 //==================================
