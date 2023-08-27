@@ -44,26 +44,34 @@ const createState = async (data) => {
  }
 };
 
-
-const getAllState= async () => {
+const getAllState = async () => {
   try {
-    // Se llama a Prisma para buscar todos las compañias
-    const result = await prisma.state.findMany();
-    
-    // Se cierra la conexión a Prisma
+    await prisma.$connect();
 
-    // Se devuelve el resultado exitoso
-    return result;
+    const allStatesData = await prisma.state.findMany({
+      include: {
+        companyZone: true, // Include the related companyZone data
+      },
+    });
+
+    return {
+      status: "ok",
+      message: "All states fetched successfully",
+      data: allStatesData,
+    };
+
   } catch (e) {
-    // En caso de error, se cierra la conexión a Prisma
-    
-    // Se devuelve el error
-    throw e;
-  }finally {
-    // Siempre desconectar la base de datos después de la operación
+    console.error(e);
+    return {
+      status: "error",
+      message: "An error occurred while fetching all states",
+      data: null,
+    };
+  } finally {
     await prisma.$disconnect();
   }
 };
+
 
 
 
