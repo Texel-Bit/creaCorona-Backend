@@ -251,29 +251,39 @@ const deleteDesignTypeFormatSizeForEnvironmentType = async (data) => {
   }
 };
 
-const getAllDesignTypeFormatSizeForEnvironmentType = async (EnvironmentType_idEnvironmentType) => {
+const getAllDesignTypeFormatSizeForEnvironmentType = async (EnvironmentType_idEnvironmentType, DesignType_idDesignType) => {
   try {
     await prisma.$connect();
 
-    const data = await prisma.DesignTypeFormatSize_has_EnvironmentType.findMany({
+    // Step 1: Fetch the related records based on EnvironmentType_idEnvironmentType
+    const records = await prisma.DesignTypeFormatSize_has_EnvironmentType.findMany({
       where: {
-        EnvironmentType_idEnvironmentType
+        EnvironmentType_idEnvironmentType,
       },
       include: {
-        DesignTypeFormatSize: {
-          select: {
-            idDesignTypeFormatSize: true,
-            DesignTypeFormatSizeName: true
-          }
-        } // Include the related DesignTypeFormatSize data
+        DesignTypeFormatSize: true
       }
     });
 
+    // Step 2: Fetch the DesignTypeFormatSize records based on DesignType_idDesignType
+    const designTypeFormatSizeRecords = await prisma.DesignTypeFormatSize.findMany({
+      where: {
+        DesignType_idDesignType
+      }
+    });
+
+    // Combine the information.
+    const data = records.map(record => ({
+      ...record,
+      DesignTypeFormatSize: designTypeFormatSizeRecords.find(d => d.idDesignTypeFormatSize === record.DesignTypeFormatSize_idDesignTypeFormatSize)
+    })).filter(record => record.DesignTypeFormatSize); // This filters out any records where the DesignTypeFormatSize was not found
+
     return {
-      status:"ok",
+      status: "ok",
       message: 'Records fetched successfully',
       data,
     };
+
   } catch (e) {
     console.error(e);
     return e;
@@ -281,6 +291,8 @@ const getAllDesignTypeFormatSizeForEnvironmentType = async (EnvironmentType_idEn
     await prisma.$disconnect();
   }
 };
+
+
 
 
 

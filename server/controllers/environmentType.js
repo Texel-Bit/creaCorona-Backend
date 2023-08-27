@@ -201,8 +201,8 @@ exports.deleteDesignTypeFormatSizeForEnvironmentType = async (req, res) => {
 
 exports.getAllDesignTypeFormatSizeForEnvironmentType = async (req, res) => {
   try {
-    const { EnvironmentType_idEnvironmentType } = req.body;
-    const result = await getAllDesignTypeFormatSizeForEnvironmentType(EnvironmentType_idEnvironmentType);
+    const { EnvironmentType_idEnvironmentType,DesignType_idDesignType } = req.body;
+    const result = await getAllDesignTypeFormatSizeForEnvironmentType(EnvironmentType_idEnvironmentType,DesignType_idDesignType);
     return res.status(200).json(result);
   } catch (e) {
     console.error(e);
