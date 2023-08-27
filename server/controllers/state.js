@@ -46,7 +46,7 @@ const {
     // Verificar si el cuerpo de la petición existe
     const { idstate,stateName, idcompanyZone } = req.body;
 
-    if (!idstate||!stateName||!idcompanyZone) {
+    if (!idstate||!idcompanyZone) {
       return res.status(400).json({
         status: false,
         err: {
@@ -64,9 +64,6 @@ const {
       }
   const state = await updateState(data);
 
-
-
-  
         res.json({ status: true, data });
       } catch (error) {
 
