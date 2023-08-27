@@ -12,7 +12,8 @@ const { createEnvironmentType,
     addDesignColorTypeToEnvironmentType,
     createDesignTypeFormatSizeForEnvironmentType,
     deleteDesignTypeFormatSizeForEnvironmentType,
-    getAllDesignTypeFormatSizeForEnvironmentType} = require('../controllers/environmentType');
+    getAllDesignTypeFormatSizeForEnvironmentType,
+    deleteDesignType_EnvironmentType} = require('../controllers/environmentType');
 
 // Importa los middlewares que se utilizan en las rutas
 const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacion');
@@ -27,6 +28,7 @@ app.post('/addDesignColorTypeToEnvironmentType', addDesignColorTypeToEnvironment
 app.post('/createDesignTypeFormatSizeForEnvironmentType', createDesignTypeFormatSizeForEnvironmentType);
 app.post('/deleteDesignTypeFormatSizeForEnvironmentType', deleteDesignTypeFormatSizeForEnvironmentType);
 app.post('/getAllDesignTypeFormatSizeForEnvironmentType', getAllDesignTypeFormatSizeForEnvironmentType);
+app.post('/deleteDesignTypeEnvironmentType', deleteDesignType_EnvironmentType);
 
 
 // Exporta el Router de Express

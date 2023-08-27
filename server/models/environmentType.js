@@ -48,6 +48,32 @@ const createDesignTypeEnvironmentType = async (data) => {
   }
 };
 
+const deleteDesignTypeEnvironmentType = async (data) => {
+  try {
+
+
+      const deleteDesignTypeEnvironmentType = await prisma.designType_EnvironmentType.deleteMany({
+    
+        where: {
+          EnvironmentType_idEnvironmentType: {
+            equals: data.EnvironmentType_idEnvironmentType,
+          },
+          DesignType_idDesignType: {
+            equals: data.DesignType_idDesignType,
+          },
+        }
+      });
+    
+    return deleteDesignTypeEnvironmentType;
+  } catch (e) {
+
+    return e;
+  } finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
+  }
+};
+
 const addDesignColorTypeToEnvironmentType = async (data) => {
 
   try {
@@ -302,6 +328,7 @@ module.exports = {
   getAllEnvironmentType,
   getEnvironmentTypeById,
   createDesignTypeEnvironmentType,
+  deleteDesignTypeEnvironmentType,
   getDesignColorTypesByEnvironmentIdAndDesignType,
   addDesignColorTypeToEnvironmentType,
   createDesignTypeFormatSizeForEnvironmentType,

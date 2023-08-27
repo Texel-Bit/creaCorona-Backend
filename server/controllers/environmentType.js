@@ -8,7 +8,8 @@ const {
   addDesignColorTypeToEnvironmentType,
   createDesignTypeFormatSizeForEnvironmentType, 
   deleteDesignTypeFormatSizeForEnvironmentType, 
-  getAllDesignTypeFormatSizeForEnvironmentType
+  getAllDesignTypeFormatSizeForEnvironmentType,
+  deleteDesignTypeEnvironmentType
 } = require("../models/environmentType");
 
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
@@ -64,6 +65,8 @@ exports.createEnvironmentType = async (req, res) => {
   }
 };
 
+
+
 exports.updateEnvironmentType = async (req, res, next) => {
   try {
     // Desestructurar los campos del cuerpo de la petición
@@ -116,6 +119,25 @@ exports.updateEnvironmentType = async (req, res, next) => {
     res.status(500).json({ status: false, error });
   }
 };
+
+exports.deleteDesignType_EnvironmentType= async (req, res, next) =>{
+  try {
+    const allEnvironmentType = await deleteDesignTypeEnvironmentType(req.body);
+
+    // Enviar la respuesta con los usuarios
+    res.json({
+      status: true,
+      data: allEnvironmentType,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      status: false,
+
+      message: "No se pudo obtener las EnvironmentType",
+    });
+  }
+}
 
 exports.getAllEnvironmentType = async (req, res) => {
   try {
