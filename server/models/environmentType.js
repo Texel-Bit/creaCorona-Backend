@@ -49,28 +49,24 @@ const createDesignTypeEnvironmentType = async (data) => {
 };
 
 const addDesignColorTypeToEnvironmentType = async (data) => {
-  let addedRecords = [];
+
   try {
     await prisma.$connect();
     
     const { EnvironmentType_idEnvironmentType, Designs } = data;
 
-    
+    await prisma.DesignColorType_has_DesignType.deleteMany({
+      where: {
+        EnvironmentType_idEnvironmentType,
+      },
+    });
+
     for (const design of Designs) {
       const { DesignType_idDesignType, DesignColorType_idDesignColorType } = design;
 
       let existingRecord = null;
     
       for (const colorType of DesignColorType_idDesignColorType) {
-        existingRecord = await prisma.DesignColorType_has_DesignType.findFirst({
-          where: {
-            EnvironmentType_idEnvironmentType,
-            DesignType_idDesignType,
-            DesignColorType_idDesignColorType: colorType,
-          },
-        });
-
-        if (existingRecord) continue; // If a record exists, break the loop
       
         const newRecord = await prisma.DesignColorType_has_DesignType.create({
           data: {
@@ -205,6 +201,89 @@ const getEnvironmentTypeById = async (data) => {
   }
 };
 
+
+const createDesignTypeFormatSizeForEnvironmentType = async (data) => {
+  try {
+    await prisma.$connect();
+    const { EnvironmentType_idEnvironmentType, DesignTypeFormatSize_idDesignTypeFormatSize } = data;
+    console.log(data)
+    const newRecord = await prisma.DesignTypeFormatSize_has_EnvironmentType.create({
+      data: {
+        EnvironmentType_idEnvironmentType,
+        DesignTypeFormatSize_idDesignTypeFormatSize,
+      },
+    });
+
+    return {
+      message: 'Record created successfully',
+      newRecord,
+    };
+  } catch (e) {
+    console.error(e);
+    return e;
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
+const deleteDesignTypeFormatSizeForEnvironmentType = async (data) => {
+  try {
+    const { EnvironmentType_idEnvironmentType, DesignTypeFormatSize_idDesignTypeFormatSize } = data;
+
+    await prisma.$connect();
+
+    await prisma.DesignTypeFormatSize_has_EnvironmentType.deleteMany({
+      where: {
+        EnvironmentType_idEnvironmentType,
+        DesignTypeFormatSize_idDesignTypeFormatSize
+
+      },
+    });
+
+    return {
+      message: 'Records deleted successfully',
+    };
+  } catch (e) {
+    console.error(e);
+    return e;
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
+const getAllDesignTypeFormatSizeForEnvironmentType = async (EnvironmentType_idEnvironmentType) => {
+  try {
+    await prisma.$connect();
+
+    const data = await prisma.DesignTypeFormatSize_has_EnvironmentType.findMany({
+      where: {
+        EnvironmentType_idEnvironmentType
+      },
+      include: {
+        DesignTypeFormatSize: {
+          select: {
+            idDesignTypeFormatSize: true,
+            DesignTypeFormatSizeName: true
+          }
+        } // Include the related DesignTypeFormatSize data
+      }
+    });
+
+    return {
+      status:"ok",
+      message: 'Records fetched successfully',
+      data,
+    };
+  } catch (e) {
+    console.error(e);
+    return e;
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
+
+
 module.exports = {
   createEnvironmentType,
   updateEnvironmentType,
@@ -212,5 +291,8 @@ module.exports = {
   getEnvironmentTypeById,
   createDesignTypeEnvironmentType,
   getDesignColorTypesByEnvironmentIdAndDesignType,
-  addDesignColorTypeToEnvironmentType
+  addDesignColorTypeToEnvironmentType,
+  createDesignTypeFormatSizeForEnvironmentType,
+  deleteDesignTypeFormatSizeForEnvironmentType,
+  getAllDesignTypeFormatSizeForEnvironmentType
 };

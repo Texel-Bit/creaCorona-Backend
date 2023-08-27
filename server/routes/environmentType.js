@@ -5,7 +5,14 @@ const express = require('express');
 const app = express.Router();
 
 // Importa los controladores que manejan las peticiones a las rutas
-const { createEnvironmentType,updateEnvironmentType,getAllEnvironmentType,getDesignColorTypesByEnvironmentIdAndDesignType,addDesignColorTypeToEnvironmentType} = require('../controllers/environmentType');
+const { createEnvironmentType,
+    updateEnvironmentType,
+    getAllEnvironmentType,
+    getDesignColorTypesByEnvironmentIdAndDesignType,
+    addDesignColorTypeToEnvironmentType,
+    createDesignTypeFormatSizeForEnvironmentType,
+    deleteDesignTypeFormatSizeForEnvironmentType,
+    getAllDesignTypeFormatSizeForEnvironmentType} = require('../controllers/environmentType');
 
 // Importa los middlewares que se utilizan en las rutas
 const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacion');
@@ -17,6 +24,9 @@ app.post('/updateEnvironmentType', [verificaToken, verificaAdminRol], updateEnvi
 app.get('/getAllEnvironmentType', [verificaToken, verificaAdminRol], getAllEnvironmentType);
 app.post('/getDesignColorTypesByEnvironmentIdAndDesignType',[verificaToken, verificaAdminRol], getDesignColorTypesByEnvironmentIdAndDesignType);
 app.post('/addDesignColorTypeToEnvironmentType', addDesignColorTypeToEnvironmentType);
+app.post('/createDesignTypeFormatSizeForEnvironmentType', createDesignTypeFormatSizeForEnvironmentType);
+app.post('/deleteDesignTypeFormatSizeForEnvironmentType', deleteDesignTypeFormatSizeForEnvironmentType);
+app.post('/getAllDesignTypeFormatSizeForEnvironmentType', getAllDesignTypeFormatSizeForEnvironmentType);
 
 
 // Exporta el Router de Express

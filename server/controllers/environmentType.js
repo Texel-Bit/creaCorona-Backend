@@ -6,6 +6,9 @@ const {
   createDesignTypeEnvironmentType,
   getDesignColorTypesByEnvironmentIdAndDesignType,
   addDesignColorTypeToEnvironmentType,
+  createDesignTypeFormatSizeForEnvironmentType, 
+  deleteDesignTypeFormatSizeForEnvironmentType, 
+  getAllDesignTypeFormatSizeForEnvironmentType
 } = require("../models/environmentType");
 
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
@@ -172,5 +175,39 @@ exports.addDesignColorTypeToEnvironmentType = async (req, res) => {
     });
   }
 };
-//sin uso
+
+
+exports.createDesignTypeFormatSizeForEnvironmentType = async (req, res) => {
+  try {
+
+    const result = await createDesignTypeFormatSizeForEnvironmentType(req.body);
+    
+    return res.status(201).json(result);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ message: "An error occurred", error: e });
+  }
+};
+
+exports.deleteDesignTypeFormatSizeForEnvironmentType = async (req, res) => {
+  try {
+    const result = await deleteDesignTypeFormatSizeForEnvironmentType(req.body);
+    return res.status(200).json(result);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ message: "An error occurred", error: e });
+  }
+};
+
+exports.getAllDesignTypeFormatSizeForEnvironmentType = async (req, res) => {
+  try {
+    const { EnvironmentType_idEnvironmentType } = req.body;
+    const result = await getAllDesignTypeFormatSizeForEnvironmentType(EnvironmentType_idEnvironmentType);
+    return res.status(200).json(result);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ message: "An error occurred", error: e });
+  }
+};
+
 
