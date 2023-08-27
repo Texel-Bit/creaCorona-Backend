@@ -231,19 +231,31 @@ const getEnvironmentTypeById = async (data) => {
 const createDesignTypeFormatSizeForEnvironmentType = async (data) => {
   try {
     await prisma.$connect();
-    const { EnvironmentType_idEnvironmentType, DesignTypeFormatSize_idDesignTypeFormatSize } = data;
-    console.log(data)
-    const newRecord = await prisma.DesignTypeFormatSize_has_EnvironmentType.create({
-      data: {
+
+    const { EnvironmentType_idEnvironmentType, DesignTypeFormatSize_idDesignTypeFormatSizeList } = data;
+
+    // Delete existing records
+    await prisma.DesignTypeFormatSize_has_EnvironmentType.deleteMany({
+      where: {
         EnvironmentType_idEnvironmentType,
-        DesignTypeFormatSize_idDesignTypeFormatSize,
       },
     });
 
+    // Create new records
+    const createManyData = DesignTypeFormatSize_idDesignTypeFormatSizeList.map(id => ({
+      EnvironmentType_idEnvironmentType,
+      DesignTypeFormatSize_idDesignTypeFormatSize: id,
+    }));
+
+    const newRecords = await prisma.DesignTypeFormatSize_has_EnvironmentType.createMany({
+      data: createManyData,
+    });
+
     return {
-      message: 'Record created successfully',
-      newRecord,
+      message: 'Records updated successfully',
+      newRecords,
     };
+
   } catch (e) {
     console.error(e);
     return e;
@@ -251,6 +263,7 @@ const createDesignTypeFormatSizeForEnvironmentType = async (data) => {
     await prisma.$disconnect();
   }
 };
+
 
 const deleteDesignTypeFormatSizeForEnvironmentType = async (data) => {
   try {
