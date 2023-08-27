@@ -21,24 +21,36 @@ const createEnvironmentType = async (data) => {
 const createDesignTypeEnvironmentType = async (data) => {
   try {
 
-    if (data.idEnvironmentType) {
-      const deleteDesignTypeEnvironmentType = await prisma.designType_EnvironmentType.deleteMany({
+    console.log(data);
+
+    if (data.EnvironmentType_idEnvironmentType) {
+      const DesignTypeEnvironmentType = await prisma.designType_EnvironmentType.findFirst({
     
         where: {
           EnvironmentType_idEnvironmentType: {
-            equals: data.DesignType_EnvironmentType,
+            equals: data.EnvironmentType_idEnvironmentType,
+          },
+          DesignType_idDesignType: {
+            equals: data.DesignType_idDesignType,
           },
         }
       });
+
+      if(!DesignTypeEnvironmentType)
+      {
+        const result = await prisma.designType_EnvironmentType.createMany({
+          data,
+        });
+        return result;
+      }
+      
+        return DesignTypeEnvironmentType;
+      
     }
  
-    const result = await prisma.designType_EnvironmentType.createMany({
-      data,
-    });
+   
 
-
-
-    return result;
+   
   } catch (e) {
 
     return e;

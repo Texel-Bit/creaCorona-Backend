@@ -65,7 +65,22 @@ exports.createEnvironmentType = async (req, res) => {
   }
 };
 
+exports.createDesignTypeEnvironmentType= async (req, res, next) => {
+  console.log(req.body);
+  try {
 
+
+    // Desestructurar los campos del cuerpo de la petición
+
+    const result = await createDesignTypeEnvironmentType(req.body);
+
+
+    res.json({ status: true, data: {result} });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ status: false, error });
+  }
+};
 
 exports.updateEnvironmentType = async (req, res, next) => {
   try {

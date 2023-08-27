@@ -6,6 +6,7 @@ const app = express.Router();
 
 // Importa los controladores que manejan las peticiones a las rutas
 const { createEnvironmentType,
+    createDesignTypeEnvironmentType,
     updateEnvironmentType,
     getAllEnvironmentType,
     getDesignColorTypesByEnvironmentIdAndDesignType,
@@ -29,6 +30,7 @@ app.post('/createDesignTypeFormatSizeForEnvironmentType', createDesignTypeFormat
 app.post('/deleteDesignTypeFormatSizeForEnvironmentType', deleteDesignTypeFormatSizeForEnvironmentType);
 app.post('/getAllDesignTypeFormatSizeForEnvironmentType', getAllDesignTypeFormatSizeForEnvironmentType);
 app.post('/deleteDesignTypeEnvironmentType', deleteDesignType_EnvironmentType);
+app.post('/createDesignTypeEnvironmentType', createDesignTypeEnvironmentType);
 
 
 // Exporta el Router de Express
