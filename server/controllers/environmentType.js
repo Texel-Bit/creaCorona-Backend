@@ -5,6 +5,7 @@ const {
   getEnvironmentTypeById,
   createDesignTypeEnvironmentType,
   getDesignColorTypesByEnvironmentIdAndDesignType,
+  addDesignColorTypeToEnvironmentType,
 } = require("../models/environmentType");
 
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
@@ -150,4 +151,26 @@ exports.getDesignColorTypesByEnvironmentIdAndDesignType = async (req, res) => {
     });
   }
 };
+
+exports.addDesignColorTypeToEnvironmentType = async (req, res) => {
+  try {
+    
+
+    const DesignColorTypeEnvironmentType = await addDesignColorTypeToEnvironmentType(req.body);
+
+
+    res.json({
+      status: true,
+      data: DesignColorTypeEnvironmentType.allRecords,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      status: false,
+      data:error,
+      message: "No se pudo agregar el tipo de diseno",
+    });
+  }
+};
 //sin uso
+

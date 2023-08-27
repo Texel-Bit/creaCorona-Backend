@@ -48,6 +48,61 @@ const createDesignTypeEnvironmentType = async (data) => {
   }
 };
 
+const addDesignColorTypeToEnvironmentType = async (data) => {
+  let addedRecords = [];
+  try {
+    await prisma.$connect();
+    
+    const { EnvironmentType_idEnvironmentType, Designs } = data;
+
+    
+    for (const design of Designs) {
+      const { DesignType_idDesignType, DesignColorType_idDesignColorType } = design;
+
+      let existingRecord = null;
+    
+      for (const colorType of DesignColorType_idDesignColorType) {
+        existingRecord = await prisma.DesignColorType_has_DesignType.findFirst({
+          where: {
+            EnvironmentType_idEnvironmentType,
+            DesignType_idDesignType,
+            DesignColorType_idDesignColorType: colorType,
+          },
+        });
+
+        if (existingRecord) continue; // If a record exists, break the loop
+      
+        const newRecord = await prisma.DesignColorType_has_DesignType.create({
+          data: {
+            EnvironmentType_idEnvironmentType,
+            DesignType_idDesignType,
+            DesignColorType_idDesignColorType: colorType,
+          },
+        });
+
+        
+      }
+
+    }
+
+    const allRecords = await prisma.DesignColorType_has_DesignType.findMany({
+      where: {
+        EnvironmentType_idEnvironmentType,
+      },
+    });
+
+    return {    
+      allRecords,
+    };
+
+  } catch (e) {
+    console.error(e);
+    return e;
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
 const updateEnvironmentType = async (data) => {
   const { idEnvironmentType, ...updateData } = data;
 
@@ -156,5 +211,6 @@ module.exports = {
   getAllEnvironmentType,
   getEnvironmentTypeById,
   createDesignTypeEnvironmentType,
-  getDesignColorTypesByEnvironmentIdAndDesignType
+  getDesignColorTypesByEnvironmentIdAndDesignType,
+  addDesignColorTypeToEnvironmentType
 };
