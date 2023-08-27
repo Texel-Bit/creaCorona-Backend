@@ -54,11 +54,7 @@ const getAllState = async () => {
       },
     });
 
-    return {
-      status: "ok",
-      message: "All states fetched successfully",
-      data: allStatesData,
-    };
+    return allStatesData
 
   } catch (e) {
     console.error(e);
