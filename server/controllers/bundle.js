@@ -18,7 +18,8 @@ exports.createBundle = async (req, res) => {
 
   const schema = Joi.object({
     idFormatSizeTexture: Joi.number().required(),
-    bundleBasePrice: Joi.number().required()
+    bundleBasePrice: Joi.number().required(),
+    idbundle: Joi.number().optional()
   });
 
   const { error } = schema.validate(req.body);
