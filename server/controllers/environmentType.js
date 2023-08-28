@@ -166,7 +166,7 @@ exports.getAllEnvironmentType = async (req, res) => {
 
 exports.getDesignColorTypesByEnvironmentIdAndDesignType = async (req, res) => {
   try {
-    const allEnvironmentType = await getDesignColorTypesByEnvironmentIdAndDesignType(req.body.environmentTypeId,req.body.designType_idDesignType);
+    const allEnvironmentType = await getDesignColorTypesByEnvironmentIdAndDesignType(req.body.EnvironmentType_idEnvironmentType,req.body.DesignType_idDesignType);
 
     // Enviar la respuesta con los usuarios
     res.json({
@@ -186,7 +186,7 @@ exports.getDesignColorTypesByEnvironmentIdAndDesignType = async (req, res) => {
 exports.addDesignColorTypeToEnvironmentType = async (req, res) => {
   try {
     
-
+    console.log("Adding devices ",req.body)
     const DesignColorTypeEnvironmentType = await addDesignColorTypeToEnvironmentType(req.body);
 
 

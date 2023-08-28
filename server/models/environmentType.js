@@ -91,19 +91,21 @@ const addDesignColorTypeToEnvironmentType = async (data) => {
   try {
     await prisma.$connect();
     
-    const { EnvironmentType_idEnvironmentType, Designs } = data;
+    const { EnvironmentType_idEnvironmentType, Designs    } = data;
 
-    await prisma.DesignColorType_has_DesignType.deleteMany({
-      where: {
-        EnvironmentType_idEnvironmentType,
-      },
-    });
+    console.log(Designs)
+
+   
 
     for (const design of Designs) {
       const { DesignType_idDesignType, DesignColorType_idDesignColorType } = design;
+      await prisma.DesignColorType_has_DesignType.deleteMany({
+        where: {
+          EnvironmentType_idEnvironmentType,
+          DesignType_idDesignType
+        },
+      });
 
-      let existingRecord = null;
-    
       for (const colorType of DesignColorType_idDesignColorType) {
       
         const newRecord = await prisma.DesignColorType_has_DesignType.create({
@@ -129,6 +131,9 @@ const addDesignColorTypeToEnvironmentType = async (data) => {
       allRecords,
     };
 
+return {    
+  "Status":"ss",
+};
   } catch (e) {
     console.error(e);
     return e;
@@ -205,6 +210,7 @@ const getDesignColorTypesByEnvironmentIdAndDesignType = async (environmentTypeId
       },
     },
   });
+
 
   return designColorTypes.map((item) => item.DesignColorType);
     // Se cierra la conexión a Prisma
