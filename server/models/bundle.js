@@ -4,6 +4,7 @@ const prisma = new PrismaClient();
 
 const createBundle = async (data) => {
 
+  console.log(data,"Datisss ")
     try {
       const result =  await prisma.bundle.create({
         data
@@ -12,6 +13,7 @@ const createBundle = async (data) => {
 
   return result
     } catch (e) {
+      console.log(e)
       return e
     }finally {
       // Siempre desconectar la base de datos después de la operación

@@ -15,13 +15,16 @@ const getAllBundleBreaker = CircuitBreakerHandler.createBreaker(getAllBundle);
 const getBundleDesignTypeFormatSizeTextureBreaker = CircuitBreakerHandler.createBreaker(getBundleDesignTypeFormatSizeTexture);
 
 exports.createBundle = async (req, res) => {
+
   const schema = Joi.object({
     idFormatSizeTexture: Joi.number().required(),
     bundleBasePrice: Joi.number().required()
   });
 
   const { error } = schema.validate(req.body);
+
   if (error) {
+    console.log(error)
     return res.status(400).json({ status: false, err: { message: error.details[0].message } });
   }
 
@@ -29,9 +32,7 @@ exports.createBundle = async (req, res) => {
     const { idFormatSizeTexture, bundleBasePrice } = req.body;
     const data = {
       bundleBasePrice: +bundleBasePrice,
-      FormatSizeTexture: {
-        connect: { idFormatSizeTexture: +idFormatSizeTexture },
-      },
+      FormatSizeTexture_idFormatSizeTexture:+idFormatSizeTexture
     };
     const valideData = {
       idFormatSizeTexture: +idFormatSizeTexture,
@@ -39,7 +40,7 @@ exports.createBundle = async (req, res) => {
 
     const valideBundle = await getBundleDesignTypeFormatSizeTextureBreaker.fire(valideData);
 
-    if (valideBundle[0]) {
+    if (valideBundle) {
       res.json({
         status: true,
         data: valideBundle,
@@ -47,12 +48,14 @@ exports.createBundle = async (req, res) => {
       });
     } else {
       const createdBundle = await createBundleBreaker.fire(data);
+      
       res.json({
         status: true,
         data: createdBundle,
       });
     }
   } catch (error) {
+    console.log(error)
     CircuitBreakerHandler.logToFile("No pudo ser creado el bundle", req);
     return res.status(400).json({
       ok: false,
