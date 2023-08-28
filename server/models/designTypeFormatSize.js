@@ -4,11 +4,13 @@ const prisma = new PrismaClient();
 
 const createDesignTypeFormatSize = async (data) => {
 
+  
     try {
       const result =  await prisma.designTypeFormatSize.create({
         data
       })
 
+     
   return result
     } catch (e) {
 

@@ -138,7 +138,7 @@ model DesignTypeFormatSize {
   DesignType_idDesignType                  Int
   DesignTypeFormatSizeHeight               String?                                    @db.VarChar(255)
   DesignTypeFormatSizeWidht                String?                                    @db.VarChar(255)
-  DesignTypeFormatSizeMosaicScale          Float?
+  DesignTypeFormatSizeMosaicScale          String?                                    @db.VarChar(50)
   DesignTypeFormatSizeDefaultImagePath     String?                                    @db.VarChar(255)
   DesignType                               DesignType                                 @relation(fields: [DesignType_idDesignType], references: [idDesignType], onDelete: NoAction, onUpdate: NoAction, map: "fk_DesignTypeFormatSize_DesignType1")
   DesignTypeFormatSize_has_EnvironmentType DesignTypeFormatSize_has_EnvironmentType[]

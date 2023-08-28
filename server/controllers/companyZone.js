@@ -1,7 +1,7 @@
 const {
     createCompanyZone,
     updateCompanyZone,
-    getAllCompanyZone,
+    getAllCompanyZone
   } = require("../models/companyZone.js");
   
   const path = require('path');
@@ -40,6 +40,8 @@ const {
     }
   };
   
+
+
   exports.updateCompanyZone = async (req, res, next) => {
     try {
     // Desestructurar los campos del cuerpo de la petición
@@ -81,5 +83,8 @@ const {
       });
     }
   };
+
+
+ 
   //sin uso
   

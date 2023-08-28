@@ -11,6 +11,7 @@ const fs = require('fs');
 const { chromium } = require('playwright');
 
 exports.createFormatSizeTexture = async (req, res) => {
+  console.log(req.body)
   try {
     const { FormatSizeTextureName, idDesignTypeFormatSize } = req.body;
     if (!FormatSizeTextureName || !idDesignTypeFormatSize) {

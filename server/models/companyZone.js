@@ -62,7 +62,9 @@ const getAllCompanyZone = async () => {
     await prisma.$disconnect();
   }
 };
-;
+
+
+
 
 module.exports = { createCompanyZone,updateCompanyZone,getAllCompanyZone };
 

@@ -23,7 +23,6 @@ exports.createDesignTypeFormatSize = async(req, res) => {
       });
     }
     
- 
   const  data= {
     DesignTypeFormatSizeName,
     DesignTypeFormatSizeHeight:DesignTypeFormatSizeHeight,
