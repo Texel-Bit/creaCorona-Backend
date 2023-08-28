@@ -9,17 +9,8 @@ const fs = require("fs");
 const path = require("path");
 
 exports.createBundleCompanyPrice = async (req, res) => {
-  const schema = Joi.object({
-    idbundle: Joi.number().required(),
-    idcompanyZone: Joi.number().required(),
-    idcompanyType: Joi.number().required(),
-    price: Joi.number().required()
-  });
+ 
 
-  const { error } = schema.validate(req.body);
-  if (error) {
-    return res.status(400).json({ status: false, err: { message: error.details[0].message } });
-  }
 
   try {
     const { idbundle, idcompanyZone, idcompanyType, price } = req.body;
