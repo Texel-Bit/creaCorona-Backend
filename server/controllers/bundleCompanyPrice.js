@@ -22,6 +22,8 @@ exports.createBundleCompanyPrice = async (req, res) => {
       price: +price
     };
 
+    console.log("Firs data ",data)
+
     const createdBundleCompanyPrice = await createBundleCompanyPrice(data);
     res.json({
       status: true,
