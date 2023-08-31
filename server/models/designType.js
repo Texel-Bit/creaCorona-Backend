@@ -49,7 +49,11 @@ const createDesignType = async (data) => {
 const getAllDesignType = async () => {
   try {
     // Se llama a Prisma para buscar todos las compañias
-    const result = await prisma.designType.findMany();
+    const result = await prisma.designType.findMany({
+      include: {
+        MosaicType: true, // include MosaicType
+      },
+    });
     
     // Se cierra la conexión a Prisma
 

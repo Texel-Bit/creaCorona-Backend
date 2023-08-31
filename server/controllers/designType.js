@@ -13,9 +13,9 @@ const {
 exports.createDesignType = async(req, res) => {
 
     try {
-    const { DesignTypeName,idMosaicType,DesignColorType} = req.body
-
-    if (!DesignTypeName||!idMosaicType||!DesignColorType) {
+    const { DesignTypeName,idMosaicType} = req.body
+    
+    if (!DesignTypeName||!idMosaicType) {
       return res.status(400).json({
         status: false,
         err: {
@@ -42,24 +42,9 @@ exports.createDesignType = async(req, res) => {
    
       const createdDesignType = await createDesignType(data);
 
-
-    //   const arr = req.body.DesignColorType
-    //   .split(",")
-    //   .map((idEnvironmentType) => ({
-    //     EnvironmentType_idEnvironmentType:
-    //     createdDesignType.idEnvironmentType,
-    //     DesignColorType_IdDesignColorType: +idEnvironmentType,
-    //   }));
-    // const DesignColorTypehasDesignType = await createDesignColorTypehasDesignType(
-    //   arr
-    // );
-
-
-
       res.json({
         status: true,
         data: createdDesignType,
-        // DesignColorTypehasDesignType
       });
     } catch (error) {
   
