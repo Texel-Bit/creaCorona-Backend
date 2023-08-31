@@ -75,6 +75,9 @@ const getAllQuotation = async () => {
   try {
     // Se llama a Prisma para buscar todos las compañias
     const result = await prisma.quotation.findMany({
+      orderBy: {
+        idquotation: 'desc',  // Replace 'someField' with the actual field you want to sort by
+      },
       include: {
         DesignColors_has_quotation: true,
         quotationProductDetails: {
