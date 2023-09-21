@@ -48,7 +48,12 @@ const createEnvironment = async (data) => {
 const getAllEnvironment = async () => {
   try {
     // Se llama a Prisma para buscar todos 
-    const result = await prisma.environment.findMany();
+    const result = await prisma.environment.findMany({
+      orderBy: {
+        MenuOrder: 'asc'
+      }
+    });
+    
     
     // Se cierra la conexión a Prisma
 

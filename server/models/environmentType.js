@@ -176,7 +176,7 @@ const getAllEnvironmentType = async () => {
         }
       },
       orderBy: {
-        idEnvironmentType: 'desc'  // Add this line for ordering by idEnvironmentType in descending order
+        MenuOrder:'asc'  // Add this line for ordering by idEnvironmentType in descending order
       }
     });
 

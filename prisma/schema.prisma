@@ -165,6 +165,7 @@ model Environment {
   EnvironmentProfileImage           String?         @db.VarChar(255)
   EnvironmentMaksImage              String?         @db.VarChar(255)
   EnvironmentAngle                  String?         @db.VarChar(255)
+  MenuOrder                         Int?
   EnvironmentType                   EnvironmentType @relation(fields: [EnvironmentType_idEnvironmentType], references: [idEnvironmentType], onDelete: NoAction, onUpdate: NoAction, map: "fk_Environment_EnvironmentType1")
 
   @@index([EnvironmentType_idEnvironmentType], map: "fk_Environment_EnvironmentType1_idx")
@@ -176,6 +177,7 @@ model EnvironmentType {
   EnvironmentTypeImage                     String?                                    @db.VarChar(255)
   WorkWithStructure                        Int?                                       @default(1) @db.TinyInt
   EnvironmentTypeIcon                      String?                                    @db.VarChar(16)
+  MenuOrder                                Int?
   DesignColorBundle                        DesignColorBundle[]
   DesignColorType_has_DesignType           DesignColorType_has_DesignType[]
   DesignTypeFormatSize_has_EnvironmentType DesignTypeFormatSize_has_EnvironmentType[]

@@ -52,6 +52,9 @@ const getAllState = async () => {
       include: {
         companyZone: true, // Include the related companyZone data
       },
+      orderBy: {
+        stateName: 'asc',
+      },
     });
 
     return allStatesData

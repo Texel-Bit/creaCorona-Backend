@@ -7,7 +7,8 @@ const {
 const { subirArchivoImagen } = require("../helpers/subirarchivos");
 const path = require('path');
 const fs = require('fs');
-
+const sharp = require('sharp');
+const lzString = require('lz-string');
 const { chromium } = require('playwright');
 
 exports.createFormatSizeTexture = async (req, res) => {
@@ -125,64 +126,67 @@ exports.getAllFormatSizeTexture = async (req, res) => {
   }
 };
 
+let browser;
+
+async function getBrowserInstance() {
+  if (!browser) {
+    browser = await chromium.launch();
+  }
+  return browser;
+}
+
 
 exports.castHtmlToPng = async (req, res) => {
+  console.log("Html to png");
+  try {
+    // Decompress SVG content from the request
+    const decompressedSvg = lzString.decompressFromBase64(req.body.svgsContent);
+    const BrowserWidth = req.body.width;
+    const BrowserHeight = req.body.height;
 
-  console.log(req.body)
-
-  try{
-    const htmlContent = Buffer.from(req.body.svgsContent, 'base64').toString('utf8');
-    const BrowserWidth=req.body.width;
-    const BrowserHeight=req.body.height;
-  
-    const browser = await chromium.launch();
+    const browser = await getBrowserInstance();
     const context = await browser.newContext({
       viewport: {
         width: BrowserWidth,
         height: BrowserHeight,
       },
-      
     });
+
     const page = await context.newPage();
-    
+
+    // Use decompressed SVG content here
     const html = `<html>
-                <head>
-                  <style>
-                    html, body {
-                      margin: 0;
-                      padding: 0;
-                    }
-                  </style>
-                </head>
-                <body>
-                ${htmlContent}
-                </body>
+                  <head>
+                    <style>
+                      html, body {
+                        margin: 0;
+                        padding: 0;
+                      }
+                    </style>
+                  </head>
+                  <body>
+                    ${decompressedSvg}
+                  </body>
                 </html>`;
-    
-                  console.log(html);
+
     await page.setContent(html);
-    
-    // Since you want to screenshot the full page, you might not need to set the viewport size
-    // but it's here in case you want to control the dimensions of the page.
     await page.setViewportSize({ width: BrowserWidth, height: BrowserHeight });
-    
-    // take a screenshot of the full page
-    const screenshotBuffer = await page.screenshot({ path: 'screenshot.png', type: 'png', fullPage: true });
-    
-    await browser.close();
-    
-    const screenshotUrl = `data:image/png;base64,${screenshotBuffer.toString('base64')}`;
-    res.status(200).json({ status: true,data: screenshotUrl });
-    
-  }
-  catch(error)
-  {
+  
+    const screenshotBuffer = await page.screenshot({ type: 'png', fullPage: true });
+
+    const compressedBuffer = await sharp(screenshotBuffer)
+      .resize({ width: BrowserWidth, height: BrowserHeight }) // optional resizing
+      .png({ quality: 80 }) // adjust quality
+      .toBuffer();
+
+    await page.close(); // Close the page, not the browser, to reuse the browser instance
+
+    const screenshotUrl = `data:image/png;base64,${compressedBuffer.toString('base64')}`;
+
+    res.status(200).json({ status: true, data: screenshotUrl });
+  } catch (error) {
+    console.error('Error while converting HTML to PNG:', error);
     res.status(400).json({ status: false, error });
-    console.log(error," ERRRRRRRRRRORRRRRRRR ")
   }
-  
-  
-
-
 };
 //sin uso
