@@ -15,8 +15,8 @@ const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacio
 app.post('/createDesignColorBundle', [verificaToken, verificaAdminRol], createDesignColorBundle);
 app.post('/updateDesignColorBundle', [verificaToken, verificaAdminRol], updateDesignColorBundle);
 app.delete('/deleteDesignColorBundle', [verificaToken, verificaAdminRol], deleteDesignColorBundle);
-app.get('/getAllDesignColorBundle', [verificaToken, verificaAdminRol], getAllDesignColorBundle);
-app.post('/getAllDesignColorBundleByFilters', [verificaToken, verificaAdminRol],getAllDesignColorBundleByFilters);
+app.get('/getAllDesignColorBundle', getAllDesignColorBundle);
+app.post('/getAllDesignColorBundleByFilters',getAllDesignColorBundleByFilters);
 
 module.exports = app;
 

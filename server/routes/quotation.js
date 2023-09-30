@@ -12,8 +12,8 @@ const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacio
 const {  validarArchivoImagen } = require('../middlewares/validar-archivo');
 
 // Define las rutas con los controladores correspondientes y los middlewares necesarios
-app.post('/createquotation', [verificaToken, verificaAdminRol], createquotation);
-app.post('/simulateQuotation', [verificaToken, verificaAdminRol], simulateQuotation);
+app.post('/createquotation', createquotation);
+app.post('/simulateQuotation', simulateQuotation);
 
 app.get('/getAllQuotation', [verificaToken, verificaAdminRol], getAllQuotation);
 

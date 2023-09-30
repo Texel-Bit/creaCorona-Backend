@@ -14,7 +14,7 @@ const { validarArchivoImagen } = require('../middlewares/validar-archivo');
 // Define las rutas con los controladores correspondientes y los middlewares necesarios
 app.post('/createEnvironment', [verificaToken, verificaAdminRol,validarArchivoImagen], createEnvironment);
 app.post('/updateEnvironment', [verificaToken, verificaAdminRol], updateEnvironment);
-app.get('/getAllEnvironment', [verificaToken, verificaAdminRol], getAllEnvironment);
+app.get('/getAllEnvironment', getAllEnvironment);
 
 
  

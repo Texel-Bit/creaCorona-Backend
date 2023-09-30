@@ -109,6 +109,50 @@ return result  } catch (e) {
 };
 
 
+const getCounselors = async (userId) => {
+  try {
+    // Step 1: Find the user by ID to get the office_idoffice.
+    const user = await prisma.sysUser.findUnique({
+        where: {
+          idsysuser: userId, // Replace with the user ID you have.
+        },
+    });
+
+    if(!user) throw new Error("User not found");
+
+    // Get the office_idoffice of the user.
+    const officeId = user.office_idoffice;
+
+    // Find all users with the same office_idoffice.
+    const usersWithSameOffice = await prisma.sysUser.findMany({
+      where: {
+          office_idoffice: officeId,
+      },
+      select: {
+          idsysuser: true, // Select only idsysuser, userName, and lastName
+          userName: true,
+          lastName: true,
+      },
+  });
+
+  // Now usersWithSameOffice contains all users with the selected fields from the same office_idoffice as the user with the provided ID.
+  // Concatenate userName and lastName for each user.
+  const modifiedUsers = usersWithSameOffice.map(user => ({
+      idsysuser: user.idsysuser,
+      name: `${user.userName} ${user.lastName}`, // Concatenate userName and lastName
+  }));
+
+    return modifiedUsers;
+
+} catch (error) {
+    throw error;
+}
+  finally {
+    // Siempre desconectar la base de datos después de la operación
+    await prisma.$disconnect();
+  }
+};
+
 // Función asincrónica que obtiene todos los usuarios de la base de datos
 const getAllUsers = async () => {
   try {
@@ -197,4 +241,4 @@ return result
   }
 };
 
-module.exports = { createUser, findOneLoginByEmail,recoverPassword,changePassword,getAllUsers,updateUser,updateUserStatus,createUserMasive };
+module.exports = { createUser, findOneLoginByEmail,recoverPassword,changePassword,getAllUsers,updateUser,updateUserStatus,createUserMasive,getCounselors };

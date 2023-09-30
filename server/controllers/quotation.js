@@ -38,18 +38,42 @@ const pngImageBytes = fs.readFileSync(path.join(__dirname, '../pdf/unnamed.png')
 
 exports.createquotation = async (req, res) => {
 
- 
+
 
   try {
     const token = req.get("JWT");
 
-    let {
-      user: { idsysuser,userName,lastName, office_idoffice, office },
-    } = await promisify(jwt.verify)(token, process.env.SEED);
+    let idsysuser;
+    let office_idoffice;
+    let office={Company_idCompany : 1};
+    let userName;
+    let lastName;
+    
+    // If JWT is provided, verify it and extract user info from it
+    if(req.headers.jwt!==null && req.headers.jwt!=='null') {
+      const token = req.get("JWT");
+      try {
+        let { user: { idsysuser: id, office_idoffice: officeId, office,userName,lastName  } } = await promisify(jwt.verify)(token, process.env.SEED);
+        idsysuser = id; // Assign extracted values to outer scope variables
+        office_idoffice = officeId;
+      } catch (error) {
+        // Handle error for invalid token
+        console.error("Invalid Token: ", error);
+        return res.status(401).json({
+          status: false,
+          err: {
+            message: "Invalid Token",
+          },
+        });
+      }
+    }
+
 
     if (!idsysuser) {
       idsysuser = 1;
+      office_idoffice = 1;
     }
+
     let {
       customerName,
       customerLastname,
@@ -620,13 +644,34 @@ const quotationItemDescription=BundleFullData[0].DesignTypeName+"( "+BundleFullD
 
 exports.simulateQuotation = async (req, res) => {
   try {
-    const token = req.get("JWT");
-    let {
-      user: { idsysuser, office_idoffice, office },
-    } = await promisify(jwt.verify)(token, process.env.SEED);
 
+    let idsysuser;
+    let office_idoffice;
+    let office={Company_idCompany : 1};
+
+    // If JWT is provided, verify it and extract user info from it
+    if(req.headers.jwt!==null && req.headers.jwt!=='null') {
+      const token = req.get("JWT");
+      try {
+        let { user: { idsysuser: id, office_idoffice: officeId, office } } = await promisify(jwt.verify)(token, process.env.SEED);
+        idsysuser = id; // Assign extracted values to outer scope variables
+        office_idoffice = officeId;
+      } catch (error) {
+        // Handle error for invalid token
+        console.error("Invalid Token: ", error);
+        return res.status(401).json({
+          status: false,
+          err: {
+            message: "Invalid Token",
+          },
+        });
+      }
+    }
+
+    // If user info is not set, assign default values
     if (!idsysuser) {
       idsysuser = 1;
+      office_idoffice = 1;
     }
     let {
       quotationWidth,

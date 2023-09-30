@@ -5,7 +5,7 @@ const express = require('express');
 const app = express.Router();
 
 // Importa los controladores que manejan las peticiones a las rutas
-const { createUser, recoverPassword, login, changePassword, getAllUsers, updateUser,updateUserStatus,createUserMasive } = require('../controllers/sysUser');
+const { createUser, recoverPassword, login, changePassword, getAllUsers, updateUser,updateUserStatus,createUserMasive,getCounselors } = require('../controllers/sysUser');
 
 // Importa los middlewares que se utilizan en las rutas
 const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacion');
@@ -19,6 +19,7 @@ app.get('/getAllUsers', [verificaToken, verificaAdminRol], getAllUsers);
 app.post('/updateUser', [verificaToken], updateUser);
 app.post('/updateUserStatus', [verificaToken,verificaAdminRol], updateUserStatus);
 app.post('/createUserMasive', [verificaToken, verificaAdminRol], createUserMasive);
+app.post('/getCounselors', [verificaToken], getCounselors);
 
 
  

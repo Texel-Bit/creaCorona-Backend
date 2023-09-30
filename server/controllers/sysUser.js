@@ -7,6 +7,7 @@ const {
   updateUser,
   updateUserStatus,
   createUserMasive,
+  getCounselors
 } = require("../models/sysUser");
 const randompassword = require("secure-random-password");
 const { promisify } = require("util");
@@ -274,6 +275,37 @@ exports.getAllUsers = async (req, res) => {
   try {
     // Obtener todos los usuarios desde la base de datos
     const allUsers = await getAllUsers();
+
+    // Eliminar la contraseña de cada usuario antes de enviar la respuesta
+    const usersWithoutPassword = allUsers.map((user) => {
+      const { password, ...userWithoutPassword } = user;
+      return userWithoutPassword;
+    });
+
+    // Enviar la respuesta con los usuarios
+    res.json({
+      status: true,
+      data: usersWithoutPassword,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      message: "No se pudo obtener los usuarios.",
+    });
+  }
+};
+
+exports.getCounselors = async (req, res) => {
+  try {
+
+    const token = req.get("JWT");
+    const {
+      user: { idsysuser },
+    } = await promisify(jwt.verify)(token, process.env.SEED);
+
+    console.log(idsysuser)
+    // Obtener todos los usuarios desde la base de datos
+    const allUsers = await getCounselors(idsysuser);
 
     // Eliminar la contraseña de cada usuario antes de enviar la respuesta
     const usersWithoutPassword = allUsers.map((user) => {

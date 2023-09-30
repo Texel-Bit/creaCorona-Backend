@@ -52,6 +52,7 @@ exports.createBrecha = async (req, res) => {
 
     const createdBrecha = await createBrechaBreaker.fire(data);
 
+    
     res.json({
       status: true,
       data: createdBrecha,

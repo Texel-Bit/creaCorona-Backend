@@ -15,7 +15,7 @@ const { verificaToken, verificaAdminRol } = require('../middlewares/autenticacio
 app.post('/createState', [verificaToken, verificaAdminRol], createState);
 app.post('/updateState', [verificaToken, verificaAdminRol], updateState);
 app.delete('/deleteState', [verificaToken, verificaAdminRol], deleteState);
-app.get('/getAllState', [verificaToken, verificaAdminRol], getAllState);
+app.get('/getAllState', getAllState);
 // app.get('/deteleState', [verificaToken, verificaAdminRol], deteleState);
 
 module.exports = app;

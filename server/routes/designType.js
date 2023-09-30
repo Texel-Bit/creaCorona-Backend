@@ -14,8 +14,8 @@ const { validarArchivoImagen } = require('../middlewares/validar-archivo');
 // Define las rutas con los controladores correspondientes y los middlewares necesarios
 app.post('/createDesignType', [verificaToken, verificaAdminRol,validarArchivoImagen], createDesignType);
 app.post('/updateDesignType', [verificaToken, verificaAdminRol], updateDesignType);
-app.get('/getAllDesignType', [verificaToken, verificaAdminRol], getAllDesignType);
-app.post('/getAllDesignTypeTest', [verificaToken, verificaAdminRol], getAllDesignTypeTest);
+app.get('/getAllDesignType', getAllDesignType);
+app.post('/getAllDesignTypeTest', getAllDesignTypeTest);
 
 
  

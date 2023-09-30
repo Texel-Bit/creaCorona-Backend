@@ -23,14 +23,14 @@ const { validarArchivoImagen } = require('../middlewares/validar-archivo');
 // Define las rutas con los controladores correspondientes y los middlewares necesarios
 app.post('/createEnvironmentType', [verificaToken, verificaAdminRol], createEnvironmentType);
 app.post('/updateEnvironmentType', [verificaToken, verificaAdminRol], updateEnvironmentType);
-app.get('/getAllEnvironmentType', [verificaToken, verificaAdminRol], getAllEnvironmentType);
-app.post('/getDesignColorTypesByEnvironmentIdAndDesignType',[verificaToken, verificaAdminRol], getDesignColorTypesByEnvironmentIdAndDesignType);
-app.post('/addDesignColorTypeToEnvironmentType', addDesignColorTypeToEnvironmentType);
-app.post('/createDesignTypeFormatSizeForEnvironmentType', createDesignTypeFormatSizeForEnvironmentType);
-app.post('/deleteDesignTypeFormatSizeForEnvironmentType', deleteDesignTypeFormatSizeForEnvironmentType);
+app.get('/getAllEnvironmentType', getAllEnvironmentType);
+app.post('/getDesignColorTypesByEnvironmentIdAndDesignType', getDesignColorTypesByEnvironmentIdAndDesignType);
+app.post('/addDesignColorTypeToEnvironmentType',[verificaToken, verificaAdminRol], addDesignColorTypeToEnvironmentType);
+app.post('/createDesignTypeFormatSizeForEnvironmentType',[verificaToken, verificaAdminRol], createDesignTypeFormatSizeForEnvironmentType);
+app.post('/deleteDesignTypeFormatSizeForEnvironmentType',[verificaToken, verificaAdminRol], deleteDesignTypeFormatSizeForEnvironmentType);
 app.post('/getAllDesignTypeFormatSizeForEnvironmentType', getAllDesignTypeFormatSizeForEnvironmentType);
-app.post('/deleteDesignTypeEnvironmentType', deleteDesignType_EnvironmentType);
-app.post('/createDesignTypeEnvironmentType', createDesignTypeEnvironmentType);
+app.post('/deleteDesignTypeEnvironmentType',[verificaToken, verificaAdminRol], deleteDesignType_EnvironmentType);
+app.post('/createDesignTypeEnvironmentType',[verificaToken, verificaAdminRol], createDesignTypeEnvironmentType);
 
 
 // Exporta el Router de Express

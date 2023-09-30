@@ -14,7 +14,7 @@ const { validarArchivoImagen } = require('../middlewares/validar-archivo');
 // Define las rutas con los controladores correspondientes y los middlewares necesarios
 app.post('/createBrecha', [verificaToken, verificaAdminRol,validarArchivoImagen], createBrecha);
 app.post('/updateBrecha', [verificaToken, verificaAdminRol], updateBrecha);
-app.get('/getAllBrecha', [verificaToken, verificaAdminRol], getAllBrecha);
+app.get('/getAllBrecha',  getAllBrecha);
 
 
 
