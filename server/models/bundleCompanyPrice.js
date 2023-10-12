@@ -79,7 +79,8 @@ const getBundleCompanyPriceByBundleCompanyTypeComopanyZone = async (data) => {
       },
     });
 
-    console.log(result);
+    console.log(result,"  ",data);
+
     if (result==null) {
 
       return result;

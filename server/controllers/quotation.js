@@ -203,7 +203,7 @@ exports.createquotation = async (req, res) => {
 
 const BundleFullData=await getBundleDesignDataByBundleId(bundle);
 
-const quotationItemDescription=BundleFullData[0].DesignTypeName+"( "+BundleFullData[0].DesignTypeFormatSizeName+" ) "+ BundleFullData[0].FormatSizeTextureName;
+const quotationItemDescription=BundleFullData[0].DesignTypeFormatSizeName;
 
     if (office.Company_idCompany == 1) {
       state = {
@@ -290,7 +290,7 @@ const quotationItemDescription=BundleFullData[0].DesignTypeName+"( "+BundleFullD
 
     const createdquotation = await createquotation(data);
 
-    console.log(req.body.quotationProductDetails);
+    
     const arrProductDetails = req.body.quotationProductDetails;
 
 
@@ -332,7 +332,7 @@ const quotationItemDescription=BundleFullData[0].DesignTypeName+"( "+BundleFullD
     // var options = { year: 'numeric', month: 'long', day: 'numeric' };
 
     const pages = pdfDoc.getPages();
-    const firstPage = pages[1];
+    const firstPage = pages[0];
 
 
     console.log("Load first path ",path.join(__dirname,"../../", desingPatternImage));
@@ -355,6 +355,9 @@ const quotationItemDescription=BundleFullData[0].DesignTypeName+"( "+BundleFullD
 
     const { width, height } = firstPage.getSize();
 
+    pageWidth=width
+    pageHeight=height
+
     console.log("Start To Build PDF ");
 
     const designColorsDetails = await getDesignColorsByIdList(
@@ -366,259 +369,191 @@ const quotationItemDescription=BundleFullData[0].DesignTypeName+"( "+BundleFullD
     );
 
 
-    let fontSize = 8;
+    let fontSize = 10;
 
-  const InitialDescriptionYPos=600;
-  const InitialDescriptionYPadding=fontSize+1;
     
-    
-    firstPage.drawText(createdquotation.idquotation.toString(), {
-      x: 500,
-      y: 720,
-      size: 13,
-      font: helveticaFont,
-      color: rgb(0, 0, 0),
-      rotate: degrees(0),
-    }),
-    firstPage.drawImage(pdfPNGLogo, {
-      x:20,
-      y: 670,
-      width: 100,
-      height: 40,
-    }),
-    firstPage.drawText(company.CompanyNIT, {
-      x:20,
-      y: 660,
-      size: fontSize,
-      font: helveticaFont,
-      color: rgb(0, 0, 0),
-      rotate: degrees(0),
-    }),
-    firstPage.drawText(new Date().toDateString() + " ", {
-      x: 350,
-      y: 700,
-      size: fontSize,
-      font: helveticaFont,
-      color: rgb(0, 0, 0),
-      rotate: degrees(0),
-    }),
-      firstPage.drawText(customerName+' '+customerLastname, {
-        x: 350,
-        y: 690,
-        size: fontSize,
-        font: helveticaFont,
-        color: rgb(0, 0, 0),
-        rotate: degrees(0),
-      }),
-      firstPage.drawText("--------- ", {
-        x: 370,
-        y: 680,
-        size: fontSize,
-        font: helveticaFont,
-        color: rgb(0, 0, 0),
-        rotate: degrees(0),
-      }),
-      firstPage.drawText("--------- ", {
-        x: 360,
-        y: 670,
-        size: fontSize,
-        font: helveticaFont,
-        color: rgb(0, 0, 0),
-        rotate: degrees(0),
-      }),
-      firstPage.drawText(customerPhoneNumber, {
-        x: 360,
-        y: 660,
-        size: fontSize,
-        font: helveticaFont,
-        color: rgb(0, 0, 0),
-        rotate: degrees(0),
-      }),
-      firstPage.drawText(customerEmail, {
-        x: 360,
-        y: 650,
-        size: fontSize,
-        font: helveticaFont,
-        color: rgb(0, 0, 0),
-        rotate: degrees(0),
+    // Constants
+const textColor = rgb(0, 0, 0);
+const rotationAngle = degrees(0);
 
-        //Datos asesor
-      }),firstPage.drawText(company.CompanyName+" - "+  office.officeDescription, {
-        x: 160,
-        y: 699,
+
+// Constants for positioning
+const margin = 30;
+const halfWidth = pageWidth / 2;
+const quarterWidth = pageWidth / 4;
+const threeQuarterWidth = (3 * pageWidth) / 4;
+
+const simulatedImageWidth = 267;  // calculated for 16:9 aspect ratio
+const simulatedImageHeight = simulatedImageWidth * 9 / 16;
+
+// Company Info - Top right
+firstPage.drawImage(pdfPNGLogo, {
+    x: pageWidth - 150,
+    y: pageHeight - 70,
+    width: 100,
+    height: 35,
+});
+
+firstPage.drawText(company.CompanyNIT, {
+    x: pageWidth - 230,
+    y: pageHeight - 50,
+    size: fontSize,
+    font: helveticaFont,
+    color: textColor,
+    rotate: rotationAngle,
+});
+
+// Quotation ID - Top left
+firstPage.drawText(`Quotation ID: ${createdquotation.idquotation}`, {
+    x: margin,
+    y: pageHeight - 50,
+    size: 20,
+    font: helveticaFont,
+    color: textColor,
+    rotate: rotationAngle,
+});
+
+// Client Info
+firstPage.drawText(`Cliente: ${customerName} ${customerLastname}`, {
+    x: margin,
+    y: pageHeight - 70,
+    size: fontSize,
+    font: helveticaFont,
+    color: textColor,
+    rotate: rotationAngle,
+});
+
+firstPage.drawText(`Télefono: ${customerPhoneNumber}`, {
+    x: margin,
+    y: pageHeight - 90,
+    size: fontSize,
+    font: helveticaFont,
+    color: textColor,
+    rotate: rotationAngle,
+});
+
+firstPage.drawText(`Correo: ${customerEmail}`, {
+    x: margin,
+    y: pageHeight - 110  ,
+    size: fontSize,
+    font: helveticaFont,
+    color: textColor,
+    rotate: rotationAngle,
+});
+
+
+firstPage.drawImage(pdfdesingPatternImage, {
+    x: margin,
+    y: pageHeight - 290,
+    width: 170,
+    height: 170,
+});
+
+
+
+firstPage.drawImage(pdfsimulationImage, {
+    x: threeQuarterWidth - (simulatedImageWidth / 2),
+    y: pageHeight - 270,
+    width: simulatedImageWidth,
+    height: simulatedImageHeight,
+});
+
+// Design and Colors Details - Right side of the simulation image
+
+let currentDetailsPosition=pageHeight-132;
+
+firstPage.drawText(`Diseños`, {
+  x: margin+200,
+  y: currentDetailsPosition  ,
+  size: fontSize,
+  font: helveticaFont,
+  color: textColor,
+  rotate: rotationAngle,
+});
+
+designList.forEach((item, index) => {
+  currentDetailsPosition =currentDetailsPosition-15
+    firstPage.drawText(item.DesignName, {
+        x: margin+200,
+        y: currentDetailsPosition,
         size: fontSize,
         font: helveticaFont,
-        color: rgb(0, 0, 0),
-        rotate: degrees(0),
-      }),
-      
-        firstPage.drawText(company.CompanyAddress+"  "+officeState.stateName, {
-          x: 160,
-          y: 688,
-          size: fontSize,
-          font: helveticaFont,
-          color: rgb(0, 0, 0),
-          rotate: degrees(0),
-        }),
-        firstPage.drawText(company.CompanyPhone, {
-          x: 160,
-          y: 677,
-          size: fontSize,
-          font: helveticaFont,
-          color: rgb(0, 0, 0),
-          rotate: degrees(0),
-        }),
-        firstPage.drawText(userName+" "+lastName, {
-          x: 160,
-          y: 666,
-          size: fontSize,
-          font: helveticaFont,
-          color: rgb(0, 0, 0),
-          rotate: degrees(0),
-        }),
-        designList.forEach((item, index) => {
-          firstPage.drawText(item.DesignName, {
-          x: 30,
-          y: InitialDescriptionYPos-(index*InitialDescriptionYPadding),
-          size: fontSize-1,
-          font: helveticaFont,
-          color: rgb(0, 0, 0),
-          rotate: degrees(0),
-  
-        })
-      });
-        firstPage.drawText(quotationItemDescription, {
-          x: 100,
-          y: InitialDescriptionYPos,
-          size: fontSize,
-          font: helveticaFont,
-          color: rgb(0, 0, 0),
-          rotate: degrees(0),
-        }),
-
-        designColorsDetails.forEach((item, index) => {
-            firstPage.drawText(item.DesignColorName, {
-            x: 311,
-            y: InitialDescriptionYPos-(index*InitialDescriptionYPadding),
-            size: fontSize-1,
-            font: helveticaFont,
-            color: rgb(0, 0, 0),
-            rotate: degrees(0),
-    
-          })
-        });
-        firstPage.drawText(cantidadValdosas.toString(), {
-          x: 360,
-          y: InitialDescriptionYPos,
-          size: fontSize,
-          font: helveticaFont,
-          color: rgb(0, 0, 0),
-          rotate: degrees(0),
-        }),
-        firstPage.drawText(formatCurrency(bundlePriceZone.price.toString()), {
-          x: 430,
-          y: InitialDescriptionYPos,
-          size: fontSize,
-          font: helveticaFont,
-          color: rgb(0, 0, 0),
-          rotate: degrees(0),
-        }),
-        firstPage.drawText(formatCurrency(data.quotationPrice.toString()), {
-          x: 520,
-          y: InitialDescriptionYPos,
-          size: fontSize,
-          font: helveticaFont,
-          color: rgb(0, 0, 0),
-          rotate: degrees(0),
-  
-        }),
-        firstPage.drawText(formatCurrency(data.quotationPrice.toString()), {
-          x: 395,
-          y: 410,
-          size: 12,
-          font: helveticaFont,
-          color: rgb(0, 0, 0),
-          rotate: degrees(0),
-  
-        }),
-        firstPage.drawText(formatCurrency(data.quotationPrice*0.19).toString(), {
-          x: 395,
-          y: 395,
-          size: 12,
-          font: helveticaFont,
-          color: rgb(0, 0, 0),
-          rotate: degrees(0),
-  
-        }),   firstPage.drawText("----------", {
-          x: 395,
-          y: 378,
-          size: 12,
-          font: helveticaFont,
-          color: rgb(0, 0, 0),
-          rotate: degrees(0),
-  
-        }),
-        firstPage.drawText(formatCurrency(parseFloat(data.quotationPrice)+parseFloat(data.quotationPrice*0.19)).toString(), {
-          x: 395,
-          y: 365,
-          size: 12,
-          font: helveticaFont,
-          color: rgb(0, 0, 0),
-          rotate: degrees(0),
-  
-        }),
-        designList.forEach((item, index) => {
-          firstPage.drawText(index+".) "+item.DesignName, {
-          x: 200,
-          y: 180-(index*(InitialDescriptionYPadding+2)),
-          size: fontSize,
-          font: helveticaFont,
-          color: rgb(0, 0, 0),
-          rotate: degrees(0),
-  
-        })
-      });
-
-      designColorsDetails.forEach((item, index) => {
-        firstPage.drawText(index+".) "+item.DesignColorName, {
-        x: 200,
-        y: 100-(index*(InitialDescriptionYPadding+2)),
-        size: fontSize,
-        font: helveticaFont,
-        color: rgb(0, 0, 0),
-        rotate: degrees(0),
-
-      })
+        color: textColor,
+        rotate: rotationAngle,
     });
-        firstPage.drawImage(pdfdesingPatternImage, {
-          x:20,
-          y: 30,
-          width: 160,
-          height:160,
-        })
+});
+
+currentDetailsPosition-=20;
+
+firstPage.drawText(`Colores`, {
+  x: margin+200,
+  y: currentDetailsPosition  ,
+  size: fontSize,
+  font: helveticaFont,
+  color: textColor,
+  rotate: rotationAngle,
+});
+
+designColorsDetails.forEach((item, index) => {
+  currentDetailsPosition=currentDetailsPosition-15
+    firstPage.drawText(item.DesignColorName, {
+        x: margin+200,
+        y: currentDetailsPosition,
+        size: fontSize,
+        font: helveticaFont,
+        color: textColor,
+        rotate: rotationAngle,
+    });
+});
+
+// Product Info - Bottom Left
+firstPage.drawText(`Sku: ${quotationItemDescription}`, {
+    x: margin,
+    y: 55,
+    size: fontSize,
+    font: helveticaFont,
+    color: textColor,
+    rotate: rotationAngle,
+});
+
+firstPage.drawText(`Unidades: ${cantidadValdosas.toString()}`, {
+    x: margin,
+    y: 35,
+    size: fontSize,
+    font: helveticaFont,
+    color: textColor,
+    rotate: rotationAngle,
+});
+
+firstPage.drawText(`Valor total: ${formatCurrency(parseFloat(data.quotationPrice) + parseFloat(data.quotationPrice * 0.19))}`, {
+    x: margin,
+    y: 15,
+    size: fontSize,
+    font: helveticaFont,
+    color: textColor,
+    rotate: rotationAngle,
+});
+
+// Date - Bottom right
+const options = { year: 'numeric', month: 'long', day: 'numeric' };
+const fecha = new Date();
+
+firstPage.drawText("Fecha: " + fecha.toLocaleDateString("es-ES", options), {
+    x: pageWidth - 250,
+    y: 30,
+    size: 12,
+    font: helveticaFont,
+    color: textColor,
+    rotate: rotationAngle,
+});
 
 
-        firstPage.drawImage(pdfsimulationImage, {
-          x:312,
-          y: 30,
-          width: 280,
-          height: 160,
-        })
+// Save the PDF
+const pdfBytes = await pdfDoc.save();
+console.log("PDF Generated");
+data.pdfBytes = pdfBytes;
+console.log(12);
 
-
-    // firstPage.drawText("Barrancabermeja " + fecha.toLocaleDateString("es-ES", options) + " ", {
-    //     x: (width / 2) - 60,
-    //     y: height / 2 - 140,
-    //     size: 10,
-    //     font: helveticaFont,
-    //     color: rgb(0, 0, 0),
-    //     rotate: degrees(0),
-    // })
-    const pdfBytes = await pdfDoc.save();
-    console.log(112);
-
-    data.pdfBytes = pdfBytes;
-    console.log(12);
 
     await emailSend.sendEmailActivationCode(data);
     console.log(13);

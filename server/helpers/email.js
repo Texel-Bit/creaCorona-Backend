@@ -72,9 +72,7 @@ exports.sendEmailActivationCode = (req, res) => {
         <p>
         Gracias por atreverte a ser el creador de tu propio diseño con “Crea Corona”, a continuación, encontrarás toda la información de tu piso o pared personalizada creada por medio de nuestra experiencia virtual.
         </p>
-        <p>
-            Nota: Los productos personalizados no tienen devolución y se sugiere pedir por lo menos un 10% adicional del producto para cubrir los desperdicios en la instalación.
-        </p>
+       
     </div>
 </body>`, // Cuerpo del correo electrónico en formato HTML
     attachments: [
