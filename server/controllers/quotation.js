@@ -158,9 +158,16 @@ exports.createquotation = async (req, res) => {
       });
     }
 
+    let quotationPrint= "";
     if(quatitionArea==0)
     {
-      quatitionArea=quotationWidth*quotationHeight
+      quatitionArea=Math.round(quotationWidth*quotationHeight*100)/100
+      quotationPrint="L: "+quotationWidth+" m       A: "+quotationHeight+" m "+"      Area: "+quatitionArea+" m²";
+    }
+    else
+    {
+      quotationPrint="Area: "+Math.round(quatitionArea*100)/100+" m²";
+
     }
 
 
@@ -255,11 +262,23 @@ const quotationItemDescription=BundleFullData[0].DesignTypeFormatSizeName;
     };
     const bundlePriceZone = await getBundlePriceByZone(PriceByBundlePrice);
 
-    
+    let quotationPrice = 0;
 
-    const quotationPrice = Math.round(
-      cantidadValdosas * bundlePriceZone.price
-    );
+    if(bundle.CalculateByMeters==0)
+    {
+      quotationPrice = Math.round(
+        (cantidadValdosas * bundlePriceZone.price)
+      );
+    }
+    else
+    {
+      quotationPrice = Math.round(
+        (quatitionArea * bundlePriceZone.price)
+      );
+    }
+   
+    quatitionArea = Math.round(quatitionArea * 100) / 100;
+    
 
      officeData  = await getAllOfficeByIdoffice(officeInfo);
 
@@ -375,9 +394,6 @@ const quotationItemDescription=BundleFullData[0].DesignTypeFormatSizeName;
     const firstPage = pages[0];
 
 
-    console.log("Load first path ",path.join(__dirname,"../../", desingPatternImage));
-
-    
 
     let tempImage=fs.readFileSync(path.join(__dirname,"../../", desingPatternImage));
     
@@ -389,12 +405,9 @@ const quotationItemDescription=BundleFullData[0].DesignTypeFormatSizeName;
     const simulationImageBase64 = imageToBase64(simulationImagePath);
 
 
-    console.log("Load Second path ",path.join(__dirname,"../../", simulationImage));
-
-    
     const pdfsimulationImage = await pdfDoc.embedPng(tempImage);
 
-    console.log("Load Third path ");
+   
 
     tempImage=fs.readFileSync(path.join(path.join(__dirname,"../../", company.CompanyImagePath)));
     const pdfPNGLogo = await pdfDoc.embedPng(tempImage);
@@ -404,7 +417,6 @@ const quotationItemDescription=BundleFullData[0].DesignTypeFormatSizeName;
     pageWidth=width
     pageHeight=height
 
-    console.log("Start To Build PDF ");
 
     const designColorsDetails = await getDesignColorsByIdList(
       req.body.DesignColors_has_quotation
@@ -940,6 +952,11 @@ const html=`<!DOCTYPE html>
             <hr>
             <h1 class="dataCliente">Datos del producto:</h1>
             <div class="formatAndStucture_format">
+                <p class="formatAndStucture_format_title">Tamaño:</p>
+                <p class="formatAndStucture_format_info">${quotationPrint}</p>
+            </div>
+            <hr>
+            <div class="formatAndStucture_format">
                 <p class="formatAndStucture_format_title">Formato:</p>
                 <p class="formatAndStucture_format_info">${BundleFullData[0].DesignTypeFormatSizeName}</p>
             </div>
@@ -1003,7 +1020,7 @@ const html=`<!DOCTYPE html>
 
             <div class="total">
                 <p class="unityTotal">Unidades: ${cantidadValdosas.toString()}</p>
-                <p class="priceTotal">Total : ${formatCurrency(parseFloat(data.quotationPrice) + parseFloat(data.quotationPrice * 0.19))}</p>
+                <p class="priceTotal">Total : ${formatCurrency(parseFloat(data.quotationPrice) )}</p>
             </div>
         </div>
 
@@ -1026,13 +1043,13 @@ fs.writeFileSync('output.html', html, 'utf8', (err) => {
 const newPdf= await htmlToPdf(html);
 // Save the PDF
 
-console.log("PDF Generated");
+
 data.pdfBytes = newPdf;
-console.log(12);
+
 
 
     await emailSend.sendEmailActivationCode(data);
-    console.log(13);
+
 
     return res.status(200).json({
       status: true,
@@ -1098,7 +1115,7 @@ exports.simulateQuotation = async (req, res) => {
     {
       quatitionArea=quotationWidth*quotationHeight
     }
-      console.log(req.body);
+     
 
     if (!idFormatSizeTexture) {
       if (req.body.idFormatSize) {
@@ -1130,6 +1147,10 @@ exports.simulateQuotation = async (req, res) => {
       idoffice: office_idoffice,
     };
 
+    const bundle = await getBundleDesignTypeFormatSizeTexture(fortmatTexture);
+
+    console.log(bundle.CalculateByMeters)
+
     const areaValdosa =
       (DesignTypeFormatSize.DesignTypeFormatSizeHeight *
         DesignTypeFormatSize.DesignTypeFormatSizeWidht) /
@@ -1143,7 +1164,7 @@ exports.simulateQuotation = async (req, res) => {
     //redondear al nyumero mayor
     const cantidadValdosas = Math.ceil(quatitionArea / areaValdosa);
 
-    const bundle = await getBundleDesignTypeFormatSizeTexture(fortmatTexture);
+   
 
     var state;
 
@@ -1164,12 +1185,20 @@ exports.simulateQuotation = async (req, res) => {
 
     const bundlePriceZone = await getBundlePriceByZone(PriceByBundlePrice);
 
-    console.log(bundlePriceZone)
+    let quotationPrice=0;
+    if(bundle.CalculateByMeters==0)
+    {
+      quotationPrice = Math.round(
+        (cantidadValdosas * bundlePriceZone.price)
+      );
+    }
+    else
+    {
+      quotationPrice = Math.round(
+        (quatitionArea * bundlePriceZone.price)
+      );
+    }
     
-    const quotationPrice = Math.round(
-      (cantidadValdosas * bundlePriceZone.price)
-    );
-
     const officeData = await getAllOfficeByIdoffice(officeInfo);
 
     const company = {
@@ -1183,7 +1212,7 @@ exports.simulateQuotation = async (req, res) => {
     const data = {
       quatitionArea: +quatitionArea,
       bundlePrice: +bundlePriceZone.price,
-      quotationPrice: +(quotationPrice*1.19),
+      quotationPrice: +(quotationPrice),
       quotationWidth: +quotationWidth,
       quotationHeight: +quotationHeight,
 
