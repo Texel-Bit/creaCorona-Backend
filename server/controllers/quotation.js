@@ -188,14 +188,7 @@ exports.createquotation = async (req, res) => {
     );
 
 
-    /*
-    const desingPatternImage = await subirArchivoImagen(
-      req.files.desingPatternImage,
-      "uploads/quotation"
-    );
-*/
-
-    // Manejo de errores de subirArchivoImagen
+   
     if (!desingPatternImage || !simulationImage) {
 
       return res.status(400).json({
@@ -299,18 +292,6 @@ const quotationItemDescription=BundleFullData[0].DesignTypeFormatSizeName;
      const price=bundleCompanyPriceData.price;
      const idbundleCompanyPrice=bundleCompanyPriceData.idbundleCompanyPrice;
   
-
-    // if (price == undefined) {
-    //   return res.status(400).json({
-    //     ok: false,
-    //     err: {
-    //       message:
-    //         "No pudo ser creado la cotizacion no existe bundleCompanyPrice",
-    //     },
-    //   });
-    // }
-
-
 
     const data = {
       customerName,
@@ -1285,4 +1266,4 @@ function formatCurrency(price) {
   return formatter.format(price);
 }
 
-//sin uso
+

@@ -221,6 +221,7 @@ model bundle {
   idbundle                              Int                   @id @default(autoincrement())
   bundleBasePrice                       Float?
   FormatSizeTexture_idFormatSizeTexture Int
+  CalculateByMeters                     Int?                  @default(0) @db.TinyInt
   FormatSizeTexture                     FormatSizeTexture     @relation(fields: [FormatSizeTexture_idFormatSizeTexture], references: [idFormatSizeTexture], onDelete: NoAction, onUpdate: NoAction, map: "fk_bundle_FormatSizeTexture1")
   bundleCompanyPrice                    bundleCompanyPrice[]
   bundle_PricesByZone                   bundle_PricesByZone[]
