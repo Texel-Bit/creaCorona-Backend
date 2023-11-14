@@ -70,7 +70,6 @@ async function htmlToPdf(htmlContent) {
 exports.createquotation = async (req, res) => {
 
 
-
   try {
     const token = req.get("JWT");
 
@@ -140,23 +139,6 @@ exports.createquotation = async (req, res) => {
       idbrecha=12;
     }
 
-    if (
-      !customerName ||
-      !customerLastname ||
-      !customerEmail ||
-      !customerPhoneNumber ||
-      !idbrecha ||
-      !idFormatSizeTexture ||
-      !idstate
-    ) {
-      return res.status(400).json({
-       
-        status: false,
-        err: {
-          message: "Datos de entrada incompletos 2",
-        },
-      });
-    }
 
     let quotationPrint= "";
     if(quatitionArea==0)
@@ -181,16 +163,6 @@ exports.createquotation = async (req, res) => {
     );
 
 
-   
-    if (!desingPatternImage || !simulationImage) {
-
-      return res.status(400).json({
-        status: false,
-        err: {
-          message: "Error al subir la imagen",
-        },
-      });
-    }
 
     const fortmatTexture = {
       idFormatSizeTexture: +idFormatSizeTexture,
