@@ -170,13 +170,6 @@ exports.createquotation = async (req, res) => {
 
     }
 
-
-    /*
-    const simulationImage = await subirArchivoImagen(
-      req.files.simulationImage,
-      "uploads/quotation"
-    );
-*/
     const simulationImage = await CastBase64ToImage(
       req.body.simulationImage,
       "uploads/quotation"
@@ -425,166 +418,11 @@ const threeQuarterWidth = (3 * pageWidth) / 4;
 const simulatedImageWidth = 267;  // calculated for 16:9 aspect ratio
 const simulatedImageHeight = simulatedImageWidth * 9 / 16;
 
-// // Company Info - Top right
-// firstPage.drawImage(pdfPNGLogo, {
-//     x: pageWidth - 150,
-//     y: pageHeight - 70,
-//     width: 100,
-//     height: 35,
-// });
-
-// firstPage.drawText(company.CompanyNIT, {
-//     x: pageWidth - 230,
-//     y: pageHeight - 50,
-//     size: fontSize,
-//     font: helveticaFont,
-//     color: textColor,
-//     rotate: rotationAngle,
-// });
-
-// // Quotation ID - Top left
-// firstPage.drawText(`Quotation ID: ${createdquotation.idquotation}`, {
-//     x: pageWidth/2,
-//     y: pageHeight - 50,
-//     size: 20,
-//     font: helveticaFont,
-//     color: textColor,
-//     rotate: rotationAngle,
-// });
-
-// // Client Info
-// firstPage.drawText(`Cliente: ${customerName} ${customerLastname}`, {
-//     x: margin,
-//     y: pageHeight - 70,
-//     size: fontSize,
-//     font: helveticaFont,
-//     color: textColor,
-//     rotate: rotationAngle,
-// });
-
-// firstPage.drawText(`Télefono: ${customerPhoneNumber}`, {
-//     x: margin,
-//     y: pageHeight - 90,
-//     size: fontSize,
-//     font: helveticaFont,
-//     color: textColor,
-//     rotate: rotationAngle,
-// });
-
-// firstPage.drawText(`Correo: ${customerEmail}`, {
-//     x: margin,
-//     y: pageHeight - 110  ,
-//     size: fontSize,
-//     font: helveticaFont,
-//     color: textColor,
-//     rotate: rotationAngle,
-// });
-
-
-// firstPage.drawImage(pdfdesingPatternImage, {
-//     x: margin,
-//     y: pageHeight - 290,
-//     width: 170,
-//     height: 170,
-// });
-
-
-
-// firstPage.drawImage(pdfsimulationImage, {
-//     x: threeQuarterWidth - (simulatedImageWidth / 2),
-//     y: pageHeight - 270,
-//     width: simulatedImageWidth,
-//     height: simulatedImageHeight,
-// });
-
-// // Design and Colors Details - Right side of the simulation image
-
-// let currentDetailsPosition=pageHeight-132;
-
-// firstPage.drawText(`Diseños`, {
-//   x: margin+200,
-//   y: currentDetailsPosition  ,
-//   size: fontSize,
-//   font: helveticaFont,
-//   color: textColor,
-//   rotate: rotationAngle,
-// });
-
-// designList.forEach((item, index) => {
-//   currentDetailsPosition =currentDetailsPosition-15
-//     firstPage.drawText(item.DesignName, {
-//         x: margin+200,
-//         y: currentDetailsPosition,
-//         size: fontSize,
-//         font: helveticaFont,
-//         color: textColor,
-//         rotate: rotationAngle,
-//     });
-// });
-
-// currentDetailsPosition-=20;
-
-// firstPage.drawText(`Colores`, {
-//   x: margin+200,
-//   y: currentDetailsPosition  ,
-//   size: fontSize,
-//   font: helveticaFont,
-//   color: textColor,
-//   rotate: rotationAngle,
-// });
-
-// designColorsDetails.forEach((item, index) => {
-//   currentDetailsPosition=currentDetailsPosition-15
-//     firstPage.drawText(item.DesignColorName, {
-//         x: margin+200,
-//         y: currentDetailsPosition,
-//         size: fontSize,
-//         font: helveticaFont,
-//         color: textColor,
-//         rotate: rotationAngle,
-//     });
-// });
-
-// // Product Info - Bottom Left
-// firstPage.drawText(`Sku: ${quotationItemDescription}`, {
-//     x: margin,
-//     y: 55,
-//     size: fontSize,
-//     font: helveticaFont,
-//     color: textColor,
-//     rotate: rotationAngle,
-// });
-
-// firstPage.drawText(`Unidades: ${cantidadValdosas.toString()}`, {
-//     x: margin,
-//     y: 35,
-//     size: fontSize,
-//     font: helveticaFont,
-//     color: textColor,
-//     rotate: rotationAngle,
-// });
-
-// firstPage.drawText(`Valor total: ${formatCurrency(parseFloat(data.quotationPrice) + parseFloat(data.quotationPrice * 0.19))}`, {
-//     x: margin,
-//     y: 15,
-//     size: fontSize,
-//     font: helveticaFont,
-//     color: textColor,
-//     rotate: rotationAngle,
-// });
 
 // Date - Bottom right
 const options = { year: 'numeric', month: 'long', day: 'numeric' };
 const fecha = new Date();
 
-// firstPage.drawText("Fecha: " + fecha.toLocaleDateString("es-ES", options), {
-//     x: pageWidth - 250,
-//     y: 30,
-//     size: 12,
-//     font: helveticaFont,
-//     color: textColor,
-//     rotate: rotationAngle,
-// });
 
 const companyData = await getCompanyById(company);
 
