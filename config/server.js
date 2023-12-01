@@ -36,12 +36,12 @@ module.exports = () => {
   // app.use(helmet());
 
   // Configure CORS for a specific origin
-  app.use(cors({
-    origin: 'https://f2rt72hd-3000.use2.devtunnels.ms/', // Set the allowed origin
-    credentials: true, // Enable credentials (cookies, authorization headers, etc.)
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
-    allowedHeaders: ['Content-Type', 'Authorization'] // Allowed HTTP headers
-  }));
+  // app.use(cors({
+  //   origin: 'https://f2rt72hd-3000.use2.devtunnels.ms/', // Set the allowed origin
+  //   credentials: true, // Enable credentials (cookies, authorization headers, etc.)
+  //   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+  //   allowedHeaders: ['Content-Type', 'Authorization'] // Allowed HTTP headers
+  // }));
 
   app.use(express.json({ limit: '50mb' }));
 
