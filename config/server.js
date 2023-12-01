@@ -40,6 +40,8 @@ module.exports = () => {
     next();
 });
 
+app.use('/uploads', express.static('uploads'));
+
   app.use(helmet({
     referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
   }));
