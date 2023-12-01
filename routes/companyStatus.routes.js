@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const companyZoneController = require('../controllers/companyZOne.controller');
+const companyZoneController = require('../controllers/companyZone.controller');
 const validateSchema = require('../middlewares/joiMiddleware');
 const { authenticateJWT, validateAdmin } = require('../middlewares/authMiddleware');
 
