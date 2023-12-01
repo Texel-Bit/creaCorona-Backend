@@ -7,9 +7,21 @@ const WebSocketSingleton = require('../middlewares/WebSocketSingleton');
 
 const startServer = (app) => {
   const port = process.env.PORT || 9445;
-  const server = app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+
+
+  // const server = app.listen(port, () => {
+  //   console.log(`Server running on http://localhost:${port}`);
+  // });
+
+  const options = {
+    key: fs.readFileSync("/etc/letsencrypt/live/corona.texelbit.com/privkey.pem"),
+    cert: fs.readFileSync("/etc/letsencrypt/live/corona.texelbit.com/cert.pem"),
+    ca: fs.readFileSync("/etc/letsencrypt/live/corona.texelbit.com/chain.pem"),
+  };
+  https.createServer(options, app).listen(process.env.PORT, () => {
+    console.log(`My HTTPS server listening on port ${process.env.PORT}...`);
   });
+
 
   WebSocketSingleton.init(server);
 };
