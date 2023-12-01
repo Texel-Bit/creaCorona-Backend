@@ -14,18 +14,28 @@ const startServer = (app) => {
   WebSocketSingleton.init(server);
 };
 
-
-
-
 module.exports = () => {
   const app = express();
 
-  //app.use(helmet());
-  // app.use(cors());
+  // Uncomment helmet for basic security
+  // app.use(helmet());
+
+  // Configure CORS for a specific origin
+  app.use(cors({
+    origin: 'https://f2rt72hd-3000.use2.devtunnels.ms/', // Set the allowed origin
+    credentials: true, // Enable credentials (cookies, authorization headers, etc.)
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'] // Allowed HTTP headers
+  }));
+
   app.use(express.json({ limit: '50mb' }));
-  //app.use(cookieParser());
-  //app.use(csrf({ cookie: true }));
+
+  // Uncomment these if you need cookie-parser and CSRF protection
+  // app.use(cookieParser());
+  // app.use(csrf({ cookie: true }));
+
   app.use(express.static('public'));
+
   // Start the server
   startServer(app);
 
