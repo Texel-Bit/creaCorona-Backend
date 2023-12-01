@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const WebSocketSingleton = require('../middlewares/WebSocketSingleton');
 
 const startServer = (app) => {
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 9445;
   const server = app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
   });
