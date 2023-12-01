@@ -1,5 +1,5 @@
 const errorCodesEnum = require('../structs/Errors/ErrorCodesEnum');
-const errorCodes = require('../structs/Errors/errorCodeMapping');
+const errorCodes = require('../structs/Errors/ErrorCodeMapping');
 
 class AnswerManager {
   static handleSuccess(res, data, message = 'Operation successful', status = 200) {
