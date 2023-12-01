@@ -4,6 +4,7 @@ const cors = require('cors');
 const csrf = require('csurf');
 const cookieParser = require('cookie-parser');
 const WebSocketSingleton = require('../middlewares/WebSocketSingleton');
+const fs = require('fs');
 
 const startServer = (app) => {
   const port = process.env.PORT || 9445;
@@ -22,6 +23,7 @@ const startServer = (app) => {
     console.log(`My HTTPS server listening on port ${process.env.PORT}...`);
   });
 
+  
 
   WebSocketSingleton.init(server);
 };
