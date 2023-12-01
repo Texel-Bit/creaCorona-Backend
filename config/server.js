@@ -32,16 +32,20 @@ const startServer = (app) => {
 module.exports = () => {
   const app = express();
 
-  // Uncomment helmet for basic security
-  // app.use(helmet());
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+    res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
+    next();
+});
+
+  app.use(helmet({
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
+  }));
 
   // Configure CORS for a specific origin
-  // app.use(cors({
-  //   origin: 'https://f2rt72hd-3000.use2.devtunnels.ms/', // Set the allowed origin
-  //   credentials: true, // Enable credentials (cookies, authorization headers, etc.)
-  //   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
-  //   allowedHeaders: ['Content-Type', 'Authorization'] // Allowed HTTP headers
-  // }));
+  app.use(cors());
 
   app.use(express.json({ limit: '50mb' }));
 
