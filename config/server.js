@@ -5,7 +5,7 @@ const csrf = require('csurf');
 const cookieParser = require('cookie-parser');
 const WebSocketSingleton = require('../middlewares/WebSocketSingleton');
 const fs = require('fs');
-
+const https = require('https');
 const startServer = (app) => {
   const port = process.env.PORT || 9445;
 
