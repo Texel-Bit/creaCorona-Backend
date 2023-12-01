@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const WebSocketSingleton = require('../middlewares/WebSocketSingleton');
 const fs = require('fs');
 const https = require('https');
+
 const startServer = (app) => {
   const port = process.env.PORT || 9445;
 
@@ -19,7 +20,7 @@ const startServer = (app) => {
     cert: fs.readFileSync("/etc/letsencrypt/live/corona.texelbit.com/cert.pem"),
     ca: fs.readFileSync("/etc/letsencrypt/live/corona.texelbit.com/chain.pem"),
   };
-  https.createServer(options, app).listen(process.env.PORT, () => {
+  const server=https.createServer(options, app).listen(process.env.PORT, () => {
     console.log(`My HTTPS server listening on port ${process.env.PORT}...`);
   });
 
