@@ -1,0 +1,8 @@
+2023-09-18T02:09:37.996Z - Circuit has been opened.
+2023-09-18T02:09:37.997Z - Action failed.
+2023-09-18T02:09:37.997Z - Circuit open. Using fallback.
+2023-09-18T02:10:07.997Z - Circuit is half open.
+2023-09-18T02:10:16.916Z - Circuit has been opened.
+2023-09-18T02:10:16.915Z - Action failed.
+2023-09-18T02:10:16.916Z - Circuit open. Using fallback.
+2023-09-18T02:10:46.910Z - Circuit is half open.

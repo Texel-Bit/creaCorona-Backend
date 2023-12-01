@@ -1,0 +1,21 @@
+2023-09-14T16:39:47.352Z - Action failed.
+2023-09-14T16:39:47.351Z - Circuit has been opened.
+2023-09-14T16:39:47.352Z - Circuit open. Using fallback.
+2023-09-14T16:40:17.352Z - Circuit is half open.
+2023-09-14T16:40:20.589Z - Circuit has been closed.
+2023-09-14T17:37:44.680Z - Circuit open. Using fallback.
+2023-09-14T17:37:44.680Z - Circuit has been opened.
+2023-09-14T17:37:44.680Z - Action failed.
+2023-09-14T17:38:14.679Z - Circuit is half open.
+2023-09-14T18:07:25.451Z - Circuit has been opened.
+2023-09-14T18:07:25.451Z - Circuit open. Using fallback.
+2023-09-14T18:07:25.452Z - Action failed.
+2023-09-14T18:07:55.461Z - Circuit is half open.
+2023-09-14T18:08:05.609Z - Circuit has been opened.
+2023-09-14T18:08:05.610Z - Action failed.
+2023-09-14T18:08:05.610Z - Circuit open. Using fallback.
+2023-09-14T18:08:35.620Z - Circuit is half open.
+2023-09-14T18:54:54.966Z - Circuit open. Using fallback.
+2023-09-14T18:54:54.967Z - Action failed.
+2023-09-14T18:54:54.967Z - Circuit has been opened.
+2023-09-14T18:55:24.967Z - Circuit is half open.

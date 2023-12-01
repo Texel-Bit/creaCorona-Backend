@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+   
+    <div class="login-container">
+
+        <img src="img/CreaCorona.png" alt="Corona Logo" class="login-logo">
+<h1 style="font-size: 21px; text-align: start;">Crea Corona Backend</h1>
+
+
+        <div class="clearfix"></div>
+        <br>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <div class="loader" id="loginLoader"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const loader = document.getElementById('loginLoader');
+            document.getElementById('loginForm').addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the traditional form submission
+        
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+        
+                const modal = document.getElementById('customModal');
+    const closeButton = document.querySelector('.close-button');
+    const modalMessageElement = document.getElementById('modalMessage');
+
+    
+       // Function to show the modal with a specific message
+       function showModal(message) {
+        modalMessageElement.textContent = message;
+        modal.style.display = "flex";
+    }
+
+    // Function to hide the modal
+    function hideModal() {
+        modal.style.display = "none";
+    }
+
+    closeButton.addEventListener('click', hideModal);
+
+                loader.style.display = 'block'; // Show the loader
+
+                console.log("Loading login ");
+
+                fetch('/sysUser/loginSwwager', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: username,
+                        password: password
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    loader.style.display = 'none'; // Hide the loader
+                    if(data.status!=="error")
+                    {
+                        console.log(data.data)
+                        if (data.data.token) {
+                        sessionStorage.setItem('token', data.data.token);
+                        document.cookie = `authToken=${data.data.token};path=/;`;
+                        window.location.href = '/api-docs';
+                        } else {
+                            showModal('Login failed!');
+                        }
+                    }
+                    else
+                    {
+                        showModal('Login failed!: '+data.developmentMessage);
+                    }
+                    
+                })
+                .catch(error => {
+                    loader.style.display = 'none'; // Hide the loader in case of an error
+                    showModal('There was an error logging in. Please try again.');
+                });
+            });
+        });
+
+        function showAlert(message) {
+    alert(message);
+    // OR: implement a custom modal/dialog with the message
+}
+    </script>
+
+<div id="customModal" class="modal">
+    <div class="modal-content">
+        <h2>Crea Corona</h2>
+        <p id="modalMessage"></p>
+        <button class="close-button">Close</button>
+    </div>
+</div>
+
+
+
+
+</body>
+</html>

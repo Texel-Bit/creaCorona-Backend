@@ -1,0 +1,41 @@
+2023-09-22T00:02:23.858Z - Action failed.
+2023-09-22T00:02:23.858Z - Circuit has been opened.
+2023-09-22T00:02:23.858Z - Circuit open. Using fallback.
+2023-09-22T00:02:53.862Z - Circuit is half open.
+2023-09-22T00:03:14.034Z - Action failed.
+2023-09-22T00:03:14.035Z - Circuit has been opened.
+2023-09-22T00:03:14.035Z - Circuit open. Using fallback.
+2023-09-22T00:03:44.040Z - Circuit is half open.
+2023-09-22T00:04:17.695Z - Circuit has been opened.
+2023-09-22T00:04:17.696Z - Circuit open. Using fallback.
+2023-09-22T00:04:17.696Z - Action failed.
+2023-09-22T00:04:47.698Z - Circuit is half open.
+2023-09-22T00:07:44.426Z - Action failed.
+2023-09-22T00:07:44.426Z - Circuit has been opened.
+2023-09-22T00:07:44.426Z - Circuit open. Using fallback.
+2023-09-22T00:08:28.011Z - Circuit has been opened.
+2023-09-22T00:08:28.011Z - Action failed.
+2023-09-22T00:08:28.011Z - Circuit open. Using fallback.
+2023-09-22T00:08:58.020Z - Circuit is half open.
+2023-09-22T00:19:02.537Z - Action failed.
+2023-09-22T00:19:02.537Z - Circuit has been opened.
+2023-09-22T00:19:02.537Z - Circuit open. Using fallback.
+2023-09-22T00:19:25.044Z - Action failed.
+2023-09-22T00:19:25.044Z - Circuit open. Using fallback.
+2023-09-22T00:19:25.044Z - Circuit has been opened.
+2023-09-22T00:30:27.540Z - Circuit has been opened.
+2023-09-22T00:30:27.540Z - Action failed.
+2023-09-22T00:30:27.540Z - Circuit open. Using fallback.
+2023-09-22T00:31:51.298Z - Circuit has been opened.
+2023-09-22T00:31:51.298Z - Action failed.
+2023-09-22T00:31:51.298Z - Circuit open. Using fallback.
+2023-09-22T00:32:17.463Z - Action failed.
+2023-09-22T00:32:17.464Z - Circuit has been opened.
+2023-09-22T00:32:17.464Z - Circuit open. Using fallback.
+2023-09-22T00:32:53.107Z - Circuit has been opened.
+2023-09-22T00:32:53.107Z - Action failed.
+2023-09-22T00:32:53.107Z - Circuit open. Using fallback.
+2023-09-22T00:33:23.107Z - Circuit is half open.
+2023-09-22T00:35:33.767Z - Circuit has been opened.
+2023-09-22T00:35:33.768Z - Action failed.
+2023-09-22T00:35:33.768Z - Circuit open. Using fallback.
