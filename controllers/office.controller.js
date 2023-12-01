@@ -1,14 +1,14 @@
 const officeModel = require('../models/office.model');
-const circuitBreakerHandler = require('../middlewares/circuitBreakerHandler');
+const CircuitBreakerHandler = require('../middlewares/CircuitBreakerHandler');
 const AnswerManager = require('../middlewares/AnswerManager');
 
 
-const getAllOfficeBreaker = circuitBreakerHandler.createBreaker(officeModel.getAllOffice);
-const createOfficeBreaker = circuitBreakerHandler.createBreaker(officeModel.createOffice);
-const updateOfficeBreaker = circuitBreakerHandler.createBreaker(officeModel.updateOffice);
-const getAllOfficesByCompanyId = circuitBreakerHandler.createBreaker(officeModel.getAllOfficesByCompanyId);
-const getAllOfficeStatusBreaker = circuitBreakerHandler.createBreaker(officeModel.getAllOfficeStatus);
-const setOfficeStatusBreaker = circuitBreakerHandler.createBreaker(officeModel.setOfficeStatus);
+const getAllOfficeBreaker = CircuitBreakerHandler.createBreaker(officeModel.getAllOffice);
+const createOfficeBreaker = CircuitBreakerHandler.createBreaker(officeModel.createOffice);
+const updateOfficeBreaker = CircuitBreakerHandler.createBreaker(officeModel.updateOffice);
+const getAllOfficesByCompanyId = CircuitBreakerHandler.createBreaker(officeModel.getAllOfficesByCompanyId);
+const getAllOfficeStatusBreaker = CircuitBreakerHandler.createBreaker(officeModel.getAllOfficeStatus);
+const setOfficeStatusBreaker = CircuitBreakerHandler.createBreaker(officeModel.setOfficeStatus);
 
 exports.getAllOffice = async(req, res) => {
     try {

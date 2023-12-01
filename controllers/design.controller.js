@@ -1,16 +1,16 @@
 const designModel = require('../models/design.model');
-const circuitBreakerHandler = require('../middlewares/circuitBreakerHandler');
+const CircuitBreakerHandler = require('../middlewares/CircuitBreakerHandler');
 const AnswerManager = require('../middlewares/AnswerManager');
 const StorageHandler = require('../middlewares/StorageHandler');
 const environmentTypeModel = require('../models/environmentType.model')
 
 
-const getAllDesignBreaker = circuitBreakerHandler.createBreaker(designModel.getAllDesign);
-const createDesignBreaker = circuitBreakerHandler.createBreaker(designModel.createDesign);
-const updateDesignBreaker = circuitBreakerHandler.createBreaker(designModel.updateDesign);
-const getAllDesignsByDesignTypeIdBreaker = circuitBreakerHandler.createBreaker(designModel.getAllDesignsByDesignTypeId);
-const setDesignStatusBreaker = circuitBreakerHandler.createBreaker(designModel.setDesignStatus);
-const getDesignsByEnvironmentTypeBreaker = circuitBreakerHandler.createBreaker(designModel.getDesignsByEnvironmentType);
+const getAllDesignBreaker = CircuitBreakerHandler.createBreaker(designModel.getAllDesign);
+const createDesignBreaker = CircuitBreakerHandler.createBreaker(designModel.createDesign);
+const updateDesignBreaker = CircuitBreakerHandler.createBreaker(designModel.updateDesign);
+const getAllDesignsByDesignTypeIdBreaker = CircuitBreakerHandler.createBreaker(designModel.getAllDesignsByDesignTypeId);
+const setDesignStatusBreaker = CircuitBreakerHandler.createBreaker(designModel.setDesignStatus);
+const getDesignsByEnvironmentTypeBreaker = CircuitBreakerHandler.createBreaker(designModel.getDesignsByEnvironmentType);
 
 exports.getAllDesign = async(req, res) => {
     try {

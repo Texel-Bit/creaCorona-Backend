@@ -1,11 +1,11 @@
 const companyTypeModel = require('../models/companyType.model');
-const circuitBreakerHandler = require('../middlewares/circuitBreakerHandler');
+const CircuitBreakerHandler = require('../middlewares/CircuitBreakerHandler');
 const AnswerManager = require('../middlewares/AnswerManager');
 
 
-const getAllCompanyTypesBreaker = circuitBreakerHandler.createBreaker(companyTypeModel.getAllCompanyTypes);
-const createCompanyTypeBreaker = circuitBreakerHandler.createBreaker(companyTypeModel.createCompanyType);
-const updateCompanyTypeBreaker = circuitBreakerHandler.createBreaker(companyTypeModel.updateCompanyType);
+const getAllCompanyTypesBreaker = CircuitBreakerHandler.createBreaker(companyTypeModel.getAllCompanyTypes);
+const createCompanyTypeBreaker = CircuitBreakerHandler.createBreaker(companyTypeModel.createCompanyType);
+const updateCompanyTypeBreaker = CircuitBreakerHandler.createBreaker(companyTypeModel.updateCompanyType);
 
 exports.getAllCompanyTypes = async(req, res) => {
     try {

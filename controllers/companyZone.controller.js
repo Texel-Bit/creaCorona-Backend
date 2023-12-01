@@ -4,19 +4,19 @@ const companyTypeModel = require('../models/companyType.model');
 const bundleModel = require('../models/bundle.model');
 
 
-const circuitBreakerHandler = require('../middlewares/circuitBreakerHandler');
+const CircuitBreakerHandler = require('../middlewares/CircuitBreakerHandler');
 const AnswerManager = require('../middlewares/AnswerManager');
 
 
-const getAllCompanyZonesBreaker = circuitBreakerHandler.createBreaker(companyZoneModel.getAllCompanyZones);
-const getAllCompanyStatusBreaker = circuitBreakerHandler.createBreaker(companyZoneModel.getAllCompanyStatus);
-const createCompanyZoneBreaker = circuitBreakerHandler.createBreaker(companyZoneModel.createCompanyZone);
-const updateCompanyZoneBreaker = circuitBreakerHandler.createBreaker(companyZoneModel.updateCompanyZone);
+const getAllCompanyZonesBreaker = CircuitBreakerHandler.createBreaker(companyZoneModel.getAllCompanyZones);
+const getAllCompanyStatusBreaker = CircuitBreakerHandler.createBreaker(companyZoneModel.getAllCompanyStatus);
+const createCompanyZoneBreaker = CircuitBreakerHandler.createBreaker(companyZoneModel.createCompanyZone);
+const updateCompanyZoneBreaker = CircuitBreakerHandler.createBreaker(companyZoneModel.updateCompanyZone);
 
-const getAllCompanyTypesBreaker = circuitBreakerHandler.createBreaker(companyTypeModel.getAllCompanyTypes);
-const getAllCompanyBundlesBreaker = circuitBreakerHandler.createBreaker(bundleModel.getAllBundles);
-const createBundlePriceBreaker = circuitBreakerHandler.createBreaker(companyPriceModel.createManyBundlesCompanyPrice);
-const setCompanyZoneStatusBreaker = circuitBreakerHandler.createBreaker(companyZoneModel.setCompanyZoneStatus);
+const getAllCompanyTypesBreaker = CircuitBreakerHandler.createBreaker(companyTypeModel.getAllCompanyTypes);
+const getAllCompanyBundlesBreaker = CircuitBreakerHandler.createBreaker(bundleModel.getAllBundles);
+const createBundlePriceBreaker = CircuitBreakerHandler.createBreaker(companyPriceModel.createManyBundlesCompanyPrice);
+const setCompanyZoneStatusBreaker = CircuitBreakerHandler.createBreaker(companyZoneModel.setCompanyZoneStatus);
 
 
 

@@ -1,14 +1,14 @@
 const designColorTypeModel = require('../models/designColorType.model');
-const circuitBreakerHandler = require('../middlewares/circuitBreakerHandler');
+const CircuitBreakerHandler = require('../middlewares/CircuitBreakerHandler');
 const AnswerManager = require('../middlewares/AnswerManager');
 const ErrorCodesEnum = require('../structs/Errors/ErrorCodesEnum');
 
 
-const getAllDesignColorTypeBreaker = circuitBreakerHandler.createBreaker(designColorTypeModel.getAllDesignColorType);
-const createDesignColorTypehasDesignTypeBreaker = circuitBreakerHandler.createBreaker(designColorTypeModel.createDesignColorTypehasDesignType);
-const deleteDesignColorTypehasDesignTypeBreaker = circuitBreakerHandler.createBreaker(designColorTypeModel.deleteDesignColorTypehasDesignType);
-const getDesignColorTypeByDesignTypeBreaker = circuitBreakerHandler.createBreaker(designColorTypeModel.getDesignColorTypeByDesignType);
-const getAllDesignColorTypehasDesignTypeBreaker = circuitBreakerHandler.createBreaker(designColorTypeModel.getAllDesignColorTypehasDesignType);
+const getAllDesignColorTypeBreaker = CircuitBreakerHandler.createBreaker(designColorTypeModel.getAllDesignColorType);
+const createDesignColorTypehasDesignTypeBreaker = CircuitBreakerHandler.createBreaker(designColorTypeModel.createDesignColorTypehasDesignType);
+const deleteDesignColorTypehasDesignTypeBreaker = CircuitBreakerHandler.createBreaker(designColorTypeModel.deleteDesignColorTypehasDesignType);
+const getDesignColorTypeByDesignTypeBreaker = CircuitBreakerHandler.createBreaker(designColorTypeModel.getDesignColorTypeByDesignType);
+const getAllDesignColorTypehasDesignTypeBreaker = CircuitBreakerHandler.createBreaker(designColorTypeModel.getAllDesignColorTypehasDesignType);
 
 exports.getAllDesignColorType = async(req, res) => {
     try {

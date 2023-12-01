@@ -1,5 +1,5 @@
 const quotationModel = require('../models/quotation.model');
-const circuitBreakerHandler = require('../middlewares/CircuitBreakerHandler');
+const CircuitBreakerHandler = require('../middlewares/CircuitBreakerHandler');
 const AnswerManager = require('../middlewares/AnswerManager');
 const jwt = require("jsonwebtoken");
 const { validateJWT, authenticateJWT } = require('../middlewares/authMiddleware');
@@ -13,9 +13,9 @@ const bundlePricesByZoneModel = require('../models/bundlePricesByZone.model')
 const bundleCompanyPriceModel = require('../models/bundleCompanyPrice.model')
 
 
-const getAllQuotationBreaker = circuitBreakerHandler.createBreaker(quotationModel.getAllQuotation);
-const updateQuotationStatusBreaker = circuitBreakerHandler.createBreaker(quotationModel.updateQuotationStatus);
-const createQuotationBreaker = circuitBreakerHandler.createBreaker(quotationModel.createQuotation);
+const getAllQuotationBreaker = CircuitBreakerHandler.createBreaker(quotationModel.getAllQuotation);
+const updateQuotationStatusBreaker = CircuitBreakerHandler.createBreaker(quotationModel.updateQuotationStatus);
+const createQuotationBreaker = CircuitBreakerHandler.createBreaker(quotationModel.createQuotation);
 
 exports.getAllQuotation = async(req, res) => {
     try {

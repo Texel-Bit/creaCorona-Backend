@@ -5,19 +5,19 @@ const EmailTemplate = require('../structs/EmailsTemplates/TemplateEmail');
 const AnswerManager = require('../middlewares/AnswerManager');
 const sendMail = require('../middlewares/emailMiddleware');
 const passwordMiddleware = require('../middlewares/passwordMiddleware');
-const circuitBreakerHandler = require('../middlewares/circuitBreakerHandler');
+const CircuitBreakerHandler = require('../middlewares/CircuitBreakerHandler');
 const ErrorCodesEnum = require('../structs/Errors/ErrorCodesEnum');
 const sysuserSchemas = require('../joiSchemas/sysUser.schema')
 
 //Circuit braker
-const createSysUserBreaker = circuitBreakerHandler.createBreaker(sysUser.createSysUser);
-const validateBreaker = circuitBreakerHandler.createBreaker(sysUser.getSysUserByEmail);
-const getAllSysUsersBreaker = circuitBreakerHandler.createBreaker(sysUser.getAllSysUsers);
-const getAllSysUsersByCompanyBreaker = circuitBreakerHandler.createBreaker(sysUser.getAllSysUsersByCompany);
-const updateSysUserBreaker = circuitBreakerHandler.createBreaker(sysUser.updateSysUser);
-const getUserByCompanyIdBreaker = circuitBreakerHandler.createBreaker(sysUser.getUserByCompanyId);
-const getAllUserRolesBreaker = circuitBreakerHandler.createBreaker(sysUser.getAllUserRoles);
-const getAllUserStatusBreaker = circuitBreakerHandler.createBreaker(sysUser.getAllUserStatus);
+const createSysUserBreaker = CircuitBreakerHandler.createBreaker(sysUser.createSysUser);
+const validateBreaker = CircuitBreakerHandler.createBreaker(sysUser.getSysUserByEmail);
+const getAllSysUsersBreaker = CircuitBreakerHandler.createBreaker(sysUser.getAllSysUsers);
+const getAllSysUsersByCompanyBreaker = CircuitBreakerHandler.createBreaker(sysUser.getAllSysUsersByCompany);
+const updateSysUserBreaker = CircuitBreakerHandler.createBreaker(sysUser.updateSysUser);
+const getUserByCompanyIdBreaker = CircuitBreakerHandler.createBreaker(sysUser.getUserByCompanyId);
+const getAllUserRolesBreaker = CircuitBreakerHandler.createBreaker(sysUser.getAllUserRoles);
+const getAllUserStatusBreaker = CircuitBreakerHandler.createBreaker(sysUser.getAllUserStatus);
 
 let userJwtData = {
   idsysuser: 0,

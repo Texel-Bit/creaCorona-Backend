@@ -1,9 +1,9 @@
 const bundlePricesByZoneModel = require('../models/bundlePricesByZone.model');
-const circuitBreakerHandler = require('../middlewares/circuitBreakerHandler');
+const CircuitBreakerHandler = require('../middlewares/CircuitBreakerHandler');
 const AnswerManager = require('../middlewares/AnswerManager');
 
-const getAllBundlePricesByZoneBreaker = circuitBreakerHandler.createBreaker(bundlePricesByZoneModel.getAllBundlePricesByZone)
-const updateBundlePricesByZoneBreaker = circuitBreakerHandler.createBreaker(bundlePricesByZoneModel.updateBundlePriceByZone)
+const getAllBundlePricesByZoneBreaker = CircuitBreakerHandler.createBreaker(bundlePricesByZoneModel.getAllBundlePricesByZone)
+const updateBundlePricesByZoneBreaker = CircuitBreakerHandler.createBreaker(bundlePricesByZoneModel.updateBundlePriceByZone)
 
 exports.getAllBundlePricesByZone = async (req, res) => {
     try {

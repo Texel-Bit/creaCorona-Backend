@@ -1,15 +1,15 @@
 const designTypeFormatSizeModel = require('../models/designTypeFormatSize.model');
-const circuitBreakerHandler = require('../middlewares/circuitBreakerHandler');
+const CircuitBreakerHandler = require('../middlewares/CircuitBreakerHandler');
 const AnswerManager = require('../middlewares/AnswerManager');
 const StorageHandler = require('../middlewares/StorageHandler');
 
 
-const getAllDesignTypeFormatSizeBreaker = circuitBreakerHandler.createBreaker(designTypeFormatSizeModel.getAllDesignTypeFormatSize);
-const getAllDesignTypeByDesignTypeIdBreaker = circuitBreakerHandler.createBreaker(designTypeFormatSizeModel.getAllDesignTypeByDesignTypeId);
-const createDesignTypeFormatSizeBreaker = circuitBreakerHandler.createBreaker(designTypeFormatSizeModel.createDesignTypeFormatSize);
-const updateDesignTypeFormatSizeBreaker = circuitBreakerHandler.createBreaker(designTypeFormatSizeModel.updateDesignTypeFormatSize);
-const setDesignTypeFormatSizeStatusBreaker = circuitBreakerHandler.createBreaker(designTypeFormatSizeModel.setDesignTypeFormatSizeStatus);
-const getDesignTypeFormatSizByEnvironmentTypeIdBreaker = circuitBreakerHandler.createBreaker(designTypeFormatSizeModel.getDesignTypeFormatSizByEnvironmentTypeId);
+const getAllDesignTypeFormatSizeBreaker = CircuitBreakerHandler.createBreaker(designTypeFormatSizeModel.getAllDesignTypeFormatSize);
+const getAllDesignTypeByDesignTypeIdBreaker = CircuitBreakerHandler.createBreaker(designTypeFormatSizeModel.getAllDesignTypeByDesignTypeId);
+const createDesignTypeFormatSizeBreaker = CircuitBreakerHandler.createBreaker(designTypeFormatSizeModel.createDesignTypeFormatSize);
+const updateDesignTypeFormatSizeBreaker = CircuitBreakerHandler.createBreaker(designTypeFormatSizeModel.updateDesignTypeFormatSize);
+const setDesignTypeFormatSizeStatusBreaker = CircuitBreakerHandler.createBreaker(designTypeFormatSizeModel.setDesignTypeFormatSizeStatus);
+const getDesignTypeFormatSizByEnvironmentTypeIdBreaker = CircuitBreakerHandler.createBreaker(designTypeFormatSizeModel.getDesignTypeFormatSizByEnvironmentTypeId);
 
 exports.getAllDesignTypeFormatSize = async(req, res) => {
     try {

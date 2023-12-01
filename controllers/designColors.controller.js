@@ -1,13 +1,13 @@
 const designColorsModel = require('../models/designColors.model');
-const circuitBreakerHandler = require('../middlewares/circuitBreakerHandler');
+const CircuitBreakerHandler = require('../middlewares/CircuitBreakerHandler');
 const AnswerManager = require('../middlewares/AnswerManager');
 const StorageHandler = require('../middlewares/StorageHandler');
 
 
-const getAllDesignColorBreaker = circuitBreakerHandler.createBreaker(designColorsModel.getAllDesignColors);
-const getAllDesignColorByDeisnghTypeIdBreaker = circuitBreakerHandler.createBreaker(designColorsModel.getAllDesignColorsByDesignTypeId);
-const createDesignColorBreaker = circuitBreakerHandler.createBreaker(designColorsModel.createDesignColors);
-const updateDesignColorBreaker = circuitBreakerHandler.createBreaker(designColorsModel.updateDesignColors);
+const getAllDesignColorBreaker = CircuitBreakerHandler.createBreaker(designColorsModel.getAllDesignColors);
+const getAllDesignColorByDeisnghTypeIdBreaker = CircuitBreakerHandler.createBreaker(designColorsModel.getAllDesignColorsByDesignTypeId);
+const createDesignColorBreaker = CircuitBreakerHandler.createBreaker(designColorsModel.createDesignColors);
+const updateDesignColorBreaker = CircuitBreakerHandler.createBreaker(designColorsModel.updateDesignColors);
 
 exports.getAllDesignColors = async(req, res) => {
     try {

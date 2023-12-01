@@ -6,20 +6,20 @@ const companyZoneModel = require('../models/companyZone.model');
 const companyPriceModel = require('../models/bundleCompanyPrice.model');
 
 
-const circuitBreakerHandler = require('../middlewares/circuitBreakerHandler');
+const CircuitBreakerHandler = require('../middlewares/CircuitBreakerHandler');
 const AnswerManager = require('../middlewares/AnswerManager');
 const StorageHandler = require('../middlewares/StorageHandler');
 
 
-const getAllFormatSizeTextureBreaker = circuitBreakerHandler.createBreaker(formatSizeTextureModel.getAllFormatSizeTexture);
-const getAllFormatSizeTextureByFormatSizeIdBreaker = circuitBreakerHandler.createBreaker(formatSizeTextureModel.getAllFormatSizeTextureByFormatSizeId);
-const createFormatSizeTextureBreaker = circuitBreakerHandler.createBreaker(formatSizeTextureModel.createFormatSizeTexture);
-const createBundleBreaker = circuitBreakerHandler.createBreaker(bundleModel.createBundle);
-const updateFormatSizeTextureBreaker = circuitBreakerHandler.createBreaker(formatSizeTextureModel.updateFormatSizeTexture);
-const setFormatSizeTextureStatusBreaker = circuitBreakerHandler.createBreaker(formatSizeTextureModel.setFormatSizeTextureStatus);
-const getAllCompanyTypesBreaker = circuitBreakerHandler.createBreaker(companyTypeModel.getAllCompanyTypes);
-const getAllZonesBreaker = circuitBreakerHandler.createBreaker(companyZoneModel.getAllCompanyZones);
-const createBundlePriceBreaker = circuitBreakerHandler.createBreaker(companyPriceModel.createManyBundlesCompanyPrice);
+const getAllFormatSizeTextureBreaker = CircuitBreakerHandler.createBreaker(formatSizeTextureModel.getAllFormatSizeTexture);
+const getAllFormatSizeTextureByFormatSizeIdBreaker = CircuitBreakerHandler.createBreaker(formatSizeTextureModel.getAllFormatSizeTextureByFormatSizeId);
+const createFormatSizeTextureBreaker = CircuitBreakerHandler.createBreaker(formatSizeTextureModel.createFormatSizeTexture);
+const createBundleBreaker = CircuitBreakerHandler.createBreaker(bundleModel.createBundle);
+const updateFormatSizeTextureBreaker = CircuitBreakerHandler.createBreaker(formatSizeTextureModel.updateFormatSizeTexture);
+const setFormatSizeTextureStatusBreaker = CircuitBreakerHandler.createBreaker(formatSizeTextureModel.setFormatSizeTextureStatus);
+const getAllCompanyTypesBreaker = CircuitBreakerHandler.createBreaker(companyTypeModel.getAllCompanyTypes);
+const getAllZonesBreaker = CircuitBreakerHandler.createBreaker(companyZoneModel.getAllCompanyZones);
+const createBundlePriceBreaker = CircuitBreakerHandler.createBreaker(companyPriceModel.createManyBundlesCompanyPrice);
 
 
 const sharp = require('sharp');

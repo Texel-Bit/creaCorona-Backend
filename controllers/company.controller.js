@@ -1,12 +1,12 @@
 const companyModel = require('../models/company.model');
-const circuitBreakerHandler = require('../middlewares/circuitBreakerHandler');
+const CircuitBreakerHandler = require('../middlewares/CircuitBreakerHandler');
 const AnswerManager = require('../middlewares/AnswerManager');
 const StorageHandler = require('../middlewares/StorageHandler');
 
-const getAllCompanysBreaker = circuitBreakerHandler.createBreaker(companyModel.getAllCompanys);
-const getAllCompanysRolesBreaker = circuitBreakerHandler.createBreaker(companyModel.getAllCompanyRole);
-const createCompanyBreaker = circuitBreakerHandler.createBreaker(companyModel.createCompany);
-const updateCompanyBreaker = circuitBreakerHandler.createBreaker(companyModel.updateCompany);
+const getAllCompanysBreaker = CircuitBreakerHandler.createBreaker(companyModel.getAllCompanys);
+const getAllCompanysRolesBreaker = CircuitBreakerHandler.createBreaker(companyModel.getAllCompanyRole);
+const createCompanyBreaker = CircuitBreakerHandler.createBreaker(companyModel.createCompany);
+const updateCompanyBreaker = CircuitBreakerHandler.createBreaker(companyModel.updateCompany);
 
 exports.getAllCompanys = async(req, res) => {
     try {
