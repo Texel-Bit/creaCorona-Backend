@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const errorcodesenum = require('../structs/Errors/errorcodesenum');
+const ErrorCodesEnum = require('../structs/Errors/ErrorCodesEnum');
 const WebSocketSingleton = require('./WebSocketSingleton');
 
 
@@ -12,7 +12,7 @@ class AuthManager {
             if (isValid) {
                 next();
             } else {
-                const error={status:errorcodesenum.INTERNAL_SERVER_ERROR,printMessage:"Invalid Credentials"};
+                const error={status:ErrorCodesEnum.INTERNAL_SERVER_ERROR,printMessage:"Invalid Credentials"};
                 next(error,null);
                         }
         } catch (error) {
@@ -25,7 +25,7 @@ class AuthManager {
         const token = req.header('authorization') ? req.header('authorization').split(' ')[1] : null;
         
         if (!token) {
-            const error={status:errorcodesenum.NETWORK_AUTHENTICATION_REQUIRED,printMessage:"Token is missing"};
+            const error={status:ErrorCodesEnum.NETWORK_AUTHENTICATION_REQUIRED,printMessage:"Token is missing"};
             next(error,null);
         }
 
@@ -63,7 +63,7 @@ class AuthManager {
 
     static validateJWT(token,result, next) {
 
-        const error={status: errorcodesenum.NETWORK_AUTHENTICATION_REQUIRED, printMessage: "Token is missing"};
+        const error={status: ErrorCodesEnum.NETWORK_AUTHENTICATION_REQUIRED, printMessage: "Token is missing"};
 
         if (!token) {
             next(error,null);
@@ -82,7 +82,7 @@ class AuthManager {
     static validateAdmin() {
        
        
-        const error = { status: errorcodesenum.UNAUTHORIZED, printMessage: "You can't access this" };
+        const error = { status: ErrorCodesEnum.UNAUTHORIZED, printMessage: "You can't access this" };
         return (req, res, next) => {
             if (!req) {
                 return next(error);
@@ -106,7 +106,7 @@ class AuthManager {
     
     static validateSwaggerAdmin() {
 
-        const error = { status: errorcodesenum.UNAUTHORIZED, printMessage: "You can't access this" };
+        const error = { status: ErrorCodesEnum.UNAUTHORIZED, printMessage: "You can't access this" };
         return (req, res, next) => {
 
             if (!req) {

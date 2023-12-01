@@ -244,7 +244,7 @@ exports.getDesignColorTypesByEnvironmentIdAndDesignType = async (req, res) => {
 
     } else {
 
-      const error = { status: errorCodesEnum.NOT_FOUND, printMessage: "design color bundle configuration not found" };
+      const error = { status: ErrorCodesEnum.NOT_FOUND, printMessage: "design color bundle configuration not found" };
      
       AnswerManager.handleError(res, error);
 

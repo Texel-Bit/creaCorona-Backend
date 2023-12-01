@@ -5,7 +5,7 @@ const templateModel = require('../models/template.model');
 const Email = require('../structs/email');
 const jwt = require('jsonwebtoken');
 const AuthManager = require('../middlewares/authMiddleware');
-const errorCodesEnum = require('../structs/Errors/ErrorCodesEnum');
+const ErrorCodesEnum = require('../structs/Errors/ErrorCodesEnum');
 const emailTemplate = require('../structs/EmailsTemplates/TemplateEmail');
 
 exports.loginTemplate = async (req, res) => {
@@ -19,7 +19,7 @@ exports.loginTemplate = async (req, res) => {
 
     // If no template is found, return an error
     if (!template) {
-      const error={status:errorCodesEnum.NOT_FOUND,printMessage:"Template not found"};
+      const error={status:ErrorCodesEnum.NOT_FOUND,printMessage:"Template not found"};
       return AnswerManager.handleError(res, error);
     }
 
@@ -73,7 +73,7 @@ exports.getTemplateById = async (req, res) => {
     if (template) {
       AnswerManager.handleSuccess(res, template, 'Template fetched successfully');
     } else {
-      const error={status:errorCodesEnum.NOT_FOUND,printMessage:"Template not found"};
+      const error={status:ErrorCodesEnum.NOT_FOUND,printMessage:"Template not found"};
 
       AnswerManager.handleError(res, error);
     }
@@ -116,7 +116,7 @@ exports.sendMailTemplate = (req, res, next) => {
 
     if(!email)
     { 
-      const error={status:errorCodesEnum.BAD_REQUEST,printMessage:"Missing params"};
+      const error={status:ErrorCodesEnum.BAD_REQUEST,printMessage:"Missing params"};
 
       return AnswerManager.handleError(res, error);
     }

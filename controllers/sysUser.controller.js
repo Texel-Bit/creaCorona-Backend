@@ -6,7 +6,7 @@ const AnswerManager = require('../middlewares/AnswerManager');
 const sendMail = require('../middlewares/emailMiddleware');
 const passwordMiddleware = require('../middlewares/passwordMiddleware');
 const circuitBreakerHandler = require('../middlewares/circuitBreakerHandler');
-const errorCodesEnum = require('../structs/Errors/errorCodesEnum');
+const ErrorCodesEnum = require('../structs/Errors/ErrorCodesEnum');
 const sysuserSchemas = require('../joiSchemas/sysUser.schema')
 
 //Circuit braker
@@ -74,7 +74,7 @@ exports.activateUser = async (req, res) => {
   try {
     AuthManager.validateJWT(token, res, async (err, decodedContent) => {
       if (err) {
-        handleRedirectOrError(res, redirect, { status: errorCodesEnum.NETWORK_AUTHENTICATION_REQUIRED, printMessage: "Token Invalid" });
+        handleRedirectOrError(res, redirect, { status: ErrorCodesEnum.NETWORK_AUTHENTICATION_REQUIRED, printMessage: "Token Invalid" });
         return;
       }
 

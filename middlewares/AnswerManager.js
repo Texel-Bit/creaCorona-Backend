@@ -1,4 +1,4 @@
-const errorCodesEnum = require('../structs/Errors/ErrorCodesEnum');
+const ErrorCodesEnum = require('../structs/Errors/ErrorCodesEnum');
 const errorCodes = require('../structs/Errors/ErrorCodeMapping');
 
 class AnswerManager {
@@ -14,7 +14,7 @@ class AnswerManager {
 
   static handleError(res, err) {
     
-    const statusCode = err.status || errorCodesEnum.INTERNAL_SERVER_ERROR;
+    const statusCode = err.status || ErrorCodesEnum.INTERNAL_SERVER_ERROR;
     const errorMessage = errorCodes[statusCode] || 'Unknown Error';
     if(process.env.NODE_ENV==="development")
     {
@@ -39,7 +39,7 @@ class AnswerManager {
 
   static handleFieldValidationError(res, err) {
     
-    const statusCode = errorCodesEnum.FIELDS_MISSING;
+    const statusCode = ErrorCodesEnum.FIELDS_MISSING;
     const errorMessage = errorCodes[statusCode] || 'Unknown Error';
     if(process.env.NODE_ENV==="development")
     {

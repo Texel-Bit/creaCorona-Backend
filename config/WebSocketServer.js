@@ -2,7 +2,7 @@ const WebSocket = require('ws');
 
 const gameController = require('../controllers/gameController.controller');
 const { generateRandomWebSocketId } = require('../middlewares/passwordMiddleware');
-const errorCodesEnum = require('../structs/Errors/ErrorCodesEnum');
+const ErrorCodesEnum = require('../structs/Errors/ErrorCodesEnum');
 
 class WebSocketServer {
 
@@ -56,7 +56,7 @@ class WebSocketServer {
 
   SendMessageById(socketId,action,message, result, next) {
     
-    const error = { status: errorCodesEnum.NETWORK_AUTHENTICATION_REQUIRED, printMessage: "Socket is missing" };
+    const error = { status: ErrorCodesEnum.NETWORK_AUTHENTICATION_REQUIRED, printMessage: "Socket is missing" };
     if (!socketId) {
       return next(error, null);
     }

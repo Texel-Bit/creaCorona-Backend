@@ -1,7 +1,7 @@
 const designColorTypeModel = require('../models/designColorType.model');
 const circuitBreakerHandler = require('../middlewares/circuitBreakerHandler');
 const AnswerManager = require('../middlewares/AnswerManager');
-const errorCodesEnum = require('../structs/Errors/ErrorCodesEnum');
+const ErrorCodesEnum = require('../structs/Errors/ErrorCodesEnum');
 
 
 const getAllDesignColorTypeBreaker = circuitBreakerHandler.createBreaker(designColorTypeModel.getAllDesignColorType);
@@ -83,7 +83,7 @@ exports.getDesignColorTypeByDesignType = async (req, res) => {
 
         } else {
 
-            const error = { status: errorCodesEnum.NOT_FOUND, printMessage: "design color type not found" };
+            const error = { status: ErrorCodesEnum.NOT_FOUND, printMessage: "design color type not found" };
             AnswerManager.handleError(res, error);
             console.log(error);
 

@@ -2,7 +2,7 @@ const designColorBundleModel = require('../models/designColorBundle.model');
 const CircuitBreakerHandler = require('../middlewares/CircuitBreakerHandler');
 const AnswerManager = require('../middlewares/AnswerManager');
 const { number } = require('joi');
-const errorCodesEnum = require('../structs/Errors/ErrorCodesEnum');
+const ErrorCodesEnum = require('../structs/Errors/ErrorCodesEnum');
 
 
 
@@ -89,7 +89,7 @@ exports.getAllDesignColorBundleByFilters = async (req, res) => {
 
     } else {
 
-      const error = { status: errorCodesEnum.NOT_FOUND, printMessage: "design color bundle configuration not found" };
+      const error = { status: ErrorCodesEnum.NOT_FOUND, printMessage: "design color bundle configuration not found" };
      
       AnswerManager.handleError(res, error);
 
